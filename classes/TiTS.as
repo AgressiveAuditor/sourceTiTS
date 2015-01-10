@@ -61,6 +61,11 @@
 	
 	import classes.Engine.checkDate;
 	import classes.Engine.showImage;
+	import classes.Engine.Utility.getPlanetName;
+	
+	import flash.events.UncaughtErrorEvent;
+	import flash.events.UncaughtErrorEvents;
+	import flash.display.LoaderInfo;
 
 	//Build the bottom drawer
 	public class TiTS extends MovieClip
@@ -84,6 +89,7 @@
 		include "../includes/NPCTemplates.as";
 		include "../includes/rooms.as";
 		include "../includes/roomFunctions.as";
+		include "../includes/StubbedFunctions.as";
 
 		//Misc content
 		include "../includes/rivalEncounters.as";
@@ -102,6 +108,7 @@
 		include "../includes/tavros.celise.as";
 		include "../includes/tavros.jade.as";
 		include "../includes/tavros.reaha.as";
+		include "../includes/tavros.reaha.expansion.as";
 		include "../includes/tavros.sellesy.as";
 		include "../includes/tavros.sera.as";
 		include "../includes/tavros.shelly.as";
@@ -132,6 +139,7 @@
 		include "../includes/tarkus.drBadger.as";
 		include "../includes/tarkus.dumbfuckBonus.as";
 		include "../includes/tarkus.grayGoo.as";
+		include "../includes/tarkus.lane.as";
 		include "../includes/tarkus.lapinara.as";
 		include "../includes/tarkus.raskvelFemaleFight.as";
 		include "../includes/tarkus.roomFunctions.as";
@@ -158,11 +166,13 @@
 		//Fourth planet
 		include "../includes/myrellion.embassy.as";
 		include "../includes/myrellion.embry.as";
+		include "../includes/myrellion.lyralla.as";
 		include "../includes/myrellion.karaAndShade.as";
 		include "../includes/myrellion.nehzara.as";
 		include "../includes/myrellion.rooms.as";
 		include "../includes/myrellion.roomFunctions.as";
 		include "../includes/myrellion.tavern.as";
+
 		
 		public var chars:Object;
 		public var foes:Array;
@@ -202,6 +212,7 @@
 		public var currentLocation:String;
 		public var shipLocation:String;
 		public var inSceneBlockSaving:Boolean;
+		public var gameOverEvent:Boolean;
 
 		public var parser:ParseEngine;
 
@@ -233,6 +244,8 @@
 
 		public function TiTS()
 		{
+			loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
+			
 			kGAMECLASS = this;
 			dataManager = new DataManager();
 			gameOptions = new GameOptions();
@@ -243,7 +256,7 @@
 
 			trace("TiTS Constructor")
 
-			version = "0.5.14";
+			version = "0.5.15";
 
 			//temporary nonsense variables.
 			temp = 0;
@@ -268,6 +281,7 @@
 			itemTarget = undefined;
 
 			this.inSceneBlockSaving = false;
+			gameOverEvent = false;
 			
 			eventQueue = new Array();
 			eventBuffer = "";
@@ -299,6 +313,20 @@
 			_perkDB = new Perks();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		private function uncaughtErrorHandler(e:UncaughtErrorEvent):void
+		{
+			if (e.error is Error)
+			{
+				var ee:Error = e.error as Error;
+				
+				clearOutput();
+				output("<b>Something bad happened! Please report this message:</b>\n\n");
+				output(ee.getStackTrace(), false, false);
+				clearMenu();
+				addButton(14, "Next", mainGameMenu);
+			}
 		}
 		
 		private function init(e:Event):void
@@ -375,18 +403,21 @@
 		{
 			toggleWTF();
 			
-			if (!inCombat()) 
-			{
-				this.userInterface.showBust("none");
-			}
-			
 			if (evt.currentTarget is MainButton)
 			{
 				trace("Button " + (evt.currentTarget as MainButton).buttonName + " clicked");
+				
+				var btn:MainButton = evt.currentTarget as MainButton;
+				if (btn.func == null) return;
 			}
 			else
 			{
 				trace("Button " + evt.currentTarget.caption.text + " clicked.");
+			}
+			
+			if (!inCombat()) 
+			{
+				this.userInterface.showBust("none");
 			}
 			
 			if (evt.currentTarget.arg == undefined)
@@ -414,6 +445,12 @@
 		public function showName(name:String):void
 		{
 			userInterface.showName(name);
+		}
+		
+		public function addNextButton(func:Function):void
+		{
+			clearMenu();
+			addButton(0, "Next", func);
 		}
 		
 		public function addButton(slot:int, cap:String = "", func:Function = undefined, arg:* = undefined, ttHeader:String = null, ttBody:String = null):void
@@ -667,137 +704,141 @@
 			this[name]();
 		}
 		
-		public function get pc():*
+		public function get pc():PlayerCharacter
 		{
 			return chars["PC"];
 		}
-		public function get monster():*
+		public function get monster():Creature
 		{
 			if(foes.length == 0) return chars["PC"];
 			else return foes[0];
 		}
 
-		public function get celise():*
+		public function get celise():Celise
 		{
 			return chars["CELISE"];
 		}
 
-		public function get rival():*
+		public function get rival():Rival
 		{
 			return chars["RIVAL"];
 		}
 
-		public function get enemy():*
+		public function get enemy():Creature
 		{
 			return foes[0];
 		}
 
-		public function get geoff():*
+		public function get geoff():Geoff
 		{
 			return chars["GEOFF"];
 		}
 
-		public function get flahne():*
+		public function get flahne():Flahne
 		{
 			return chars["FLAHNE"];
 		}
 
-		public function get zilpack():*
+		public function get zilpack():ZilPack
 		{
 			return chars["ZILPACK"];
 		}
 
-		public function get zil():*
+		public function get zil():ZilMale
 		{
 			return chars["ZIL"];
 		}
 
-		public function get penny():*
+		public function get penny():Penny
 		{
 			return chars["PENNY"];
 		}
 
-		public function get embry():*
+		public function get embry():Embry
 		{
 			return chars["EMBRY"];
 		}
 
-		public function get shekka():*
+		public function get shekka():Shekka
 		{
 			return chars["SHEKKA"];
 		}
 
-		public function get burt():*
+		public function get burt():Burt
 		{
 			return chars["BURT"];
 		}
 
-		public function get zilFemale():*
+		public function get zilFemale():ZilFemale
 		{
 			return chars["ZILFEMALE"];
 		}
 
-		public function get cuntsnake():*
+		public function get cuntsnake():CuntSnake
 		{
 			return chars["CUNTSNAKE"];
 		}
 		
-		public function get reaha():*
+		public function get reaha():Reaha
 		{
 			return chars["REAHA"];
 		}
 		
-		public function get dane():*
+		public function get dane():Dane
 		{
 			return chars["DANE"];
 		}
 		
-		public function get mimbrane():*
+		public function get mimbrane():Mimbrane
 		{
 			return chars["MIMBRANE"];
 		}
-		public function get anno():*
+		public function get anno():Anno
 		{
 			return chars["ANNO"];
 		}
 		
-		public function get kiro():*
+		public function get kiro():Kiro
 		{
 			return chars["KIRO"];
 		}
 		
-		public function get saendra():*
+		public function get saendra():Saendra
 		{
 			return chars["SAENDRA"];
 		}
-		public function get sera():*
+		public function get sera():Sera
 		{
 			return chars["SERA"];
 		}
-		public function get syri():*
+		public function get syri():Syri
 		{
 			return chars["SYRI"];
 		}
 		
-		public function get vanae():*
+		public function get vanae():Creature
 		{
 			return this.monster;
 		}
-		public function get vanaeMaiden():*
+		public function get vanaeMaiden():MaidenVanae
 		{
 			return chars["MAIDEN_VANAE"];
 		}
-		public function get vanaeHuntress():*
+		public function get vanaeHuntress():HuntressVanae
 		{
 			return chars["HUNTRESS_VANAE"];
 		}
-		public function get gianna():*
+		public function get gianna():Gianna
 		{
 			return chars["GIANNA"];
 		}
-		public function get brynn():*
+		public function get brynn():Brynn
 		{
 			return chars["BRYNN"];
+		}
+		public function get lane():Lane
+		{
+			return chars["LANE"];
 		}
 	}
 }

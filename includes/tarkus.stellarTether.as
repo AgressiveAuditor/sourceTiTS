@@ -349,7 +349,11 @@ function liftStationEngineeringDeckBonusFunc():Boolean
 	output("\n\nTam-Tam is ");
 	if(flags["TAM_DISABLE_METHOD"] == undefined) output("hunched over her robotic hound, desperately trying to undo the damage you've done");
 	else if(flags["TAM_DISABLE_METHOD"] == 1) output("knocked out and chained up, her wrists affixed to one of the engines by a set of chains");
-	else output("snoozing peacefully, taking herself a little cat-nap atop her damaged attack drone, enjoying the afterglow of your... intimate intervention.");
+	else 
+	{
+		if(flags["TAKEN_TAMWOLF"] == undefined) output("snoozing peacefully, taking herself a little cat-nap atop her damaged attack drone, enjoying the afterglow of your... intimate intervention.");
+		else output("snoozing peacefully, taking herself a little cat-nap on the floor, enjoying the afterglow of your... intimate intervention.");
+	}
 
 	//Upon entering, first time:
 	if(flags["TAM_DISABLE_METHOD"] == undefined)
@@ -782,7 +786,7 @@ function liftDownEvent():void
 		output("stars is blocked out by the rise of huge earthen cliff sides as you descend into the chasm. You step up to the glass fore of the car, squinting to see the tether station far below. You can't at first, but as time passes (and the elevator picks up speed), it comes into view. It's a large installation, circular, surrounded by a wide walkway with a lengthy bridge leading from the bottom of the lift tracks to the door of the station proper.");
 
 		output("\n\nWhat a long way down. You take a moment to catch your breath after the deadly shootout with that crazed cat-girl and her robotic friend; ");
-		if(pc.rangedWeapon.shortName != "" && pc.rangedWeapon.damageType == "GLOBAL.KINETIC") output("you drop the magazine from your [pc.rangedWeapon], slamming a new one home and racking the slide");
+		if(pc.rangedWeapon.shortName != "" && pc.rangedWeapon.damageType == GLOBAL.KINETIC) output("you drop the magazine from your [pc.rangedWeapon], slamming a new one home and racking the slide");
 		else if(pc.rangedWeapon.shortName != "") output("you check the ammunition readings on your weapon, satisfied you're up for another encounter");
 		else output("you rub a bit of the drones' machine oil off of your well-used [pc.meleeWeapon]");
 		output(". Satisfied you're ready for a proper fight, you step back from the window and steel yourself from what's to come.");
@@ -1963,7 +1967,7 @@ function kaskaFightAI():void
 	//HP Shit
 	if(!foes[0].hasStatusEffect("Futa Lust"))
 	{
-		if(pc.statusEffectv1("Round") % 6 == 0 && pc.statusEffectv1("Round") != 0)
+		if(pc.statusEffectv1("Round") % 6 == 0 && pc.statusEffectv1("Round") != 0 && !foes[0].hasStatusEffect("Disarmed"))
 		{
 			NPCDisarmingShot(foes[0]);
 			return;
@@ -1973,14 +1977,18 @@ function kaskaFightAI():void
 			NPCstealthFieldActivation(foes[0]);
 			return;
 		}
-		if(pc.shields() > 0)
+		if(pc.shields() > 0 && !foes[0].hasStatusEffect("Disarmed"))
 		{
 			choices[choices.length] = shieldBustah;
 			choices[choices.length] = shieldBustah;
 		}
-		choices[choices.length] = kaskaVolleyShot;
-		choices[choices.length] = NPCOvercharge;
+		if(!foes[0].hasStatusEffect("Disarmed"))
+		{
+			choices[choices.length] = kaskaVolleyShot;
+			choices[choices.length] = NPCOvercharge;
+		}
 		if(!pc.hasStatusEffect("Blind")) choices[choices.length] = NPCFlashGrenade;
+
 	}
 	//Lust Shit
 	else
@@ -1995,7 +2003,8 @@ function kaskaFightAI():void
 		if(!pc.hasStatusEffect("Disarmed")) choices[choices.length] = kaskaHighKick;
 	}
 	//Pick one
-	choices[rand(choices.length)]();
+	if(choices.length > 0) choices[rand(choices.length)]();
+	else enemyAttack(pc);
 }
 
 
@@ -2184,7 +2193,7 @@ function defeatedByKaska():void
 				if(pc.cockTotal() > 1) output("s aren't");
 				else output(" isn't");
 				output(" far behind.");
-				if(pc.crotchGarbed()) 
+				if(pc.isCrotchGarbed()) 
 				{
 					output(" You can feel your [pc.lowerGarment] slipping and sliding wetly against ");
 					if(pc.cockTotal() == 1) output("it");
@@ -2915,9 +2924,9 @@ function bombStatusUpdate():void
 	if(flags["TARKUS_BOMB_TIMER"] == 120) eventBuffer += "\n\n<b>There's only two hours left to disarm the bomb!</b>";
 	if(flags["TARKUS_BOMB_TIMER"] == 90) eventBuffer += "\n\n<b>There's only an hour and a half left to disarm the bomb!</b>";
 	if(flags["TARKUS_BOMB_TIMER"] == 60) eventBuffer += "\n\n<b>There's only one hour left to disarm the bomb!</b>";
-	if(flags["TARKUS_BOMB_TIMER"] == 45) eventBuffer += "\n\n<b>There's only one 45 minutes left to disarm the bomb!</b>";
-	if(flags["TARKUS_BOMB_TIMER"] == 30) eventBuffer += "\n\n<b>There's only one 30 minutes left to disarm the bomb!</b>";
-	if(flags["TARKUS_BOMB_TIMER"] == 15) eventBuffer += "\n\n<b>There's only one 15 minutes left to disarm the bomb!</b>";
+	if(flags["TARKUS_BOMB_TIMER"] == 45) eventBuffer += "\n\n<b>There's only 45 minutes left to disarm the bomb!</b>";
+	if(flags["TARKUS_BOMB_TIMER"] == 30) eventBuffer += "\n\n<b>There's only 30 minutes left to disarm the bomb!</b>";
+	if(flags["TARKUS_BOMB_TIMER"] == 15) eventBuffer += "\n\n<b>There's only 15 minutes left to disarm the bomb!</b>";
 }
 
 //Dungeon Done, Bosses Molestered, Bomb Disarmed
@@ -3132,7 +3141,7 @@ function youWonSomePodShit():void
 	showBust("SHEKKA");
 	output("You finalize the payment and run your hands across the pod until it chimes. The tone is brief and almost musical. You'd expect to hear similar from a lift on a luxury planet. <i>\"DNA signature detected, welcome [pc.name] Steele,\"</i> a synthesized, female voice announces. A seam appears on the face of the gleaming metal, recessing itself down before sliding out of the way and into the body of the probe. Behind it, there's a simple screen with a set of coordinates.");
 	output("\n\nShekka whistles, <i>\"Guess it's a good thing you bought that, huh? She seems to recognize you.\"</i>");
-	output("\n\nYou nod while turning to your codex. The coordinates correspond to another planet linked up by the rush - one of two habitable worlds in the system. You had better head to REDACTED if you want to claim your father's legacy, but first, there is the matter of this spent pod. You don't need to lug it everywhere. You could give it to Shekka, sell it to her, or sell it back to your dad's company.");
+	output("\n\nYou nod while turning to your codex. The coordinates correspond to another planet linked up by the rush - the only habitable world in the system. You had better head to Myrellion if you want to claim your father's legacy, but first, there is the matter of this spent pod. You don't need to lug it everywhere. You could give it to Shekka, sell it to her, or sell it back to your dad's company.");
 	processTime(2);
 	flags["PLANET_3_UNLOCKED"] = 1;
 	//[SellShekka] [GiveShekka] [SellSteele]	

@@ -144,6 +144,7 @@
 		public static const TYPE_GOAT:int 									= 50;
 		public static const TYPE_SYNTHETIC:int 								= 51;
 		public static const TYPE_SIMII:int 								    = 52;
+		public static const TYPE_DAYNAR:int									= 53;
 		
 		public static const TYPE_NAMES:Array = [
 			"Human",
@@ -192,7 +193,11 @@
 			"Vanae",
 			"Vanae Maiden",
 			"Vanae Huntress",
-			"Leithan"
+			"Leithan",
+			"Goat",
+			"Synthetic",
+			"Simii",
+			"Daynar"
 		];
 		
 		public static const VALID_FACE_TYPES:Array = [
@@ -654,6 +659,9 @@
 		public static const LIFTDOWN:int 								= 13;
 		public static const TAXI:int    								= 14;
 		public static const PUBLIC:int 									= 15;
+		public static const PRIVATE:int									= 16;
+		public static const FAPPING_ILLEGAL:int							= 17;
+		public static const NUDITY_ILLEGAL:int							= 18;
 		
 		// Temp flag alias whilst the asset gets introduced
 		public static const LIFT:int = OBJECTIVE;

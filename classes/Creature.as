@@ -3,6 +3,8 @@
 	import classes.Characters.PregnancyPlaceholder;
 	import classes.CockClass;
 	import classes.DataManager.Errors.VersionUpgraderError;
+	import classes.Items.Melee.Fists;
+	import classes.Items.Melee.Rock;
 	import classes.Items.Miscellaneous.EmptySlot;
 	import classes.VaginaClass;
 	import classes.BreastRowClass;
@@ -635,10 +637,18 @@
 		public var tailType: Number = 0;
 		public function tailTypeUnlocked(newTailType:Number):Boolean
 		{
+			if (tailType == GLOBAL.TYPE_CUNTSNAKE) return false;
 			return true;
 		}
 		public function tailTypeLockedMessage():String
 		{
+			if (tailType == GLOBAL.TYPE_CUNTSNAKE)
+			{
+				var msg:String = "\n\nThe creature masquerading as a tail seems pretty spooked about something all of a sudden;";
+				if (isBiped()) msg += " it's wrapped itself around your [pc.thigh], clinging on tightly and chirping to itself quietly...."
+				else msg += " it's busy chirping away to itself and thrashing around, almost as if it were trying to seek out a predator....";
+				return msg;
+			}
 			return "";
 		}
 		
@@ -1154,9 +1164,6 @@
 				case "name":
 					buffer = short;
 					break;
-				case "fullname"
-					//foo
-					break;
 				case "race":
 					buffer = race();
 					break;
@@ -1329,6 +1336,9 @@
 				case "smallestCock":
 				case "cockSmallest":
 					buffer = cockDescript(smallestCockIndex());
+					break;
+				case "cockShortest":
+					buffer = cockDescript(shortestCockIndex());
 					break;
 				case "eachCockHead":
 					buffer = eachCockHead();
@@ -1541,6 +1551,12 @@
 					break;
 				case "milkFlavor":
 					buffer = fluidFlavor(milkType);
+					break;
+				case "wing":
+					buffer = wingDescript();
+					break;
+				case "wings":
+					buffer = wingsDescript();
 					break;
 				case "leg":
 					buffer = leg();
@@ -1932,6 +1948,7 @@
 		}
 		//HP
 		public function HP(arg: Number = 0): Number {
+			if(kGAMECLASS.easy && arg < 0) arg *= .5;
 			HPRaw += arg;
 			if (HPRaw > HPMax()) HPRaw = HPMax();
 			return HPRaw;
@@ -2003,6 +2020,7 @@
 		}
 		public function lustDamage(arg:Number = 0):Number
 		{
+			if(kGAMECLASS.easy && arg > 0) arg *= .5;
 			if(hasStatusEffect("Sex On a Meteor")) arg *= 1.5;
 			if(hasPerk("Easy")) arg *= 1.2;
 			return lust(arg);
@@ -2151,7 +2169,8 @@
 		}
 		public function WQ():Number
 		{
-			return Math.round(willpower()/willpowerMax()*100);
+			var val:Number = Math.round(willpower()/willpowerMax()*100);
+			return val;
 		}
 		public function willpower(arg:Number = 0, apply:Boolean = false):Number 
 		{
@@ -2233,8 +2252,12 @@
 		}
 		public function lustMin(): Number {
 			var bonus:int = 0;
-			if(hasPerk("Drug Fucked")) bonus += 10;
-			if(hasStatusEffect("Ellie's Milk")) bonus += 33;
+			if (hasPerk("Drug Fucked")) bonus += 10;
+			if (hasStatusEffect("Ellie's Milk")) bonus += 33;
+			if (hasStatusEffect("Lane Detoxing Weakness"))
+			{
+				if (bonus < statusEffectv2("Lane Detoxing Weakness")) bonus = statusEffectv2("Lane Detoxing Weakness");
+			}
 			return (0 + bonus);
 		}
 		public function physiqueMax(): Number {
@@ -2300,6 +2323,10 @@
 				trace("ERROR: slowStatGain got to the end with a stat that should've called the earlier error. Looks like the function has been changed, added to, or bugged. Make sure top stat list matches bottom!");
 				return 0;
 			}
+		}
+		public function hasEquippedWeapon():Boolean
+		{
+			return (!(meleeWeapon is Rock) || !(rangedWeapon is Rock));
 		}
 		public function hasEnergyWeapon():Boolean
 		{
@@ -2371,6 +2398,7 @@
 			return temp;
 		}
 		public function shields(arg: Number = 0): Number {
+			if(kGAMECLASS.easy && arg < 0) arg *= .5;
 			shieldsRaw += arg;
 			if (shieldsRaw > shieldsMax())
 				shieldsRaw = shieldsMax();
@@ -3057,6 +3085,14 @@
 			if(tailCount == 1) return tailDescript();
 			else if(tailCount > 1) return pluralize(tailDescript());
 			else return "<b>ERROR: Taildescript called with no tails present</b>";
+		}
+		public function wingDescript():String
+		{
+			return "wing";
+		}
+		public function wingsDescript():String
+		{
+			return pluralize(wingDescript());
 		}
 		public function leg(forceType: Boolean = false, forceAdjective: Boolean = false): String {
 			var select: Number = 0;
@@ -4510,6 +4546,16 @@
 			}
 			return index;
 		}
+		public function smallestCockVolume(effective: Boolean = true): Number {
+			if (cocks.length == 0) return 0;
+			var counter: Number = cocks.length;
+			var index: Number = 0;
+			while (counter > 0) {
+				counter--;
+				if (cockVolume(index, effective) > cockVolume(counter, effective)) index = counter;
+			}
+			return cockVolume(index, effective);
+		}
 		public function smallestCockIndex(effective: Boolean = true): Number {
 			if (cocks.length == 0) return 0;
 			var counter: Number = cocks.length;
@@ -5004,10 +5050,10 @@
 			//Just check to make sure there's a cap for top end and bottom end
 			if(milkFullness > 200) milkFullness = 200;
 			else if(milkFullness < 0) {
-				trace("ERROR: Flash sucks dicks at math and somehow got a negative milk fullness.");
+				//trace("ERROR: Flash sucks dicks at math and somehow got a negative milk fullness.");
 				milkFullness = 0;
 			}
-			trace("Breast milk produced: " + mLsGained + ", Fullness: " + milkFullness + " Total mLs Held: " + milkQ(99) + ", Max mLs: " + milkCapacity());
+			//trace("Breast milk produced: " + mLsGained + ", Fullness: " + milkFullness + " Total mLs Held: " + milkQ(99) + ", Max mLs: " + milkCapacity());
 			return mLsGained;
 		}
 		public function milkCapacity(arg:int = -1):Number
@@ -5017,7 +5063,7 @@
 			//if arg == -1, mLs produced by biggest row.
 			if(arg == -1)
 			{
-				capacity = (400 + biggestTitSize() / 2 * 100) * milkStorageMultiplier;
+				capacity = (400 + breastRows[biggestTitRow()].breastRatingRaw / 2 * 100) * milkStorageMultiplier;
 			}
 			//if arg == 99, total mLs produced by all rows
 			else if(arg == 99)
@@ -5025,7 +5071,7 @@
 				//Total it up!
 				for(var x:int = 0; x < breastRows.length; x++)
 				{
-					capacity += (400 + breastRows[x].breastRating() / 2 * 100);
+					capacity += (400 + breastRows[x].breastRatingRaw / 2 * 100);
 				}
 				capacity *= milkStorageMultiplier;
 			}
@@ -5639,6 +5685,11 @@
 			cocks[slot].clearFlags();
 
 			//Add bonus flags and shit.
+			if (type == GLOBAL.TYPE_HUMAN)
+			{
+				cocks[slot].knotMultiplier = 1;
+				cocks[slot].cockColor = "pink";
+			}
 			if (type == GLOBAL.TYPE_CANINE || type == GLOBAL.TYPE_VULPINE) {
 				cocks[slot].knotMultiplier = 1.25;
 				cocks[slot].cockColor = "bright red";
@@ -5707,13 +5758,13 @@
 			var weighting: Number = femininity;
 			//Tits count up to their rating for femininity
 			if (biggestTitSize() >= 1) {
-				trace("boobs confirmed");
+				//trace("boobs confirmed");
 				if (biggestTitSize() * 3 > 50) weighting += 50;
 				else weighting += biggestTitSize() * 3;
 			}
 			//Flat chest + 20 masculine
 			else if (biggestTitSize() == 0) {
-				trace("no boobs confirmed");
+				//trace("no boobs confirmed");
 				weighting -= 20;
 			}
 			//Hips give small boost
@@ -5725,7 +5776,7 @@
 			if (tone < 30) weighting += 10;
 			if (lipRating() > 1) weighting += lipRating() * 3;
 			if (hasBeard()) weighting -= 100;
-			trace("Femininity Rating = " + weighting);
+			//trace("Femininity Rating = " + weighting);
 			//Neuters first!
 			if (neuter != "") {
 				if (weighting >= 45 && weighting <= 55 || hasStatusEffect("Force It Gender")) return neuter;
@@ -8463,11 +8514,10 @@
 					else if (rando == 2) descript += "voluminous";
 					else descript += "distended";
 				} else if (cocks[cockNum].thickness() > 3.5) {
-					rando = this.rand(5);
+					rando = this.rand(4);
 					if (rando == 0) descript += "inhumanly distended";
 					else if (rando == 1) descript += "bloated";
 					else if (rando == 2) descript += "mammoth";
-					else if (rando == 3) descript += "virgin splitting";
 					else descript += "monstrously thick";
 				}
 			}
@@ -8488,12 +8538,11 @@
 			//Length 1/3 chance
 			else if (this.rand(3) == 0) {
 				if (l < 3) {
-					rando = this.rand(5);
+					rando = this.rand(4);
 					if (rando == 0) descript = "little";
 					else if (rando == 1) descript = "toy-sized";
 					else if (rando == 2) descript = "mini";
 					else if (rando == 3) descript = "budding";
-					else if (rando == 4) descript += "wee";
 					else descript = "tiny";
 				} else if (l < 5) {
 					rando = this.rand(2);
@@ -8530,7 +8579,7 @@
 					else if (rando == 1) descript = "giant";
 					else descript = "arm-length";
 				} else if (l < 50) {
-					rando = this.rand(8);
+					rando = this.rand(7);
 					if (type == GLOBAL.TYPE_FELINE && this.rand(4) == 0) descript = "coiled ";
 					else {
 						if (rando == 0) descript = "towering";
@@ -8539,7 +8588,6 @@
 						else if (rando == 3) descript = "imposing";
 						else if (rando == 4) descript = "prodigious";
 						else if (rando == 5) descript = "hyper";
-						else if (rando == 6) descript += "damn big";
 						else descript = "massive";
 					}
 				} else if (l < 100) {

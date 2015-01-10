@@ -593,7 +593,7 @@ function treatmentHourProcs():void
 				if(pc.hasVagina()) eventBuffer += "[pc.thighs]";
 				else eventBuffer += "cheeks";
 				eventBuffer += ".";
-				if(pc.bRows > 1) eventBuffer += "\n\nIf you the Treatment worked on more than one row, you could probably be having a wonderful titgasm by now.";
+				if(pc.breastRows.length > 1) eventBuffer += "\n\nIf you the Treatment worked on more than one row, you could probably be having a wonderful titgasm by now.";
 				//+33 lust
 				pc.lust(33);
 				pc.breastRows[0].breastRatingRaw++
@@ -1296,7 +1296,7 @@ function treatmentHourProcs():void
 			eventBuffer += "\n\nAll the big words are just a distraction.";
 			//Brute Speech Unlock!
 			eventBuffer += "\n\n(<b>Gained Perk: Brute Speech</b> - You will now sound like more like a reticent brute in scenes that support it.)";
-			pc.createPerk("Ditz Speech",0,0,0,0,"Alters dialogue in certain scenes.");
+			pc.createPerk("Brute Speech",0,0,0,0,"Alters dialogue in certain scenes.");
 
 		}
 		else if(treatedHours == 48)

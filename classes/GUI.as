@@ -493,10 +493,17 @@
 				throw new Error("Couldn't find module \"" + module + "\"");
 			}
 			
-			// Update some button states
+			// Update some button states			
 			if ((classes.kGAMECLASS.pc as PlayerCharacter).levelUpAvailable())
 			{
-				this.levelUpButton.Activate();
+				if (titsClassPtr.gameOverEvent == true || titsClassPtr.inSceneBlockSaving == true)
+				{
+					this.levelUpButton.Deactivate();
+				}
+				else
+				{
+					this.levelUpButton.Activate();
+				}
 			}
 			else
 			{
@@ -908,6 +915,16 @@
 		public function setButtonPurple(slot:int):void
 		{
 			_buttonTray.setButtonPurple(slot);
+		}
+		
+		public function setButtonDisabled(slot:int):void
+		{
+			_buttonTray.setButtonDisabled(slot);
+		}
+		
+		public function setButtonActive(slot:int):void
+		{
+			_buttonTray.setButtonActive(slot);
 		}
 		
 		//Returns the position of the last used buttonData spot.

@@ -2367,7 +2367,7 @@ function teaseReactions(damage:Number,target:Creature):String {
 		if (damage == 0)
 		{
 			textRands = [
-				"The blind huntress snorts at your display and makes a quick jab at you with her spear. You leap out of the way just in time. <i>“All you're doing is leaving yourself open, " + ((pc.zilScore() >= 4 || pc.naleenScore >= 5) ? "[pc.race]" : "outsider") + "!”</i> she exclaims.",
+				"The blind huntress snorts at your display and makes a quick jab at you with her spear. You leap out of the way just in time. <i>“All you're doing is leaving yourself open, " + ((pc.zilScore() >= 4 || pc.naleenScore() >= 5) ? "[pc.race]" : "outsider") + "!”</i> she exclaims.",
 				"You utterly fail to entice the huntress. You barely dodge an attack that causes you to cease your efforts. You're going to have to do better, or try something else...",
 				"The alien huntress seems to be getting into it, moving towards you... only to swipe her spear at your head. You barely duck in time. Seems she didn't go for it at all!"
 			];
@@ -2728,7 +2728,7 @@ function crotchTeaseText(target:Creature):void {
 		}
 		else output(" “<i>But I thought another color on the inside would look even nicer.</i>”");
 		//[pc.girlCum == honey]
-		if(pc.girlCum == GLOBAL.FLUID_TYPE_HONEY) 
+		if(pc.girlCumType == GLOBAL.FLUID_TYPE_HONEY) 
 		{
 			output("\n\n“<i>I even cum honey now");
 			if(pc.vaginas[0].wetness() >= 3) output(", a lot more than most zil even");
@@ -2799,7 +2799,7 @@ function buttTeaseText():void {
 	{
 		output("You reach your hand between your legs and grab your [pc.tailgina] then pull it under your waist and up to your stomach, you flick your [pc.tails] to let a bit of fluid drip from it. Giving your opponent a sly look you curl your tail up and take a lick, letting your [pc.tongue] probe the folds of your tail-mounted snatch for a few seconds.");
 		if(flags["TIMES_BUTT_TEASED"] > 75 && pc.hasTongueFlag(GLOBAL.FLAG_LONG)) output(" You work your tail itself around a little bit, just enough to show off where it’s bulging around your deep-diving tongue.");
-		output(" A thin string of of [pc.girlCumVisc] fluid connects your mouth and [pc.oneTailgina] as you pull it away, flashing the moist opening towards your foe for a moment.");
+		output(" A thin string of [pc.girlCumVisc] fluid connects your mouth and [pc.oneTailgina] as you pull it away, flashing the moist opening towards your foe for a moment.");
 	}
 	//Reqs: PC has a cunt-tail, skill >25
 	else if(select == 6)
@@ -2846,7 +2846,7 @@ function buttTeaseText():void {
 		if(pc.isCrotchGarbed()) output(", slide down your clothing,");
 		output(" and bounce your [pc.butt] up and down hypnotically");
 		//Big butts = extra text + higher success
-		if(pc.buttRating >= 10) {
+		if(pc.buttRating() >= 10) {
 			output(", making it jiggle delightfully.  Your target even gets a few glimpses of the [pc.asshole] between your cheeks.");
 		}
 		//Small butts = less damage, still high success
