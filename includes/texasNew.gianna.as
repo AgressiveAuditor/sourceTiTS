@@ -46,7 +46,7 @@ Can buy her oil for slight rep gains.
 //  UTILITY FUNCS
 //================================
 
-function giannaPersonality(modification:int = 0):int
+public function giannaPersonality(modification:int = 0):int
 {
 	//Add on if changing.
 	if(modification != 0) 
@@ -59,7 +59,7 @@ function giannaPersonality(modification:int = 0):int
 	return (gianna.personality);
 }
 
-function giannaAWOL(arg:int = 0):Boolean
+public function giannaAWOL(arg:int = 0):Boolean
 {
 	if(flags["GIANNA_AWAY_TIMER"] == undefined) flags["GIANNA_AWAY_TIMER"] = 0;
 	//If we're adding time, add it.
@@ -74,14 +74,16 @@ function giannaAWOL(arg:int = 0):Boolean
 	return false;
 }
 
-function giannaDisplay():void
+public function giannaDisplay():void
 {
 	showName("\nGIANNA");
-	showBust("GIANNA_NUDE");
+	if(gianna.biggestTitSize() <= 9) showBust("GIANNA_NUDE");
+	else if(gianna.biggestTitSize() <= 18) showBust("GIANNA_MEDIUM_NUDE");
+	else showBust("GIANNA_LARGE_NUDE");
 	author("Fenoxo");
 }
 
-function giannaSiliconeUsed():Number
+public function giannaSiliconeUsed():Number
 {
 	var total:Number = 0;
 	total += gianna.buttRating() * 2;
@@ -90,7 +92,7 @@ function giannaSiliconeUsed():Number
 	return total;
 }
 
-function giannaAvailableSilicone(arg:int = 0):Number
+public function giannaAvailableSilicone(arg:int = 0):Number
 {
 	if(flags["GIANNA_SILICONE_STORAGE"] == undefined) flags["GIANNA_SILICONE_STORAGE"] = 20;
 	if(arg != 0)
@@ -106,7 +108,7 @@ function giannaAvailableSilicone(arg:int = 0):Number
 //  ACTUAL CONTENT FUNCTIONS
 //================================
 
-function giannaBonusShit():Boolean
+public function giannaBonusShit():Boolean
 {
 	//Unmet blurb
 	if(flags["MET_GIANNA"] == undefined)
@@ -186,7 +188,7 @@ function giannaBonusShit():Boolean
 	return false;
 }
 
-function approachGianna(special:String = ""):void
+public function approachGianna(special:String = ""):void
 {
 	if(special != "noText")
 	{
@@ -352,7 +354,7 @@ function approachGianna(special:String = ""):void
 	addButton(14,"Back",mainGameMenu);
 }
 
-function giannaFuckChoices():void
+public function giannaFuckChoices():void
 {
 	giannaDisplay();
 	//9999 add some talk shit here later?
@@ -411,7 +413,7 @@ function giannaFuckChoices():void
 
 
 //Yes I Like You Cumflated
-function yesILikeYouCumFlatedGianna():void
+public function yesILikeYouCumFlatedGianna():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -436,7 +438,7 @@ function yesILikeYouCumFlatedGianna():void
 	approachGianna("noText");
 }
 //Yes, but...
-function yesButAboutCumFlation():void
+public function yesButAboutCumFlation():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -458,7 +460,7 @@ function yesButAboutCumFlation():void
 }
 
 //No cumflation please
-function neverCumflateAgain():void
+public function neverCumflateAgain():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -486,7 +488,7 @@ function neverCumflateAgain():void
 }
 
 //No - leave while she cleans
-function leaveWhileGiannaGetsRidOfCum():void
+public function leaveWhileGiannaGetsRidOfCum():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -498,7 +500,7 @@ function leaveWhileGiannaGetsRidOfCum():void
 }
 
 //Yes - wait while Gianna cleans off the spunk
-function waitForGiannaToDespunk():void
+public function waitForGiannaToDespunk():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -511,7 +513,7 @@ function waitForGiannaToDespunk():void
 }
 
 //Appearance
-function giannaAppearance():void
+public function giannaAppearance():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -586,7 +588,7 @@ function giannaAppearance():void
 }
 
 //Talk
-function talkToGianna(display:Boolean = true):void
+public function talkToGianna(display:Boolean = true):void
 {
 	if(display)
 	{
@@ -687,7 +689,7 @@ function talkToGianna(display:Boolean = true):void
 }
 
 //About Her [1x only. Replaced with <i>“Her AI”</i> & <i>“Her Body”</i> after]
-function aboutHerTalk():void
+public function aboutHerTalk():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -705,7 +707,7 @@ function aboutHerTalk():void
 }
 
 //Agree
-function agreeWithGiannaAboutRoboMotions():void
+public function agreeWithGiannaAboutRoboMotions():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -721,7 +723,7 @@ function agreeWithGiannaAboutRoboMotions():void
 }
 
 //Disagree
-function disagreeWithGiannaAboutRobomotions():void
+public function disagreeWithGiannaAboutRobomotions():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -743,7 +745,7 @@ function disagreeWithGiannaAboutRobomotions():void
 
 //Her A.I.
 //Unlocked by <i>“About Her”</i>. Replaces its button on the talk menu.
-function talkToGiannaAboutHerAI():void
+public function talkToGiannaAboutHerAI():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -832,7 +834,7 @@ function talkToGiannaAboutHerAI():void
 }
 
 //[Yes]
-function yesGiannaYouCanBeARealBoy():void
+public function yesGiannaYouCanBeARealBoy():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -849,7 +851,7 @@ function yesGiannaYouCanBeARealBoy():void
 }
 
 //[No]
-function noGiannaYoullNeverAmountToAnythingGod():void
+public function noGiannaYoullNeverAmountToAnythingGod():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -874,7 +876,7 @@ function noGiannaYoullNeverAmountToAnythingGod():void
 }
 
 //Her Body
-function talkToGiannaAbootHerBodyEh():void
+public function talkToGiannaAbootHerBodyEh():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -974,7 +976,7 @@ function talkToGiannaAbootHerBodyEh():void
 	addDisabledButton(1,"About Body","About Body","You just finished talking about that.");
 }
 //[Bore Me]
-function boreMeGianna():void
+public function boreMeGianna():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -987,7 +989,7 @@ function boreMeGianna():void
 	addButton(0,"Next",boreMeGiannaPartDues);
 }
 
-function boreMeGiannaPartDues():void
+public function boreMeGiannaPartDues():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1039,7 +1041,7 @@ function boreMeGiannaPartDues():void
 }
 
 //[Nah]
-function takeAPassOnListeningToTechSpecs():void
+public function takeAPassOnListeningToTechSpecs():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1053,7 +1055,7 @@ function takeAPassOnListeningToTechSpecs():void
 }
 
 //[***]Her Owner
-function talkToGiannaAboutHerFormerOwner():void
+public function talkToGiannaAboutHerFormerOwner():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1118,7 +1120,7 @@ function talkToGiannaAboutHerFormerOwner():void
 }
 
 //Comfort - + confidence
-function comfortGiannaSheAintNoThing():void
+public function comfortGiannaSheAintNoThing():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1144,7 +1146,7 @@ function comfortGiannaSheAintNoThing():void
 }
 
 //Dissuade - -confidence
-function dissuadeGiannaSheTotesIsAThing():void
+public function dissuadeGiannaSheTotesIsAThing():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1158,7 +1160,7 @@ function dissuadeGiannaSheTotesIsAThing():void
 }
 
 //Neutral - nothing changes
-function giannaAintNoThingNeutral():void
+public function giannaAintNoThingNeutral():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1171,7 +1173,7 @@ function giannaAintNoThingNeutral():void
 }
 
 //[***]Big T :D
-function talkToGiannaAboutBigT():void
+public function talkToGiannaAboutBigT():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1261,7 +1263,7 @@ function talkToGiannaAboutBigT():void
 //Reserve - 6
 
 
-function giannaBodyModMenu(display:Boolean = true):void
+public function giannaBodyModMenu(display:Boolean = true):void
 {
 	if(display)
 	{
@@ -1407,7 +1409,7 @@ function giannaBodyModMenu(display:Boolean = true):void
 	else addButton(14,"Back",unhookGiannaHose);
 }
 
-function unhookGiannaHose():void
+public function unhookGiannaHose():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1439,7 +1441,7 @@ function unhookGiannaHose():void
 //Gianna max volume available: 75
 
 //Distribution
-function giannaSiliconeDistributionDisplay():void
+public function giannaSiliconeDistributionDisplay():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1457,10 +1459,9 @@ function giannaSiliconeDistributionDisplay():void
 }
 
 //[***] Increase Breasts
-function increaseGiannaBoobs(siliconeUsed:int):void
+public function increaseGiannaBoobs(siliconeUsed:int):void
 {
 	clearOutput();
-	giannaDisplay();
 	giannaAvailableSilicone(-siliconeUsed);
 	//C->E
 	if(gianna.biggestTitSize() <= 3)
@@ -1548,16 +1549,16 @@ function increaseGiannaBoobs(siliconeUsed:int):void
 		output("\n\nYou chuckle warmly in response while she climbs to her feet. What now?");
 		gianna.breastRows[0].breastRatingRaw = 41;
 	}
+	giannaDisplay();
 	processTime(5);
 	pc.lust(5);
 	giannaBodyModMenu(false);
 }
 
 //[***] Decrease Breasts
-function decreaseGiannaBoobs(siliconeReturned:int):void
+public function decreaseGiannaBoobs(siliconeReturned:int):void
 {
 	clearOutput();
-	giannaDisplay();
 	giannaAvailableSilicone(siliconeReturned);
 	//M->GG
 	if(gianna.biggestTitSize() >= 41)
@@ -1652,12 +1653,13 @@ function decreaseGiannaBoobs(siliconeReturned:int):void
 		output("\n\nThe rest of her chest follows suit. Where once the android had a big, rounded bosom, she’s now shifting towards having a pair of pear-shaped boobs, perfectly sized to be just about a handful of tit. <i>“There,”</i> Gianna gasps and shuts off her pump. <i>“C-cups. Big enough to remind everyone that I’m a girl, small enough not to get in the way, and the perfect thing to entice a bull that wants to try something different from the usual mountainous melons.”</i> She pinches a nipple and gasps in delight. <i>“I might have made them more sensitive to account for their small size.... What’s next?”</i>");
 		gianna.breastRows[0].breastRatingRaw = 3;
 	}
+	giannaDisplay();
 	processTime(3);
 	giannaBodyModMenu(false);
 }
 
 //[***] Increase Ass
-function increaseGiannaAss(siliconeUsed:Number):void
+public function increaseGiannaAss(siliconeUsed:Number):void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1771,7 +1773,7 @@ function increaseGiannaAss(siliconeUsed:Number):void
 }
 
 //[Be Nice]
-function beNiceAboutGiannaGiantBooty():void
+public function beNiceAboutGiannaGiantBooty():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1783,7 +1785,7 @@ function beNiceAboutGiannaGiantBooty():void
 }
 
 //[Be Normal]
-function beNormalAboutGiannaGiantBooty():void
+public function beNormalAboutGiannaGiantBooty():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1793,7 +1795,7 @@ function beNormalAboutGiannaGiantBooty():void
 	maxGiannaBootyEnd();
 }
 //[Be Jerk]
-function beAJerkAboutGiannaGiantBooty():void
+public function beAJerkAboutGiannaGiantBooty():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1804,7 +1806,7 @@ function beAJerkAboutGiannaGiantBooty():void
 	maxGiannaBootyEnd(true);
 }
 
-function maxGiannaBootyEnd(jerk:Boolean = false):void
+public function maxGiannaBootyEnd(jerk:Boolean = false):void
 {
 	//Post-variant buttflation
 	output("\n\nGianna ");
@@ -1830,7 +1832,7 @@ function maxGiannaBootyEnd(jerk:Boolean = false):void
 
 }
 //[***] Decrease Ass
-function diminishGiannaButt(siliconeReturned:int):void
+public function diminishGiannaButt(siliconeReturned:int):void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1922,7 +1924,7 @@ function diminishGiannaButt(siliconeReturned:int):void
 
 
 //[***] Give Silicone
-function giveGiannaSilicone():void
+public function giveGiannaSilicone():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -1969,7 +1971,7 @@ function giveGiannaSilicone():void
 
 
 //[***] Increase Lips
-function increaseGiannaLips(siliconeUsed:int):void
+public function increaseGiannaLips(siliconeUsed:int):void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2076,7 +2078,7 @@ function increaseGiannaLips(siliconeUsed:int):void
 }
 
 //[***] Decrease Lips
-function giannaLipDecrease(siliconeReturned:int):void
+public function giannaLipDecrease(siliconeReturned:int):void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2185,7 +2187,7 @@ function giannaLipDecrease(siliconeReturned:int):void
 //Blah blah blah, hyper boobs.
 //No taurs
 //Approx 2500 words.
-function hugeTittyTittyfuck():void
+public function hugeTittyTittyfuck():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2349,7 +2351,7 @@ function hugeTittyTittyfuck():void
 }
 
 //[***] Normal Tit Titfuck
-function giannaNormalTitTitfuck():void
+public function giannaNormalTitTitfuck():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2564,7 +2566,7 @@ function giannaNormalTitTitfuck():void
 }
 
 //[***]Cocksucking Lips Suck Cocks
-function giannasCockSuckingLipsSuckCocks():void
+public function giannasCockSuckingLipsSuckCocks():void
 {
 	clearOutput();
 	output("You pull Gianna close. <i>“You know, with lips like that, it’s hard to carry on a conversation with you without imagining them doing something else.”</i>");
@@ -2693,7 +2695,7 @@ function giannasCockSuckingLipsSuckCocks():void
 }
 
 //[**]Give Girls Oral
-function giveGirlsOral():void
+public function giveGirlsOral():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2876,7 +2878,7 @@ function giveGirlsOral():void
 }
 
 //Next epilogues - variants based on if came from clit sucking or tongue vibes.
-function girlyTongueVibeEpilogue(clitSucked:Boolean = false):void
+public function girlyTongueVibeEpilogue(clitSucked:Boolean = false):void
 {
 	clearOutput();
 	giannaDisplay();
@@ -2934,7 +2936,7 @@ function girlyTongueVibeEpilogue(clitSucked:Boolean = false):void
 
 //[**]Girly Sixtynine [With Optional Gianna Dicksucking]n
 //Non-taurs only
-function girlySixtynineWithGianna():void
+public function girlySixtynineWithGianna():void
 {
 	clearOutput();
 	output("<i>“");
@@ -3038,7 +3040,7 @@ function girlySixtynineWithGianna():void
 }
 
 //Cock
-function suckGiannasRoboCockDuring69():void
+public function suckGiannasRoboCockDuring69():void
 {
 	var x:int = rand(pc.totalVaginas());
 	clearOutput();
@@ -3120,7 +3122,7 @@ function suckGiannasRoboCockDuring69():void
 }
 
 //Pussy
-function eatOutPussyOfRoboChicksDuring69():void
+public function eatOutPussyOfRoboChicksDuring69():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -3205,7 +3207,7 @@ function eatOutPussyOfRoboChicksDuring69():void
 
 //[**]Cooch Fuck - Four-In-One (3 of 4 Finished)
 //No taurs 4now!
-function coochFuckThreeMaybeFourInOne():void
+public function coochFuckThreeMaybeFourInOne():void
 {
 	var x:int = pc.cockThatFits(gianna.vaginalCapacity(0));
 	if(x < 0) x = pc.smallestCockIndex();
@@ -3561,7 +3563,7 @@ function coochFuckThreeMaybeFourInOne():void
 	addButton(0,"Next",mainGameMenu);
 }
 
-function missionaryKnotEpilogue():void
+public function missionaryKnotEpilogue():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -3574,7 +3576,7 @@ function missionaryKnotEpilogue():void
 }
 
 //[**]Phat booty hotdogging
-function phatBootyHotdogging():void
+public function phatBootyHotdogging():void
 {
 	clearOutput();
 	giannaDisplay();
@@ -3719,7 +3721,7 @@ function phatBootyHotdogging():void
 
 //[**]Anal Buttfuck By Savin
 //Any cocksize that can fit in her, any GiannaButt size. 
-function savinTriesToWriteGiannaButtfux():void
+public function savinTriesToWriteGiannaButtfux():void
 {
 	clearOutput();
 	giannaDisplay();

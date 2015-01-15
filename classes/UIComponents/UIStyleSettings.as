@@ -59,6 +59,7 @@ package classes.UIComponents
 			UIStyleSettings._gCodexLinkFormatter = null;
 			UIStyleSettings._gMapIndoorRoomFlagColourTransform = null;
 			UIStyleSettings._gMapOutdoorRoomFlagColourTransform = null;
+			UIStyleSettings._gMapCaveRoomFlagColourTransform = null;
 			UIStyleSettings._gMapFallbackRoomColourTransform = null;
 			UIStyleSettings._gMapPCLocationRoomColourTransform = null;
 			UIStyleSettings._gHighlightColourTransform = null;
@@ -114,6 +115,10 @@ package classes.UIComponents
 		public static var gFallbackRoomColour:uint			= 0x000000; // Obvious colour to highlight rooms without flags.
 		public static var gIndoorRoomFlagColour:uint 		= 0x333E52;
 		public static var gOutdoorRoomFlagColour:uint		= 0x77797A;
+		public static var gCaveRoomFlagColour:uint 			= 0x332225;
+		public static var gDesertRoomFlagColour:uint		= 0xD6BB8D;
+		public static var gForestRoomFlagColour:uint		= 0x3F704C; //Greenish
+		public static var gJungleRoomFlagColour:uint 		= 0x184925; //Darker/Greener!
 		
 		// Font Faces
 		
@@ -555,6 +560,108 @@ package classes.UIComponents
 			return UIStyleSettings._gLevelUpBarMaxedArrowButtonFormatter;
 		}
 		
+		private static var _gBigStatBarBackTextFormat:TextFormat;
+		public static function get gBigStatBarBackTextFormat():TextFormat
+		{
+			if (UIStyleSettings._gBigStatBarBackTextFormat == null)
+			{
+				_gBigStatBarBackTextFormat = new TextFormat();
+				_gBigStatBarBackTextFormat.size = 48;
+				_gBigStatBarBackTextFormat.color = UIStyleSettings.gBackgroundColour;
+				_gBigStatBarBackTextFormat.align = TextFormatAlign.LEFT;
+				_gBigStatBarBackTextFormat.leading = -5;
+				_gBigStatBarBackTextFormat.kerning = true;
+				_gBigStatBarBackTextFormat.bold = false;
+				_gBigStatBarBackTextFormat.font = "Univers UltraCondensed";
+			}
+			return UIStyleSettings._gBigStatBarBackTextFormat;
+		}
+		
+		private static var _gSmallStatBarBackTextFormat:TextFormat;
+		public static function get gSmallStatBarBackTextFormat():TextFormat
+		{
+			if (UIStyleSettings._gSmallStatBarBackTextFormat == null)
+			{
+				_gSmallStatBarBackTextFormat = new TextFormat();
+				_gSmallStatBarBackTextFormat.size = 33;
+				_gSmallStatBarBackTextFormat.color = UIStyleSettings.gBackgroundColour;
+				_gSmallStatBarBackTextFormat.align = TextFormatAlign.LEFT;
+				_gSmallStatBarBackTextFormat.leading = -5;
+				_gSmallStatBarBackTextFormat.kerning = true;
+				_gSmallStatBarBackTextFormat.bold = false;
+				_gSmallStatBarBackTextFormat.font = "Univers UltraCondensed";
+			}
+			return UIStyleSettings._gSmallStatBarBackTextFormat;
+		}
+		
+		private static var _gBigStatBarFrontTextFormat:TextFormat;
+		public static function get gBigStatBarFrontTextFormat():TextFormat
+		{
+			if (UIStyleSettings._gBigStatBarFrontTextFormat == null)
+			{
+				_gBigStatBarFrontTextFormat = new TextFormat();
+				_gBigStatBarFrontTextFormat.size = 48;
+				_gBigStatBarFrontTextFormat.color = UIStyleSettings.gForegroundColour;
+				_gBigStatBarFrontTextFormat.align = TextFormatAlign.LEFT;
+				_gBigStatBarFrontTextFormat.leading = -5;
+				_gBigStatBarFrontTextFormat.kerning = true;
+				_gBigStatBarFrontTextFormat.bold = false;
+				_gBigStatBarFrontTextFormat.font = "Univers UltraCondensed";
+			}
+			return UIStyleSettings._gBigStatBarFrontTextFormat;
+		}
+		
+		private static var _gSmallStatBarFrontTextFormat:TextFormat;
+		public static function get gSmallStatBarFrontTextFormat():TextFormat
+		{
+			if (UIStyleSettings._gSmallStatBarFrontTextFormat == null)
+			{
+				_gSmallStatBarFrontTextFormat = new TextFormat();
+				_gSmallStatBarFrontTextFormat.size = 33;
+				_gSmallStatBarFrontTextFormat.color = UIStyleSettings.gForegroundColour;
+				_gSmallStatBarFrontTextFormat.align = TextFormatAlign.LEFT;
+				_gSmallStatBarFrontTextFormat.leading = -5;
+				_gSmallStatBarFrontTextFormat.kerning = true;
+				_gSmallStatBarFrontTextFormat.bold = false;
+				_gSmallStatBarFrontTextFormat.font = "Univers UltraCondensed";
+			}
+			return UIStyleSettings._gSmallStatBarFrontTextFormat;
+		}
+		
+		private static var _gBigStatBarValueFormat:TextFormat;
+		public static function get gBigStatBarValueFormat():TextFormat
+		{
+			if (UIStyleSettings._gBigStatBarValueFormat == null)
+			{
+				_gBigStatBarValueFormat = new TextFormat();
+				_gBigStatBarValueFormat.size = 30;
+				_gBigStatBarValueFormat.color = 0xFFFFFF;
+				_gBigStatBarValueFormat.align = TextFormatAlign.RIGHT;
+				_gBigStatBarValueFormat.leading = -5;
+				_gBigStatBarValueFormat.kerning = true;
+				_gBigStatBarValueFormat.bold = true;
+				_gBigStatBarValueFormat.font = "Lato";
+			}
+			return UIStyleSettings._gBigStatBarValueFormat;
+		}
+		
+		private static var _gSmallStatBarValueFormat:TextFormat;
+		public static function get gSmallStatBarValueFormat():TextFormat
+		{
+			if (UIStyleSettings._gSmallStatBarValueFormat == null)
+			{
+				_gSmallStatBarValueFormat = new TextFormat();
+				_gSmallStatBarValueFormat.size = 21;
+				_gSmallStatBarValueFormat.color = 0xFFFFFF;
+				_gSmallStatBarValueFormat.align = TextFormatAlign.RIGHT;
+				_gSmallStatBarValueFormat.leading = -3.5;
+				_gSmallStatBarValueFormat.kerning = true;
+				_gSmallStatBarValueFormat.bold = true;
+				_gSmallStatBarValueFormat.font = "Lato";
+			}
+			return UIStyleSettings._gSmallStatBarValueFormat;
+		}
+		
 		private static var _gPerkHeaderLabelTextFormat:TextFormat;
 		public static function get gPerkHeaderLabelTextFormat():TextFormat
 		{
@@ -858,7 +965,49 @@ package classes.UIComponents
 			}
 			return UIStyleSettings._gMapOutdoorRoomFlagColourTransform;
 		}
-		
+
+		private static var _gMapCaveRoomFlagColourTransform:ColorTransform;
+		public static function get gMapCaveRoomFlagColourTransform():ColorTransform
+		{
+			if (UIStyleSettings._gMapCaveRoomFlagColourTransform == null)
+			{
+				UIStyleSettings._gMapCaveRoomFlagColourTransform = new ColorTransform();
+				UIStyleSettings._gMapCaveRoomFlagColourTransform.color = UIStyleSettings.gCaveRoomFlagColour;
+			}
+			return UIStyleSettings._gMapCaveRoomFlagColourTransform;
+		}
+
+		private static var _gMapForestRoomFlagColourTransform:ColorTransform;
+		public static function get gMapForestRoomFlagColourTransform():ColorTransform
+		{
+			if (UIStyleSettings._gMapForestRoomFlagColourTransform == null)
+			{
+				UIStyleSettings._gMapForestRoomFlagColourTransform = new ColorTransform();
+				UIStyleSettings._gMapForestRoomFlagColourTransform.color = UIStyleSettings.gForestRoomFlagColour;
+			}
+			return UIStyleSettings._gMapForestRoomFlagColourTransform;
+		}
+		private static var _gMapDesertRoomFlagColourTransform:ColorTransform;
+		public static function get gMapDesertRoomFlagColourTransform():ColorTransform
+		{
+			if (UIStyleSettings._gMapDesertRoomFlagColourTransform == null)
+			{
+				UIStyleSettings._gMapDesertRoomFlagColourTransform = new ColorTransform();
+				UIStyleSettings._gMapDesertRoomFlagColourTransform.color = UIStyleSettings.gDesertRoomFlagColour;
+			}
+			return UIStyleSettings._gMapDesertRoomFlagColourTransform;
+		}
+		private static var _gMapJungleRoomFlagColourTransform:ColorTransform;
+		public static function get gMapJungleRoomFlagColourTransform():ColorTransform
+		{
+			if (UIStyleSettings._gMapJungleRoomFlagColourTransform == null)
+			{
+				UIStyleSettings._gMapJungleRoomFlagColourTransform = new ColorTransform();
+				UIStyleSettings._gMapJungleRoomFlagColourTransform.color = UIStyleSettings.gJungleRoomFlagColour;
+			}
+			return UIStyleSettings._gMapJungleRoomFlagColourTransform;
+		}
+
 		private static var _gMapPCLocationRoomColourTransform:ColorTransform;
 		public static function get gMapPCLocationRoomColourTransform():ColorTransform
 		{
@@ -944,70 +1093,70 @@ package classes.UIComponents
 			{
 				UIStyleSettings._gMainTextCSSStyleSheet = new StyleSheet();
 				
-				var defaultFormat = { 
+				var defaultFormat:Object = { 
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#FFFFFF",
 					marginRight: 5
 				};
 				
-				var good = { 
+				var good:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#00CCFF", 
 					marginRight: 5 
 				};
 				
-				var bad = { 
+				var bad:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#CC3300", 
 					marginRight: 5 
 				};
 				
-				var indifferent = { 
+				var indifferent:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#FFFFFF", 
 					marginRight: 5 
 				};
 				
-				var header = {
+				var header:Object = {
 					fontFamily: "Univers UltraCondensed",
 					fontSize: 72,
 					color: "#FFFFFF",
 					marginRight: 5
 				}
 				
-				var blockHeader = {
+				var blockHeader:Object = {
 					fontFamily: "Univers UltraCondensed",
 					fontSize: 28,
 					color: "#FFFFFF",
 					marginRight: 5
 				}
 				
-				var lockedCodexEntry = {
+				var lockedCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#CC3300",
 					marginRight: 0
 				}
 				
-				var newCodexEntry = {
+				var newCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#CCBC14",
 					marginRight: 0
 				}
 				
-				var viewedCodexEntry = {
+				var viewedCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#FFFFFF",
 					marginRight: 0
 				}
 				
-				var activeCodexEntry = {
+				var activeCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#00CCFF",
@@ -1036,70 +1185,70 @@ package classes.UIComponents
 			{
 				UIStyleSettings._gSharedStyleSheet = new StyleSheet();
 				
-				var defaultFormat = { 
+				var defaultFormat:Object = { 
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#FFFFFF",
 					marginRight: 5
 				};
 				
-				var good = { 
+				var good:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#00CCFF", 
 					marginRight: 5 
 				};
 				
-				var bad = { 
+				var bad:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#CC3300", 
 					marginRight: 5 
 				};
 				
-				var indifferent = { 
+				var indifferent:Object = { 
 					fontFamily: "Lato", 
 					fontSize: 18, 
 					color: "#FFFFFF", 
 					marginRight: 5 
 				};
 				
-				var header = {
+				var header:Object = {
 					fontFamily: "Univers UltraCondensed",
 					fontSize: 72,
 					color: "#FFFFFF",
 					marginRight: 5
 				}
 				
-				var blockHeader = {
+				var blockHeader:Object = {
 					fontFamily: "Univers UltraCondensed",
 					fontSize: 28,
 					color: "#FFFFFF",
 					marginRight: 5
 				}
 				
-				var lockedCodexEntry = {
+				var lockedCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#CC3300",
 					marginRight: 0
 				}
 				
-				var newCodexEntry = {
+				var newCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#CCBC14",
 					marginRight: 0
 				}
 				
-				var viewedCodexEntry = {
+				var viewedCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#FFFFFF",
 					marginRight: 0
 				}
 				
-				var activeCodexEntry = {
+				var activeCodexEntry:Object = {
 					fontFamily: "Lato",
 					fontSize: 18,
 					color: "#00CCFF",

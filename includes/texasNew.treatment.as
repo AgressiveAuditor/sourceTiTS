@@ -22,7 +22,7 @@ v3 hour counter
 
 
 
-function treatmentHourProcs():void
+public function treatmentHourProcs():void
 {
 	pc.addStatusValue("The Treatment",3,1);
 	var treatedHours:int = pc.statusEffectv3("The Treatment");
@@ -2162,7 +2162,7 @@ function treatmentHourProcs():void
 		//Cum Quality to 2.
 		if(treatedHours == 133 && pc.hasCock() && pc.cumQualityRaw < 2)
 		{
-			eventBuffer += "\n\nThe Codex chirps, startling you. “<i>Alert: user virility levels have exceeded human norms. Sensors estimate a sperm density of over double terran standard. Use of contraceptives is recommended.</i>” What the.... Is this thing set up to monitor you that closely? Why the hell would it have an alert for that but not for you having emissions that could rival horse? You sigh, resigned to the fact that you’re going to have pregnant partners if you want to have any real fun.";
+			eventBuffer += "\n\nThe Codex chirps, startling you. “<i>Alert: user virility levels have exceeded human norms. Sensors estimate a sperm density of over double terran standard. Use of contraceptives is recommended.</i>” What the.... Is this thing set up to monitor you that closely? Why the hell would it have an alert for that but not for you having emissions that could rival a horse? You sigh, resigned to the fact that you’re going to have pregnant partners if you want to have any real fun.";
 			pc.cumQualityRaw = 2;
 		}
 		//PHEROMONES! Tease bonus!
@@ -2372,7 +2372,7 @@ function treatmentHourProcs():void
 	}
 }
 
-function cuntsBelowWetnessThreshold(threshold:Number = 0):Number
+public function cuntsBelowWetnessThreshold(threshold:Number = 0):Number
 {
 	if(!pc.hasVagina()) return 0;
 
@@ -2383,7 +2383,7 @@ function cuntsBelowWetnessThreshold(threshold:Number = 0):Number
 	}
 	return counter;
 }
-function setMinimumWetness(arg:int = 0):void
+public function setMinimumWetness(arg:int = 0):void
 {
 	if(!pc.hasVagina()) return;
 
@@ -2394,7 +2394,7 @@ function setMinimumWetness(arg:int = 0):void
 	return;
 }
 
-function treatedVagNote(butt:Boolean = false):void
+public function treatedVagNote(butt:Boolean = false):void
 {
 	if(!butt && pc.hasVagina())
 	{

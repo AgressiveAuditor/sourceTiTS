@@ -1,7 +1,7 @@
-const REAHA_CONFIDENCE_LOW:int = 15;
-const REAHA_CONFIDENCE_MED:int = 40;
-const REAHA_CONFIDENCE_HIGH:int = 65;
-function reahaConfidence(conf:int = 0):int
+public const REAHA_CONFIDENCE_LOW:int = 15;
+public const REAHA_CONFIDENCE_MED:int = 40;
+public const REAHA_CONFIDENCE_HIGH:int = 65;
+public function reahaConfidence(conf:int = 0):int
 {
 	if (flags["REAHA_CONFIDENCE"] == undefined) flags["REAHA_CONFIDENCE"] = 0;
 	if (conf != 0)
@@ -14,11 +14,11 @@ function reahaConfidence(conf:int = 0):int
 	return flags["REAHA_CONFIDENCE"];
 }
 
-const REAHA_ADDICTION_LOW:int = 15;
-const REAHA_ADDICTION_MED:int = 40;
-const REAHA_ADDICTION_HIGH:int = 65;
-const REAHA_ADDICTION_MAX:int = 100;
-function reahaAddiction(addict:int = 0):int
+public const REAHA_ADDICTION_LOW:int = 15;
+public const REAHA_ADDICTION_MED:int = 40;
+public const REAHA_ADDICTION_HIGH:int = 65;
+public const REAHA_ADDICTION_MAX:int = 100;
+public function reahaAddiction(addict:int = 0):int
 {
 	if (flags["REAHA_ADDICTION"] == undefined) flags["REAHA_ADDICTION"] = REAHA_ADDICTION_MAX;
 	if (addict != 0)
@@ -31,28 +31,30 @@ function reahaAddiction(addict:int = 0):int
 	return flags["REAHA_ADDICTION"];
 }
 
-function reahaAddicted():Boolean
+public function reahaAddicted():Boolean
 {
 	if (flags["REAHA_ADDICTION_CURED"] == undefined) return true;
 	return false;
 }
 
-function reahaAddictionTherapyAvailable():Boolean
+public function reahaAddictionTherapyAvailable():Boolean
 {
 	if (flags["REAHA_ADDICTION_CURED"] != undefined) return false;
 	if (flags["REAHA_ADDICTION_THERAPY_LAST_DAY"] == days) return false;
 	return true;
 }
 
-function reahaHeader():void
+public function reahaHeader():void
 {
 	showName("\nREAHA");
 	author("Savin");
 	showBust("REAHA");
 }
 
-function reahaMoosAboutNewTexas():Boolean
+public function reahaMoosAboutNewTexas():Boolean
 {
+	if (!reahaIsCrew()) return false;
+	
 	if (flags["REAHA_DONE_NEWTEXAS_SPIEL"] == undefined)
 	{
 		flags["REAHA_DONE_NEWTEXAS_SPIEL"] = 1;
@@ -82,13 +84,13 @@ function reahaMoosAboutNewTexas():Boolean
 	return false;
 }
 
-function talkWithFollowerReaha():void
+public function talkWithFollowerReaha():void
 {
 	if (flags["REAHA_DONE_NEWTEXAS_FOLLOWUP"] == undefined) reahaFirstTalk();
 	else reahaRegularTalk();
 }
 
-function reahaFirstTalk():void
+public function reahaFirstTalk():void
 {
 	clearOutput();
 	showName("\nREAHA");
@@ -97,7 +99,7 @@ function reahaFirstTalk():void
 
 	flags["REAHA_DONE_NEWTEXAS_FOLLOWUP"] = 1;
 
-	output("\n\n<i>“I get the feeling you’ve been to New Texas before,”</i> you say to her, by way of opening the topic");
+	output("<i>“I get the feeling you’ve been to New Texas before,”</i> you say to her, by way of opening the topic");
 	if (9999 == 0) output(", your eyes drawn to her bare, bovine body. She looks, and even acts, like the Treated cows you’ve seen on the surface");
 	output(". Reaha blinks hard, clearly surprised that you’re just trying to talk rather than fuck.");
 	
@@ -144,7 +146,7 @@ function reahaFirstTalk():void
 	else output(" [pc.master]");
 	output(". Those bastards at the brothel tricked me, got me addicted to these stupid patches so bad I can barely even think half the time. I might as well have just fucking got Treated, for all the good running away did me.”</i>");
 	
-	if (pc.isNice()) output("\n\n<i>“Hesitantly, you reach over and plant a reassuring hand on the cow’s bare shoulder. Reaha sighs, letting out a long, chesty breath before looking up and giving you a faint little smile. <i>“I’m sorry,”</i> you tell her, not really knowing what else you can say.");
+	if (pc.isNice()) output("\n\nHesitantly, you reach over and plant a reassuring hand on the cow’s bare shoulder. Reaha sighs, letting out a long, chesty breath before looking up and giving you a faint little smile. <i>“I’m sorry,”</i> you tell her, not really knowing what else you can say.");
 	else output("\n\n<i>“That sucks, Reaha,”</i> you say.");
 	
 	output("\n\nReaha shrugs slightly. <i>“It’s not your fault,");
@@ -163,7 +165,7 @@ function reahaFirstTalk():void
 	approachShipBoardReahaWhyDidntSavinCodeThisHeWasntExhaustedYesterday(false);
 }
 
-function reahaRegularTalk():void
+public function reahaRegularTalk():void
 {
 	clearOutput();
 	reahaHeader();
@@ -179,7 +181,7 @@ function reahaRegularTalk():void
 	showReahaTalkMenu();
 }
 
-function showReahaTalkMenu(func:Function = null):void
+public function showReahaTalkMenu(func:Function = null):void
 {
 	clearMenu();
 
@@ -204,9 +206,11 @@ function showReahaTalkMenu(func:Function = null):void
 
 	if (func != reahaTalkHerLife) addButton(4, "Her Life", reahaTalkHerLife, undefined, "Her Life", "Ask Reaha to tell you a little bit about her life before she became a slave");
 	else addDisabledButton(4, "Her Life");
+	
+	addButton(14, "Back", approachShipBoardReahaWhyDidntSavinCodeThisHeWasntExhaustedYesterday, false);
 }
 
-function reahaTalkTreatment():void
+public function reahaTalkTreatment():void
 {
 	clearOutput();
 	reahaHeader();
@@ -267,7 +271,7 @@ function reahaTalkTreatment():void
 	}
 }
 
-function reahaTalkTreatmentBitterness():void
+public function reahaTalkTreatmentBitterness():void
 {
 	if (flags["REAHA_TALK_TREATMENT_CHOICE"] == undefined)
 	{
@@ -288,7 +292,7 @@ function reahaTalkTreatmentBitterness():void
 	showReahaTalkMenu(reahaTalkTreatment);
 }
 
-function reahaTalkTreatmentComfort():void
+public function reahaTalkTreatmentComfort():void
 {
 	if (flags["REAHA_TALK_TREATMENT_CHOICE"] == undefined)
 	{
@@ -305,7 +309,7 @@ function reahaTalkTreatmentComfort():void
 	if (reahaFree()) output(" [pc.name]");
 	else output(" [pc.master]");
 	output(". I </i>hate<i> it, more than I ever could Beth’s place. At least they were honest in the whorehouse... well, not really, but they wore it on their lapels, ‘Oh, we’re evil sex-slavers, bwahahah.’ New Texas, though...");
-	if (reahaFree()) output(" The government -- my own FAMILY -- tried to turn me into a brainless cumslut just because I had the luck to be born with a pair of tits. They’re all complicit, every single one of them, for making slaves out of women, and for what? The U.G.C. lets them get away with it because it’s tradition!");
+	if (reahaFree()) output(" The government -- my own FAMILY -- tried to turn me into a brainless cumslut just because I had the luck to be born with a pair of tits. They’re all complicit, every single one of them, for making slaves out of women, and for what? The U.G.C. lets them get away with it because it’s tradition!</i>”");
 	else output(" This whole place, it’s some sick bastard’s sex garden, and we’re supposed to lie down -- preferably on our backs -- and just accept it? No. That’s why I ran away, [pc.master]. And why I never wanted to come back.”</i>");
 	
 	output("\n\nReaha takes a deep breath, looks at you with her big blue eyes, and steps up with her arms wide open. You take the cow-girl up on her offer, pulling her into a tight hug. Her arms clutch around your back, and the quiver in her voice as she speaks again clues you in to just how close to tears she is: <i>“Just... do whatever you came here to do, and let’s leave. Okay? I don’t want to be here a second longer, [pc.master]. This planet makes me sick!”</i>");
@@ -315,7 +319,7 @@ function reahaTalkTreatmentComfort():void
 	showReahaTalkMenu(reahaTalkTreatment);
 }
 
-function reahaTalkNewTexas():void
+public function reahaTalkNewTexas():void
 {
 	clearOutput();
 	reahaHeader();
@@ -351,7 +355,7 @@ function reahaTalkNewTexas():void
 	}
 }
 
-function reahaTalkNewTexasEw():void
+public function reahaTalkNewTexasEw():void
 {
 	clearOutput();
 	reahaHeader();
@@ -375,7 +379,7 @@ function reahaTalkNewTexasEw():void
 	addNextButton(reahaTalkNewTexasII);
 }
 
-function reahaTalkNewTexasNatural():void
+public function reahaTalkNewTexasNatural():void
 {
 	clearOutput();
 	reahaHeader();
@@ -405,7 +409,7 @@ function reahaTalkNewTexasNatural():void
 	addNextButton(reahaTalkNewTexasII);
 }
 
-function reahaTalkNewTexasManUp():void
+public function reahaTalkNewTexasManUp():void
 {
 	clearOutput();
 	reahaHeader();
@@ -428,7 +432,7 @@ function reahaTalkNewTexasManUp():void
 	addNextButton(reahaTalkNewTexasII);
 }
 
-function reahaTalkNewTexasII():void
+public function reahaTalkNewTexasII():void
 {
 	clearOutput();
 	reahaHeader();
@@ -439,7 +443,7 @@ function reahaTalkNewTexasII():void
 
 		output("<i>“So, how come you never told me you had sisters before?”</i>");
 		
-		output("\n\nReaha shrugs. <i>“Up till recently, I thought you bought me to");
+		output("\n\nReaha shrugs. <i>“Up ‘til recently, I thought you bought me to");
 		if (!reahaFree()) output(" suck dick");
 		else output(" be your personal milk maid");
 		output(", not talk.");
@@ -463,7 +467,7 @@ function reahaTalkNewTexasII():void
 	showReahaTalkMenu(reahaTalkNewTexas);
 }
 
-function reahaTalkAddiction():void
+public function reahaTalkAddiction():void
 {
 	clearOutput();
 	reahaHeader();
@@ -508,13 +512,16 @@ function reahaTalkAddiction():void
 
 	// [Cure Addiction] [Sorry] [I Like 'Em]
 	clearMenu();
-	if (flags["REAHA_TALK_ADDICTION_CURE"] == undefined) addButton(0, "Cure", reahaTalkAddictionCure, undefined, "Cure Addiction", "Tell Reaha you'd like to help her out with her problem, if you can.");
+	if (flags["REAHA_TALK_ADDICTION_CURE"] == undefined)
+	{
+		addButton(0, "Cure", reahaTalkAddictionCure, undefined, "Cure Addiction", "Tell Reaha you'd like to help her out with her problem, if you can.");
+		addButton(1, "Sorry", reahaTalkAddictionSorry, undefined, "Sorry", "Tell Reaha “too bad” about that whole patch thing.");
+		addButton(2, "I Like", reahaTalkAddictionILike, undefined, "I Like Them", "Tell Reaha you like her just the way she is: drooling with lust and covered in patches.");
+	}
 	else addButton(0, "Cure", reahaTalkAddictionCure, undefined, "Cure Addiction", "Ask Reaha how she thinks she's doing with her addiction. ");
-	addButton(1, "Sorry", reahaTalkAddictionSorry, undefined, "Sorry", "Tell Reaha “too bad” about that whole patch thing.");
-	addButton(2, "I Like", reahaTalkAddictionILike, undefined, "I Like Them", "Tell Reaha you like her just the way she is: drooling with lust and covered in patches.");
 }
 
-function reahaTalkAddictionSorry():void
+public function reahaTalkAddictionSorry():void
 {
 	clearOutput();
 	reahaHeader();
@@ -532,7 +539,7 @@ function reahaTalkAddictionSorry():void
 	showReahaTalkMenu(reahaTalkAddiction);
 }
 
-function reahaTalkAddictionCure():void
+public function reahaTalkAddictionCure():void
 {
 	clearOutput();
 	reahaHeader();
@@ -593,7 +600,7 @@ function reahaTalkAddictionCure():void
 	}
 }
 
-function reahaTalkAddictionILike():void
+public function reahaTalkAddictionILike():void
 {
 	clearOutput();
 	reahaHeader();
@@ -608,7 +615,7 @@ function reahaTalkAddictionILike():void
 	showReahaTalkMenu(reahaTalkAddiction);
 }
 
-function reahaTalkGeneMods():void
+public function reahaTalkGeneMods():void
 {
 	clearOutput();
 	reahaHeader();
@@ -639,7 +646,7 @@ function reahaTalkGeneMods():void
 	else addButton(2, "Before?", reahaTalkGeneModsBefore, undefined, "Looks Before Mods?", "You ask Reaha if you can see those pics of her before her modification again.");
 }
 
-function reahaTalkGeneModsExpensive():void
+public function reahaTalkGeneModsExpensive():void
 {
 	clearOutput();
 	reahaHeader();
@@ -657,7 +664,7 @@ function reahaTalkGeneModsExpensive():void
 	showReahaTalkMenu(reahaTalkGeneMods);
 }
 
-function reahaTalkGeneModsWhy():void
+public function reahaTalkGeneModsWhy():void
 {
 	clearOutput();
 	reahaHeader();
@@ -684,7 +691,7 @@ function reahaTalkGeneModsWhy():void
 	addButton(1, "Rebuke", reahaTalkGeneModsWhyRebuke);
 }
 
-function reahaTalkGeneModsWhyComfort():void
+public function reahaTalkGeneModsWhyComfort():void
 {
 	clearOutput();
 	reahaHeader();
@@ -717,7 +724,7 @@ function reahaTalkGeneModsWhyComfort():void
 	showReahaTalkMenu(reahaTalkGeneMods);
 }
 
-function reahaTalkGeneModsWhyRebuke():void
+public function reahaTalkGeneModsWhyRebuke():void
 {
 	clearOutput();
 	reahaHeader();
@@ -739,7 +746,7 @@ function reahaTalkGeneModsWhyRebuke():void
 	showReahaTalkMenu(reahaTalkGeneMods);
 }
 
-function reahaTalkGeneModsBefore():void
+public function reahaTalkGeneModsBefore():void
 {
 	clearOutput();
 	reahaHeader();
@@ -801,7 +808,7 @@ function reahaTalkGeneModsBefore():void
 	}
 }
 
-function reahaTalkGeneModsBeforeOld():void
+public function reahaTalkGeneModsBeforeOld():void
 {
 	clearOutput();
 	reahaHeader();
@@ -833,7 +840,7 @@ function reahaTalkGeneModsBeforeOld():void
 	showReahaTalkMenu(reahaTalkGeneMods);
 }
 
-function reahaTalkGeneModsBeforeNew():void
+public function reahaTalkGeneModsBeforeNew():void
 {
 	clearOutput();
 	reahaHeader();
@@ -856,7 +863,7 @@ function reahaTalkGeneModsBeforeNew():void
 	showReahaTalkMenu(reahaTalkGeneMods);
 }
 
-function reahaTalkHerLife():void
+public function reahaTalkHerLife():void
 {
 	clearOutput();
 	reahaHeader();
@@ -873,7 +880,7 @@ function reahaTalkHerLife():void
 	
 	output("\n\n<i>“Well, tell me about it,”</i>");
 	
-	output("\n\nReaha grins, rubbing her tattoo. <i>“Right before I turned eighteen, I hopped ship off of New Texas. Well, stowed away might be a better term for it. I sort of put myself in a box and hoped for the best. Lucky me, when the captain found me, he wasn’t too upset. I guess he understood why I’d want to get out of there. He took me all the way to Earth, no charge. Not like I could have paid him anyway -- I didn’t really have any money. Which was... sort of a problem when I got to Earth. I didn’t have any skills, and I didn’t know anything about anything other than milk and boobies, so I didn’t really know what I was going to do, until the captain said I ought to think about joining the army. He’d been in the navy, he said, and learned to pilot a ship there. ");
+	output("\n\nReaha grins, rubbing her tattoo. <i>“Right before I turned eighteen, I hopped ship off of New Texas. Well, stowed away might be a better term for it. I sort of put myself in a box and hoped for the best. Lucky me, when the captain found me, he wasn’t too upset. I guess he understood why I’d want to get out of there. He took me all the way to Earth, no charge. Not like I could have paid him anyway -- I didn’t really have any money. Which was... sort of a problem when I got to Earth. I didn’t have any skills, and I didn’t know anything about anything other than milk and boobies, so I didn’t really know what I was going to do, until the captain said I ought to think about joining the army. He’d been in the navy, he said, and learned to pilot a ship there.”</i>");
 	
 	output("\n\n<i>“Plus they’d feed, house, and pay me for a couple of years, too. That wasn’t a bad deal, either,”</i> Reaha says with a wry little chuckle. <i>“So yeah, I signed up not long after I hit Terra on a two-year contract. They put me in the infantry, seeing as I didn’t have any particular aptitudes or skills -- but I’m pretty strong and tough, or I was anyway. I didn’t really do anything special while I was in, just another grunt, you know? I was berthed on the </i>Odyssey<i> while she did a tour of the core, brand new flagship straight out of the docks. Made it up to lance corporal after a litte more more than a year. Honestly, I liked being in the army. I don’t know that I’d call it fun, but it was... it was good,”</i> Reaha says, giving you a little shrug. ");
 	
@@ -894,7 +901,7 @@ function reahaTalkHerLife():void
 	showReahaTalkMenu(reahaTalkHerLife);
 }
 
-function reahaAddictionTherapy():void
+public function reahaAddictionTherapy():void
 {
 	clearOutput();
 	reahaHeader();
@@ -967,7 +974,7 @@ function reahaAddictionTherapy():void
 	else addNextButton(reahaAddictionTherapyNoWingWang);
 }
 
-function reahaAddictionTherapyDickwielder():void
+public function reahaAddictionTherapyDickwielder():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1032,7 +1039,7 @@ function reahaAddictionTherapyDickwielder():void
 	addButton(0, "Next", mainGameMenu);
 }
 
-function reahaAddictionTherapyNoWingWang():void
+public function reahaAddictionTherapyNoWingWang():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1099,7 +1106,7 @@ function reahaAddictionTherapyNoWingWang():void
 	addButton(0, "Next", mainGameMenu);
 }
 
-function reahaBreastMilkIceCream():void
+public function reahaBreastMilkIceCream():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1187,7 +1194,7 @@ function reahaBreastMilkIceCream():void
 	addButton(1, "Greedy", reahaBreastMilkIceCreamGreedy);
 }
 
-function reahaBreastMilkIceCreamGreedy():void
+public function reahaBreastMilkIceCreamGreedy():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1205,7 +1212,7 @@ function reahaBreastMilkIceCreamGreedy():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaBreastMilkIceCreamShare():void
+public function reahaBreastMilkIceCreamShare():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1231,7 +1238,7 @@ function reahaBreastMilkIceCreamShare():void
 	addNextButton(mainGameMenu);
 }
 
-function tryProcDommyReahaTime(tMinutes:Number):Boolean
+public function tryProcDommyReahaTime(tMinutes:Number):Boolean
 {
 	if (!reahaIsCrew()) return false;
 	if (currentLocation != "SHIP INTERIOR") return false; // Only care about processTime calls onboard the ship
@@ -1256,7 +1263,7 @@ function tryProcDommyReahaTime(tMinutes:Number):Boolean
 	return false;
 }
 
-function reahaDommyFuxTime():void
+public function reahaDommyFuxTime():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1282,7 +1289,7 @@ function reahaDommyFuxTime():void
 	addButton(1, "Wait...", reahaDommyFuxTimeWait);
 }
 
-function reahaDommyFuxTimeFuckOff():void
+public function reahaDommyFuxTimeFuckOff():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1298,7 +1305,7 @@ function reahaDommyFuxTimeFuckOff():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaDommyFuxTimeWait():void
+public function reahaDommyFuxTimeWait():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1373,7 +1380,7 @@ function reahaDommyFuxTimeWait():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaMilkTalk():void
+public function reahaMilkTalk():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1413,7 +1420,7 @@ function reahaMilkTalk():void
 	addButton(14, "Back", showReahaTalkMenu);
 }
 
-function reahaMilkTalkHoneydew():void
+public function reahaMilkTalkHoneydew():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1449,7 +1456,7 @@ function reahaMilkTalkHoneydew():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaMilkTalkChocolac():void
+public function reahaMilkTalkChocolac():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1486,18 +1493,24 @@ function reahaMilkTalkChocolac():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaBootOffShip():void
+public function reahaBootOffShip():void
 {
 	clearOutput();
 	reahaHeader();
 
 	if (shipLocation == "500")
 	{
-		output("<i>“Hey, Reaha,”</i> you say, stepping over towards your bovine slave, {if PC is Kind: <i>“Look, I need to make room on the ship. Need to leave you here for a while, alright? // if Misch: <i>“Guess what?");
+		output("<i>“Hey, Reaha,”</i> you say, stepping over towards your bovine slave,");
+		if (pc.isNice()) output(" <i>“Look, I need to make room on the ship. Need to leave you here for a while, alright?”</i>");
+		else if (pc.isMischievous())
+		{
+			output(" <i>“Guess what?");
 		
-		output("\n\n<i>“What?”</i> she says, blinking at you.");
+			output("\n\n<i>“What?”</i> she says, blinking at you.");
 		
-		output("\n\n<i>“You’re off the crew! Get out!”</i> //elseif Hard: <i>“Pack your bags. You’re staying here.”</i>}");
+			output("\n\n<i>“You’re off the crew! Get out!”</i>");
+		}
+		else output("<i>“Pack your bags. You’re staying here.”</i>");
 		
 		output("\n\nReaha stares at you for a second, her big blue eyes growing wide. <i>“Wh-what...”</i> she mumbles. <i>“You can’t leave me here! I don’t belong here, they’ll make me take the Treatment or... or my mother will find me! Pleasepleaseplease don’t leave me, I’ll be a good cow I promise.”</i>");
 		
@@ -1545,7 +1558,7 @@ function reahaBootOffShip():void
 	}
 }
 
-function reahaBootOffShipNevermind():void
+public function reahaBootOffShipNevermind():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1562,7 +1575,7 @@ function reahaBootOffShipNevermind():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaBootOffShipGo2Tavros():void
+public function reahaBootOffShipGo2Tavros():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1590,7 +1603,7 @@ function reahaBootOffShipGo2Tavros():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaBootOffShipNewTexas():void
+public function reahaBootOffShipNewTexas():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1605,7 +1618,7 @@ function reahaBootOffShipNewTexas():void
 	addNextButton(mainGameMenu);
 }
 
-function reahaBackAtBeths():void
+public function reahaBackAtBeths():void
 {
 	clearOutput();
 	reahaHeader();
@@ -1624,7 +1637,7 @@ function reahaBackAtBeths():void
 	addButton(1, "Leave", mainGameMenu);
 }
 
-function reahaBackAtBethsRejoin():void
+public function reahaBackAtBethsRejoin():void
 {
 	clearOutput();
 	reahaHeader();

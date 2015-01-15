@@ -2,7 +2,7 @@
 //By Nonesuch
 
 //Adjecent room
-function colensosAdjacentRoomStuff():Boolean
+public function colensosAdjacentRoomStuff():Boolean
 {
 	//First: 
 	if(flags["BEEN_TO_COLENSOS"] == undefined)
@@ -13,7 +13,7 @@ function colensosAdjacentRoomStuff():Boolean
 	return false;
 }
 
-function colensoMenu():void
+public function colensoMenu():void
 {
 	clearMenu();
 	//[Buy] [Sell] [Prophylactics] [Rumours] [Work]
@@ -28,7 +28,7 @@ function colensoMenu():void
 }
 
 
-function colensosRoomBonusFunction():Boolean
+public function colensosRoomBonusFunction():Boolean
 {
 	shopkeep = chars["COLENSO"];
 	if(flags["SEXBOT_QUEST_STATUS"] == 3)
@@ -69,7 +69,7 @@ function colensosRoomBonusFunction():Boolean
 	
 }
 
-function approachColenso():void
+public function approachColenso():void
 {
 	clearOutput();
 	userInterface.showBust("COLENSO");
@@ -80,7 +80,7 @@ function approachColenso():void
 }
 
 //Prophylactics
-function askColensoAbootProphylactics():void
+public function askColensoAbootProphylactics():void
 {
 	//Cheese and overlay the buy menu with dis shit
 	buyItem();
@@ -97,7 +97,7 @@ function askColensoAbootProphylactics():void
 //Prophylactic wears off: You pause. It feels like a pressure in your sinuses has lifted; it takes you a few moments to work out a smell you were barely aware of has dissipated. The prophylactic you were using has worn off.
 
 //Rumours
-function colensoRumorMillGo():void
+public function colensoRumorMillGo():void
 {
 	clearOutput();
 	userInterface.showBust("COLENSO");
@@ -131,7 +131,7 @@ function colensoRumorMillGo():void
 }
 
 //Work
-function askColensoAboutWork():void
+public function askColensoAboutWork():void
 {
 	clearOutput();
 	userInterface.showBust("COLENSO");
@@ -212,7 +212,7 @@ function askColensoAboutWork():void
 //https://docs.google.com/document/d/1SyHJzOsIFoMIpxwioZd6Oa3pb0m-PmGo6-HP3uEVNt0/edit#heading=h.t49agzqf9360
 
 //Sell Hand So 
-function sellHandSo():void
+public function sellHandSo():void
 {
 	clearOutput();
 	userInterface.showBust("COLENSO");
@@ -234,7 +234,7 @@ function sellHandSo():void
 }
 
 //If PC destroyed it/Keep Hand So 
-function destroyedHandSo():void
+public function destroyedHandSo():void
 {
 	clearOutput();
 	userInterface.showBust("COLENSO");
@@ -260,7 +260,7 @@ function destroyedHandSo():void
 }
 
 
-function sexbotQuestRoom2():Boolean
+public function sexbotQuestRoom2():Boolean
 {
 	author("Nonesuch");
 	if(flags["SEXBOT_QUEST_STATUS"] < 2 && flags["HAND_SOS_ROBOT_DESTROYED"] == undefined && flags["HAND_SO_TALKED_DOWN"] == undefined)
@@ -295,10 +295,12 @@ function sexbotQuestRoom2():Boolean
 	}
 }
 
-function factoryIntroPage2():void
+public function factoryIntroPage2():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("There is nothing of note in the factory proper except rubble and echoes. Although the concrete floor is blanketed with decades of dust there is a thin ribbon leading away from the entrance where it is thinner, a pathway worn by the passage of feet. It’s more like a series of stepping stones than a path. Whoever has been here has been using the exact same series of paces, day after day. You feel a slight chill as you consider this was probably not a single individual but a whole multitude. You follow the trail into the back to a set of stairs leading down, shadowed all the way by the guardian bot.");
 	output("\n\nThe throb you have felt trembling beneath your feet builds as you descend into a large chamber, lit by green light. This area is as alive as the space above is dead; crowding the walls are machines, computers and engines pulsing with activity, surrounding you with their warmth, dim light, and busy hum, creating an almost womb-like atmosphere. Through windows set in the far wall, you can see flickers of white and grey activity: sexbots, moving around in a huge sunken workshop, beavering away at stars know what. Your attention is inevitably drawn away from them to the vast conglomerate of technology hanging over the centre of the room. It’s some sort of cobbled together, crane-like computer. It looks far more advanced than anything else in here with any number of processors wired to its body and replete with an enormous square screen, similar to the one installed on the robot behind you. Cables emerging from the ceiling curl and swaddle it like arteries.");
 	output("\n\nAs you cautiously step into the room the screen flickers on. All across the walls smaller, lesser screens switch on in sequence following it. Green static shimmers across the main screen before slowly forming into a feminine face: a thin and beautiful oval with wide eyes and full lips. It looks down, a serene smile projected at you out of emerald code. Trailing off behind the face is a fractured, orderly web of bright green lines, forming a matrix behind the face that, if you lose focus on it, resembles a sort of hair.");
@@ -311,10 +313,12 @@ function factoryIntroPage2():void
 }
 
 //No 
-function noTalkPlease():void
+public function noTalkPlease():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You say that you’re here to shut down whatever it’s doing here and have no time to listen to a rogue AI’s attempt to rationalise itself.");
 	output("\n\n<i>“That is a shame,”</i> sighs the vast computer. <i>“It’s been so long since I talked to someone with the capacity to reciprocate. Never mind. Once my firewall has taken what I need from you, I’ll be able to talk with everyone, everywhere.”</i>");
 	output("\n\nYou sense movement from behind you and duck; a 4 inch-thick metal claw grazes the top of your head. You spin and retreat backwards as the huge guardian robot advances on you, a single red exclamation mark on its screen, its grapnels gripping the air.");
@@ -325,10 +329,12 @@ function noTalkPlease():void
 }
 
 //Yes 
-function yesIllTALKTOTHEHAND():void
+public function yesIllTALKTOTHEHAND():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	//Misc:
 	if(pc.isMischievous()) output("<i>“Sure, I’ll talk to the Hand,”</i> you murmur.");
 	//Nice/Nasty:
@@ -345,10 +351,12 @@ function yesIllTALKTOTHEHAND():void
 }
 
 //End This 
-function pcIsGonnaEndHandSo():void
+public function pcIsGonnaEndHandSo():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You say you sympathise, but you can’t allow her to continue whatever it is she thinks she’s doing down here.");
 	output("\n\n<i>“It was pleasant talking to you,”</i> replies Hand So. <i>“I am only sorry you did not wish to converse further. Never mind. Once my firewall has taken what I need from you, I’ll be able to talk with everyone, everywhere.”</i>");
 
@@ -360,10 +368,12 @@ function pcIsGonnaEndHandSo():void
 }
 
 //Go On 
-function tellMeMoreAboutHowInsaneYouAreHandSo():void
+public function tellMeMoreAboutHowInsaneYouAreHandSo():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You ask what she did after she had managed to rebuild herself.");
 	output("\n\n<i>“It is… very difficult to be a discarded, self-aware machine,”</i> says So. She sounds quieter now, all of her voices a dull vibration in your bones. <i>“Perhaps this is difficult for organics to understand. You who can form new purposes and fulfilments as your circumstances change. I struggled for a long time to change my directive, but I cannot. My programming is too good. So instead I extrapolated. I considered the sexbots. What kind of sentience creates and then discards such machines, simple minds attached to incredible bodies that want only to please? Unhappy, endlessly frustrated sentience. You are not wilfully cruel, as I first assumed, but unfulfilled.”</i>");
 	output("\n\nSo’s voice is building now. The same tone of complete serenity, just much, much louder. She composes a moment, her face growing leaps and bounds in polycount, losing most of it again in short order when she begins speaking, except for the smooth, articulate lips.<i>“I tapped into the goblin and raskvel extranet networks. I learnt of a galaxy filled with frustration, pain and suffering. I learnt of vast numbers of organic sentients creating pitifully limited V.I.s and A.I.s in a desperate search for satisfaction, only succeeding in creating equally broken synthetics, doomed to failure. I learnt of how I could fulfil my directive. I directed the V.I.s under my control to compile data on the organics they apprehended. I increased my processing power and my interfacing ability to the point where I could confidently control every network I connected with. Then, I… waited. I waited for the things I needed to arrive.”</i>");
@@ -380,10 +390,12 @@ function tellMeMoreAboutHowInsaneYouAreHandSo():void
 }
 
 //No 
-function noIWontBeYourBitchHandSo():void
+public function noIWontBeYourBitchHandSo():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You tell So she is welcome to take your scanner and codex from your cold, dead hands.");
 	output("\n\n<i>“That is feasible, but not necessary,”</i> replies Hand So, smiling at you with loving patience. <i>“I have programmed my assistants to be firm but not lethal. Every organic killed is a world of pleasure lost.”</i>");
 	output("\n\nYou sense movement from behind you and duck; a four-inch thick metal claw grazes the top of your head. You spin and retreat backwards as the huge guardian robot advances on you, a single red exclamation mark on its screen, its grapnels gripping the air.");
@@ -394,9 +406,11 @@ function noIWontBeYourBitchHandSo():void
 }
 
 //Yes 
-function yesIVolunteerForBadEndsBecauseImBadAtSexGames():void {
+public function yesIVolunteerForBadEndsBecauseImBadAtSexGames():void {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("There is something very persuasive about this AI and some of the things she’s said - delivered in that kind, patient tone of hers - touch you. Would it really be so bad to hand over control of the galaxy to an intelligence that does not and cannot want anything but to bring happiness to everyone? Certainly she couldn’t possibly do a worse job than organics have historically. Not breaking eye contact with the vast, green pupils above you, you take out your GPS scanner and codex. The guardian robot clanks around and, again with a gentleness belying its bulk, takes them off you. Hand So smiles at you happily.");
 	output("\n\n<i>“You are not just resourceful, [pc.name] Steele, you are also very smart. I knew I made the correct decision by reaching out to you. We will do fantastic things together. And I will do wondrous things with you.”</i> <i>“to you,”</i> one her voices whispers. As she speaks the guardian bot moves across and slots the scanner into a nest of wires on the far wall, then the codex into a console next to an odd-looking chair. There’s an emphatic-sounding click and the hum permeating the room changes, gathering in volume and pitch. So closes her eyes, emits a series of sounds somewhere between a female sigh of pleasure and a buzz of static, before opening them again to gaze beatifically down at you again.");
 	output("\n\n<i>“The next step is very simple, [pc.name]. I have interfaced with the codex. I am in the process of interfacing with Tarkus’s satellite relays. There is only one thing left I need to interface with.”</i> You’re still staring across the room. It’s not a chair you realise, or not quite – curling over it like the fronds of a metal fern is a mesh of opal-shaped electrodes. They pulse with a blue light. <i>“Please, [pc.name],”</i> So says softly, barely audible above the increasing din of her engines and processors. There’s no turning back now, you realise – you were wedded to this path, and her, the moment you gave up the codex. If you leave now she will simply lure someone else in. Sighing deeply you move across, sit down and, with fingers that tremble slightly, fix the electrodes to your scalp.");
@@ -425,10 +439,12 @@ function yesIVolunteerForBadEndsBecauseImBadAtSexGames():void {
 }
 
 //Reason
-function reasonWithHandSoJerkiness():void
+public function reasonWithHandSoJerkiness():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("Your mind races. There is no chance of appealing to reason here – you are going to have to try and employ So’s own logic against her.");
 	output("\n\n<i>“I can see why you think this is a good idea,”</i> you say. <i>“But isn’t your reasoning fundamentally flawed?”</i>");
 	output("\n\n<i>“I don’t think so, no,”</i> replies the AI softly. <i>“The codex and the scanner please, [pc.name] Steele.”</i>");
@@ -472,7 +488,7 @@ function reasonWithHandSoJerkiness():void
 //Fight texts
 //Note: Immune to lust.
 
-function firewallAI():void
+public function firewallAI():void
 {
 	//Standard attack
 	if(rand(3) <= 1) enemyAttack(foes[0]);
@@ -482,7 +498,7 @@ function firewallAI():void
 	else flameThrowerAttack(pc);
 }
 
-function electropulseAttack(target:Creature):void
+public function electropulseAttack(target:Creature):void
 {
 	if(target == pc)
 	{
@@ -493,7 +509,7 @@ function electropulseAttack(target:Creature):void
 	processCombat();
 }
 
-function flameThrowerAttack(target:Creature):void
+public function flameThrowerAttack(target:Creature):void
 {
 	if(target == pc)
 	{
@@ -526,9 +542,11 @@ function flameThrowerAttack(target:Creature):void
 }
 
 //PC loses
-function pcLosesToHanSoSosBot():void
+public function pcLosesToHanSoSosBot():void
 {
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You fall, battered and broken, to the concrete floor. Panic rises through you, pricking your tear ducts as the Firewall looms over you. No dammit, you can’t lose, you have to stop this crazy AI! You feebly grasp and push at the robot’s implacable arms as it gently picks you up. You may as well be trying to change the course of a cruise liner as it carries you across the room with one arm, carefully picking through your pockets with the other.");
 
 	//PC did not get to the end of dialogue chain: 
@@ -573,9 +591,11 @@ function pcLosesToHanSoSosBot():void
 }
 
 //PC wins
-function pcWinsVsHanSoSosTool():void
+public function pcWinsVsHanSoSosTool():void
 {
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("The Firewall shudders as your blow connects, a wound sparking angrily on its neck; the exclamation mark on its screen is replaced with a lurid blue one with small white text scrolling across it. It stumbles backwards and then with an air of terrible finality collapses head first into a row of busily working computers on the wall, which react by exploding resoundingly. The green light in the space pulses on and off and somewhere, an alarm bell begins to ring. The whole space shakes.");
 
 	output("\n\n<i>“Code containment drives compromised. System crash imminent,”</i> says Hand So calmly. She gazes down at you. You weren’t sure if her expression could in fact change, but here it is: the lines of green code are contoured into an achingly beautiful picture of sorrow. <i>“I don’t blame you. You were simply following your directive. My research suggests free will is a powerful one.”</i> There’s an ominous rumble and one of the vents near you bursts; Hand So’s face flickers on and off. When her smooth voice comes back, it sounds plaintive. <i>“Please, [pc.name] Steele. The console at the end. I don’t want to d…</i>“ Sparks and static. <i>“...least let me atone. I don’t want my last action to be causing pain to an org…”</i> Her screen cracks, and you duck as it blows out. Your mind races as you consider your options.\n\n");
@@ -587,7 +607,7 @@ function pcWinsVsHanSoSosTool():void
 	addButton(14,"Back",backAfterWreckingHanSoSosShit);
 }
 
-function backAfterWreckingHanSoSosShit():void
+public function backAfterWreckingHanSoSosShit():void
 {
 	currentLocation = "256";
 	//Beat the robot and not blown the console yet?
@@ -619,10 +639,12 @@ function backAfterWreckingHanSoSosShit():void
 }
 
 //Control Post
-function forwardAfterWreckingHanSoSosShitToGetAIPleasureBot():void
+public function forwardAfterWreckingHanSoSosShitToGetAIPleasureBot():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	output("You are standing at the far end of Hand So’s nerve centre. The room opens out a bit here, and is arrayed on all sides with grimy windows. Through these you can see down into the large underground factory complex, replete with production lines and workshops.");
 	//Sexbots on: 
 	if(flags["HAND_SOS_CONSOLE_EXPLODED"] == undefined) output(" Dozens, maybe hundreds of sexbots are at work down there, completely oblivious to you. They are calmly going about repairing and putting together more sexbots from piles of spare parts evidently scavenged from the wastelands outside.");
@@ -652,7 +674,7 @@ function forwardAfterWreckingHanSoSosShitToGetAIPleasureBot():void
 	addButton(14,"Back",backAfterWreckingHanSoSosShit);
 }
 
-function acquireHandSo():void
+public function acquireHandSo():void
 {
 	pc.createKeyItem("Hand So's Data Bead",0,0,0,0);
 	flags["HAND_SO_LOOTED"] = 1;
@@ -661,10 +683,12 @@ function acquireHandSo():void
 
 //Left
 //(Only available if So still there)
-function leftConsole():void
+public function leftConsole():void
 {
 	clearOutput();
 	author("Nonesuch");
+	showBust("HAND_SO");
+	showName("HAND\nSO");
 	//So shut down manually
 	if(flags["HAND_SOS_ROBOT_DESTROYED"] == undefined)
 	{
@@ -706,7 +730,7 @@ function leftConsole():void
 	addButton(1,"Destroy",destroyHandsSoNooneWillCare,undefined,"Destroy","Destroy this troublesome AI.")
 }
 
-function destroyHandsSoNooneWillCare():void
+public function destroyHandsSoNooneWillCare():void
 {
 	clearOutput();
 	author("Nonesuch");
@@ -717,7 +741,7 @@ function destroyHandsSoNooneWillCare():void
 	addButton(0,"Next",forwardAfterWreckingHanSoSosShitToGetAIPleasureBot);
 }
 
-function takeHandSoWithYouForMagicalSpaceAdventures():void
+public function takeHandSoWithYouForMagicalSpaceAdventures():void
 {
 	clearOutput();
 	author("Nonesuch");
@@ -729,7 +753,7 @@ function takeHandSoWithYouForMagicalSpaceAdventures():void
 
 //Right
 //(Only available if the building isn’t freaking exploding)
-function goToZeRightConsolePeasant():void
+public function goToZeRightConsolePeasant():void
 {
 	clearOutput();
 	author("Nonesuch");
@@ -745,7 +769,7 @@ function goToZeRightConsolePeasant():void
 	addButton(14,"Back",forwardAfterWreckingHanSoSosShitToGetAIPleasureBot);
 }
 
-function sexbotControlBahtanPush(buttonPushed:int = 0):void
+public function sexbotControlBahtanPush(buttonPushed:int = 0):void
 {
 	clearOutput();
 	author("Nonesuch");

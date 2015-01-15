@@ -1,6 +1,7 @@
 ﻿import classes.Characters.PlayerCharacter;
 import classes.GameData.Pregnancy.PregnancyManager;
 import classes.GUI;
+import classes.Items.Miscellaneous.HorsePill;
 import classes.StorageClass;
 import classes.UIComponents.SquareButton;
 import flash.events.Event;
@@ -159,7 +160,7 @@ public function showPerksList():void
 	}
 }
 
-function crew(counter:Boolean = false):Number {
+public function crew(counter:Boolean = false):Number {
 	if(!counter) {
 		clearOutput();
 		this.clearMenu();
@@ -201,7 +202,7 @@ function crew(counter:Boolean = false):Number {
 	}
 	return count;
 }
-function rest():void {
+public function rest():void {
 	//Turn encounters back on.
 	flags["ENCOUNTERS_DISABLED"] = undefined;
 
@@ -219,7 +220,7 @@ function rest():void {
 	this.addButton(0,"Next",mainGameMenu);
 }
 
-function sleep(outputs:Boolean = true):void {
+public function sleep(outputs:Boolean = true):void {
 	
 	//Turn encounters back on.
 	flags["ENCOUNTERS_DISABLED"] = undefined;
@@ -283,7 +284,7 @@ function sleep(outputs:Boolean = true):void {
 	else this.addButton(0,"Next",mainGameMenu);
 }
 
-function sleepHeal():void
+public function sleepHeal():void
 {
 	if (pc.HPRaw < pc.HPMax()) 
 	{
@@ -294,7 +295,7 @@ function sleepHeal():void
 }
 
 
-function shipMenu():Boolean {
+public function shipMenu():Boolean {
 	
 	setLocation("SHIP\nINTERIOR",rooms[rooms["SHIP INTERIOR"].outExit].planet,rooms[rooms["SHIP INTERIOR"].outExit].system);
 	
@@ -322,7 +323,7 @@ function shipMenu():Boolean {
 	return false;
 }
 
-function flyMenu():void {
+public function flyMenu():void {
 	clearOutput();
 	if(pc.hasStatusEffect("Disarmed") && shipLocation == "500")
 	{
@@ -365,7 +366,7 @@ function flyMenu():void {
 	this.addButton(14,"Back",mainGameMenu);
 }
 
-function flyTo(arg:String):void {
+public function flyTo(arg:String):void {
 	
 	if (flags["SUPRESS TRAVEL EVENTS"] == 1)
 	{
@@ -402,7 +403,7 @@ function flyTo(arg:String):void {
 		output("You slow your ship down as you near the orbit of your next destination, Tarkus. As you scale down past a third of the speed of light, the planet begins to come into view: surrounded by a dense field of asteroids loom the two sundered halves of the goblin world. At first glance appears this appears to be a lifeless system, however as the ships sensor suite comes online instruments alert you to extreme electromagnetic interference emanating from the planet below suggest a power source in the multi-petawatt range. The planet, or perhaps more accurately the rended halves of the former planet, is blatantly chained together with a massive space tether whose every link must be the size of a Terran cruiser! Surely it must have taken the resources of the entire system to erect such a technological marvel: No wonder new pioneers are so interested in this place.");
 		output("\n\nSlow but surely, the ship picks through shards of rock that must have once been part of the planet's core and mantle. Further in however the field seems to largely consist of orbital debris rather than planetary ejecta: hulls of space ships and ruined clumps of satellites mashed together over centuries of disuse flit past you at thousands of kilometers per hour, making your approach difficult. More than once unidentified high velocity particles are intercepted by your shields, a grim reminder your ship is barely equipped to survive this landing. Finally you're through. The console to your front chirps as heat shields engage and you enter the upper atmosphere.");
 		output("\n\n For several minutes all you can hear is the hum of the shield generator much louder than before as it works to deflect and absorb much of the heat created by drag as you descend. \n\n\ Finally the vibration subsides and your view is restored as the heat shields slide open, just in time for you to see yourself punch through a thick cloud layer that leaves a mask of water droplets at the edges of your cockpit window. Although still high above the planet you make out the surface below as mostly red speckled with flecks of silver and grey, the sea resembles acrylic paints that have undergone mixing at the hands of an overzealous toddler, hideous black and green hues garishly reflect the harsh light of Tarkus's star KP0384128J");
-		output("\n\n Entry process winks green and your altitude control system switches to local ref. 300 kilometers out from the beacon you slow to a polite mach one in towards the impact site of the ancient and disintegrating capital ship you saw from orbit. The ship is surrounded by mechanical detritus from all sides and powdered with red dusts from a wasteland which stretches as far as your eye can see to the east. It rests on the shore the strange shimmering black sea.The land here is little more than a junkyard, one more world ravished by the march of progress till it was little more than skeleton. The dead land sends a chill down your spine while you wait for permission to land. As you vector to one of the dimly lit hangers you fly past an ancient QR code dating from the brief but colorful Information Age of Man that reads simply; NOVA. "Goddamn the ship is prehistoric!", you think as the Z14 eases into your appointed docking bay - a hastily spray-painted square on the deck, surrounded by other explorers' ships.");
+		output("\n\n Entry process winks green and your altitude control system switches to local ref. 300 kilometers out from the beacon you slow to a polite mach one in towards the impact site of the ancient and disintegrating capital ship you saw from orbit. The ship is surrounded by mechanical detritus from all sides and powdered with red dusts from a wasteland which stretches as far as your eye can see to the east. It rests on the shore the strange shimmering black sea.The land here is little more than a junkyard, one more world ravished by the march of progress till it was little more than skeleton. The dead land sends a chill down your spine while you wait for permission to land. As you vector to one of the dimly lit hangers you fly past an ancient QR code dating from the brief but colorful Information Age of Man that reads simply; NOVA. \"Goddamn the ship is prehistoric!\" you think as the Z14 eases into your appointed docking bay - a hastily spray-painted square on the deck, surrounded by other explorers' ships.");
 	}
 	else if(arg == "New Texas") {
 		shipLocation = "500";
@@ -420,7 +421,7 @@ function flyTo(arg:String):void {
 	this.addButton(0,"Next",mainGameMenu);
 }
 
-function sneakBackYouNudist():void
+public function sneakBackYouNudist():void
 {
 	clearOutput();
 	output("You meticulously make your way back to the ship using every ounce of subtlety you possess. It takes way longer than you would have thought thanks to a couple of near-misses, but you make it safe and sound to the interior of your craft.");
@@ -432,7 +433,7 @@ function sneakBackYouNudist():void
 	addButton(0,"Next",mainGameMenu);
 }
 
-function move(arg:String, goToMainMenu:Boolean = true):void {
+public function move(arg:String, goToMainMenu:Boolean = true):void {
 	//Prevent movement for nudists into nude-restricted zones.
 	if(rooms[arg].hasFlag(GLOBAL.NUDITY_ILLEGAL))
 	{
@@ -467,7 +468,7 @@ function move(arg:String, goToMainMenu:Boolean = true):void {
 	mainGameMenu();
 }
 
-function statusTick():void {
+public function statusTick():void {
 	var shitToCut:Array = new Array();
 	var y:int = 0;
 	for(var x:int = pc.statusEffects.length-1; x >= 0; x--) 
@@ -480,7 +481,7 @@ function statusTick():void {
 			//TIMER OVER!
 			if(pc.statusEffects[x].minutesLeft <= 0) 
 			{
-				if (pc.statusEffects[x].storageName.indexOf("Lane's Hypnosis"))
+				if (pc.statusEffects[x].storageName.indexOf("Lane's Hypnosis") != -1)
 				{
 					baseHypnosisWearsOff(pc.statusEffects[x].storageName);
 				}
@@ -496,7 +497,7 @@ function statusTick():void {
 				//Horse pill gets bonus proc!
 				if(pc.statusEffects[x].storageName == "Horse Pill")
 				{
-					var pill = new HorsePill();
+					var pill:HorsePill = new HorsePill();
 					eventQueue[eventQueue.length] = pill.lastPillTF;
 				}
 				//Condensol ends!
@@ -659,6 +660,22 @@ public function variableRoomUpdateCheck():void
 	
 	if (flags["BRYNN_MET_TODAY"] == 1) rooms["BrynnsStall"].removeFlag(GLOBAL.NPC);
 	else rooms["BrynnsStall"].addFlag(GLOBAL.NPC);
+	//Pitchers on Mhen'ga
+	if(flags["ROOM_80_PITCHER_MET"] == 1)
+	{
+		if(!rooms["OVERGROWN ROCK 12"].hasFlag(GLOBAL.PLANT_BULB)) rooms["OVERGROWN ROCK 12"].addFlag(GLOBAL.PLANT_BULB);
+	}
+	else rooms["OVERGROWN ROCK 12"].removeFlag(GLOBAL.PLANT_BULB);
+	if(flags["ROOM_65_PITCHER_MET"] == 1)
+	{
+		if(!rooms["VINED JUNGLE 3"].hasFlag(GLOBAL.PLANT_BULB)) rooms["VINED JUNGLE 3"].addFlag(GLOBAL.PLANT_BULB);
+	}
+	else rooms["VINED JUNGLE 3"].removeFlag(GLOBAL.PLANT_BULB);
+	if(flags["ROOM_61_PITCHER_MET"] == 1)
+	{
+		if(!rooms["DEEP JUNGLE 2"].hasFlag(GLOBAL.PLANT_BULB)) rooms["DEEP JUNGLE 2"].addFlag(GLOBAL.PLANT_BULB);
+	}
+	else rooms["DEEP JUNGLE 2"].removeFlag(GLOBAL.PLANT_BULB);
 }
 
 public function processTime(arg:int):void {
@@ -799,7 +816,7 @@ public function processTime(arg:int):void {
 			//Horse pill procs!
 			if(pc.hasStatusEffect("Horse Pill"))
 			{
-				var pill = new HorsePill();
+				var pill:HorsePill = new HorsePill();
 				//eventQueue[eventQueue.length] = pill.pillTF;
 				pill.pillTF();
 			}	
@@ -921,7 +938,7 @@ public function processTime(arg:int):void {
 	updatePCStats();
 }
 
-function boobswellStuff(time:Number = 0):void
+public function boobswellStuff(time:Number = 0):void
 {
 	//Message text, boob size+. Every 6 hours or so.
 	//Every minute = .003 breastRating. = 5.5 hours per cup size.
@@ -963,7 +980,7 @@ function boobswellStuff(time:Number = 0):void
 }
 
 //Notes about milk gain increases
-function milkGainNotes():void
+public function milkGainNotes():void
 {
 	var x:int = 0;
 	//Cross 75% milk fullness +1 cup
@@ -1031,13 +1048,13 @@ function milkGainNotes():void
 	}
 }
 
-function lactationUpdateHourTick():void
+public function lactationUpdateHourTick():void
 {
 	//These are easy since they proc with time passage and can be added to event buffer.
 	//Milk Multiplier crosses a 10 point threshold while dropping
 	//Drops .5 an hour above 150 fullness. 1 above 200 fullness
 	//Milk Rate drops by .1 an hour above 200.
-	var originalMultiplier = pc.milkMultiplier;
+	var originalMultiplier:Number = pc.milkMultiplier;
 	//Bounty bra never loses milkMultiplier!
 	if(pc.upperUndergarment is BountyBra)
 	{
@@ -1096,7 +1113,7 @@ function lactationUpdateHourTick():void
 }
 
 //Milk Multiplier crosses a 10 point threshold from raising
-function milkMultiplierGainNotificationCheck():void
+public function milkMultiplierGainNotificationCheck():void
 {
 	//kGAMECLASS cheat to cheat these messages into the event buffer? Or pass event buffer as an argument? Regardless, seems the cleanest way to keep it from interrupting the scene it gets called in.
 	//30
@@ -1155,7 +1172,7 @@ function milkMultiplierGainNotificationCheck():void
 	}
 }
 
-function badEnd():void 
+public function badEnd():void 
 {
 	gameOverEvent = true;
 	

@@ -31,8 +31,8 @@
 	public class DataManager 
 	{
 		// Define the current version of save games.
-		private static const LATEST_SAVE_VERSION:int = 17;
-		private static const MINIMUM_SAVE_VERSION:int = 6;
+		private static const LATEST_SAVE_VERSION:int = 18;
+		private static const MINIMUM_SAVE_VERSION:int = 18;
 		
 		private var _autoSaveEnabled:Boolean = false;
 		private var _lastManualDataSlot:int = -1;
@@ -60,6 +60,7 @@
 			var sv14:SaveVersionUpgrader14;
 			var sv15:SaveVersionUpgrader15;
 			var sv16:SaveVersionUpgrader16;
+			var sv17:SaveVersionUpgrader17;
 			
 			// I'm putting this fucking thing here for the same reason.
 			var dbgShield:DBGShield;
@@ -110,7 +111,7 @@
 		{
 			so.clear();
 			
-			for (var prop in blob)
+			for (var prop:* in blob)
 			{
 				so.data[prop] = blob[prop];
 			}
@@ -250,7 +251,7 @@
 			
 			if (dataFile.data.minVersion > DataManager.LATEST_SAVE_VERSION)
 			{
-				return (String(slotNumber) + ": <b>INCOMPATIBLE</b>\n\n");
+				return (String(slotNumber) + ": <b>INCOMPATIBLE</b>\nThis save game was created with a newer version of Trials in Tainted Space.\n");
 			}
 			
 			// Valid file to preview!
@@ -623,6 +624,7 @@
 			{
 				kGAMECLASS.userInterface.hideNPCStats();
 				kGAMECLASS.userInterface.showPCStats();
+				kGAMECLASS.resetBarStates();
 				kGAMECLASS.updatePCStats();
 				kGAMECLASS.output2("Game loaded from 'TiTs_" + slotNumber + "'!");
 				kGAMECLASS.userInterface.clearGhostMenu();
@@ -811,6 +813,7 @@
 		 */
 		public function executeGame():void
 		{
+			
 			//Purge out the event buffer so people can't buy something, load, and then get it.
 			kGAMECLASS.eventQueue = new Array();
 			kGAMECLASS.eventBuffer = "";
@@ -840,7 +843,6 @@
 				kGAMECLASS.pc.energy(kGAMECLASS.pc.energyMax());
 				kGAMECLASS.userInterface.hideMinimap();
 				kGAMECLASS.setClass(kGAMECLASS.pc.characterClass);
-				kGAMECLASS.updatePCStats();
 				return;
 			}
 			else if (kGAMECLASS.currentLocation != "")
@@ -848,7 +850,7 @@
 				kGAMECLASS.userInterface.setMapData(kGAMECLASS.mapper.generateMap(kGAMECLASS.currentLocation));
 				kGAMECLASS.userInterface.showMinimap();
 			}
-						
+			
 			kGAMECLASS.mainGameMenu();
 		}
 		

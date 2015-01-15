@@ -14,43 +14,45 @@
 	 */
 	public class MiniMap extends Sprite
 	{
-		public static const DISPLAY_MODE_SMALL = 0;
-		public static const DISPLAY_MODE_LARGE = 1;
-		public static const DISPLAY_MODE_HYBRID = 2;
-		private static const MAX_DISPLAY_MODES = 2;
+		public static const DISPLAY_MODE_SMALL:uint = 0;
+		public static const DISPLAY_MODE_LARGE:uint = 1;
+		public static const DISPLAY_MODE_HYBRID:uint = 2;
+		private static const MAX_DISPLAY_MODES:uint = 2;
 		
-		public static const SCALE_MODE_FIXED = 0;
-		public static const SCALE_MODE_NUMBER = 1;
-		public static const SCALE_MODE_SIZE = 2;
-		private static const MAX_SCALE_MODES = 2;
+		public static const SCALE_MODE_FIXED:uint = 0;
+		public static const SCALE_MODE_NUMBER:uint = 1;
+		public static const SCALE_MODE_SIZE:uint = 2;
+		private static const MAX_SCALE_MODES:uint = 2;
 		
-		public static const ICON_SHIP = 0;
-		public static const ICON_QUEST = 1;
-		public static const ICON_OBJECTIVE = 2;
-		public static const ICON_NPC = 3;
-		public static const ICON_MEDICAL = 4;
-		public static const ICON_DOWN = 5;
-		public static const ICON_UP = 6;
-		public static const ICON_COMMERCE = 7;
-		public static const ICON_BAR = 8;
-		public static const ICON_TAXI = 9;
-		public static const ICONS_MAX = 10;
+		public static const ICON_SHIP:uint = 0;
+		public static const ICON_QUEST:uint = 1;
+		public static const ICON_OBJECTIVE:uint = 2;
+		public static const ICON_NPC:uint = 3;
+		public static const ICON_MEDICAL:uint = 4;
+		public static const ICON_DOWN:uint = 5;
+		public static const ICON_UP:uint = 6;
+		public static const ICON_COMMERCE:uint = 7;
+		public static const ICON_BAR:uint = 8;
+		public static const ICON_TAXI:uint = 9;
+		public static const ICON_PLANE:uint = 10;
+		public static const ICON_PLANT_BULB:uint = 11;
+		public static const ICONS_MAX:uint = 12;
 		
 		// I've spied rumblings of a way to search through an SWF class definitions to build a list like this completely dynamically... but the code I found to do it looks a) awful b) is russian... maybe later? maybe.
 		// Basically, this is the list of linkage class names for the icons symbols in the FLA's library, which we're going to use to build icons in the correct order -- you might notice that they're in the same order as the integer flags up ^ there... the integer flags are used as array indexes to find the proper classname.
-		public static const ICON_NAMES:Array = new Array("map_ship", "map_quest", "map_objective", "map_npc", "map_medical", "map_down", "map_up", "map_commerce", "map_bar", "map_taxi");
+		public static const ICON_NAMES:Array = new Array("Map_Ship", "Map_Quest", "Map_Objective", "Map_NPC", "Map_Medical", "Map_Down", "Map_Up", "Map_Commerce", "Map_Bar", "Map_Taxi", "Map_Plane","Map_Plant_Bulb");
 		
 		
 		/* Each room only deals with the links it has to neighbours in the East + South direction (Right + Down)
 		 * Ergo, we need to work out which directionality a one way link is; target to neighbour or vice versa, hence the 2 flags for directionality.
 		 */
-		public static const LINK_PASSAGE = 0; // 2 way connection
-		public static const LINK_TARGET2NEIGHBOUR = 1; // 1 Way connection from current room to other
-		public static const LINK_NEIGHBOUR2TARGET = 2; // 1 Way connection from other to current room
-		public static const LINK_LOCKED = 3; // A "locked" type of link -- no engine support, but the map is configured for it... technically speaking.
-		public static const LINKS_MAX = 4;
+		public static const LINK_PASSAGE:uint = 0; // 2 way connection
+		public static const LINK_TARGET2NEIGHBOUR:uint = 1; // 1 Way connection from current room to other
+		public static const LINK_NEIGHBOUR2TARGET:uint = 2; // 1 Way connection from other to current room
+		public static const LINK_LOCKED:uint = 3; // A "locked" type of link -- no engine support, but the map is configured for it... technically speaking.
+		public static const LINKS_MAX:uint = 4;
 		
-		public static const LINK_NAMES:Array = new Array("map_passage", "map_oneway", "map_oneway_invert", "map_lock");
+		public static const LINK_NAMES:Array = new Array("Map_Passage", "Map_Oneway", "Map_Oneway_Invert", "Map_Lock");
 		public static const LINK_ROTATE:Array = new Array(true, true, true, false);
 		
 		// Display & Child object settings
@@ -262,7 +264,7 @@
 				for (numY = 0; numY < childNumY; numY++)
 				{
 					// ... Build the sprite
-					var childSprite = new MinimapRoom(childSizeX, childSizeY);
+					var childSprite:MinimapRoom = new MinimapRoom(childSizeX, childSizeY);
 					childSprite.name = String(numX) + "." + String(numY);
 					
 					_childElements[numX][numY] = childSprite;
@@ -289,7 +291,7 @@
 				
 				for (numY = 0; numY < childNumY; numY++)
 				{
-					var linkObjX = new MinimapLink(false);
+					var linkObjX:MinimapLink = new MinimapLink(false);
 					_childContainer.addChild(linkObjX);
 					
 					linkObjX.x = _childElements[numX][numY].x + (childSizeX + (childSpacing / 2));
@@ -308,7 +310,7 @@
 				
 				for (numY = 0; numY < (childNumY - 1); numY++)
 				{
-					var linkObjY = new MinimapLink(true);
+					var linkObjY:MinimapLink = new MinimapLink(true);
 					_childContainer.addChild(linkObjY);
 					
 					linkObjY.x = _childElements[numX][numY].x + (childSizeX / 2);
@@ -434,7 +436,7 @@
 						
 						if (roomFlags & Mapper.current_locaton_mask)
 						{
-						tarSprite.setColour(UIStyleSettings.gMapPCLocationRoomColourTransform);
+							tarSprite.setColour(UIStyleSettings.gMapPCLocationRoomColourTransform);
 						}
 						else if (roomFlags & Mapper.room_indoor_mask)
 						{
@@ -443,6 +445,22 @@
 						else if (roomFlags & Mapper.room_outdoor_mask)
 						{
 							tarSprite.setColour(UIStyleSettings.gMapOutdoorRoomFlagColourTransform);
+						}
+						else if (roomFlags & Mapper.room_cave_mask)
+						{
+							tarSprite.setColour(UIStyleSettings.gMapCaveRoomFlagColourTransform);
+						}
+						else if (roomFlags & Mapper.room_forest_mask)
+						{
+							tarSprite.setColour(UIStyleSettings.gMapForestRoomFlagColourTransform);
+						}
+						else if (roomFlags & Mapper.room_jungle_mask)
+						{
+							tarSprite.setColour(UIStyleSettings.gMapJungleRoomFlagColourTransform);
+						}
+						else if (roomFlags & Mapper.room_desert_mask)
+						{
+							tarSprite.setColour(UIStyleSettings.gMapDesertRoomFlagColourTransform);
 						}
 						else // Catch-all for any room that doesn't have a flag set.
 						{
@@ -482,6 +500,14 @@
 						else if (roomFlags & Mapper.room_taxi_mask)
 						{
 							tarSprite.setIcon(ICON_TAXI);
+						}
+						else if (roomFlags & Mapper.room_plane_mask)
+						{
+							tarSprite.setIcon(ICON_PLANE);
+						}
+						else if (roomFlags & Mapper.room_plant_bulb_mask)
+						{
+							tarSprite.setIcon(ICON_PLANT_BULB);
 						}
 						else if (roomFlags & Mapper.room_objective_mask)
 						{

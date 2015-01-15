@@ -3,7 +3,7 @@
 //The first time the PC enters the Myrellion Tavern, KaraQuest 1 triggers! Go to that doc for sweet deets. 
 //https://docs.google.com/document/d/1G_hmZvUYehxytaCG2hL3n4CIBZWKMkLMx556ElHigNM/edit#heading=h.tuevrq58epfp
 
-function goldenPeakBonusFunction():Boolean
+public function goldenPeakBonusFunction():Boolean
 {
 	if(pc.characterClass == GLOBAL.CLASS_SMUGGLER) output(" Throw in a few more shady characters and a fist fight, and it'd feel like home!");
 	output(" A holoscreen is set up just over the bar, showing reruns of Steph Irson: Galactic Huntress.");
@@ -27,10 +27,12 @@ function goldenPeakBonusFunction():Boolean
 	//else addButton(0,"Candice",approachTheBartenderAtTheBar,undefined,"Candice","See if you can get a drink or some fun from Candice.");
 	if(flags["MET_EMBRY"] == undefined) addButton(0,"Waitress",callWaitress,undefined,"Waitress","Call a waitress to order some food.");
 	else addButton(0,embry.short,callWaitress,undefined,embry.short,"Call her over. Maybe you can get some food or something.");
+	//Add Liliana's shit to the bar.
+	lilianaBonusShits();
 	return false;
 }
 
-function showCandice():void
+public function showCandice():void
 {
 	author("Savin");
 	if(flags["MET_CANDICE"] == undefined) showName("\nBARTENDER");
@@ -40,7 +42,7 @@ function showCandice():void
 
 //Actually Buying a Drink
 //!!!!!!!!!!!!!!Embry now does this!!!!!!!!!!!!
-function buyADrinkFromCandice(drink:String):void
+public function buyADrinkFromCandice(drink:String):void
 {
 	clearOutput();
 	showEmbry();
@@ -110,7 +112,7 @@ function buyADrinkFromCandice(drink:String):void
 
 //PC too drunk for his own good
 //Append to above.
-function smashedEpilogueToDrinkBuyFromCandice():void
+public function smashedEpilogueToDrinkBuyFromCandice():void
 {
 	output("\n\nYour whole world goes topsy-turvey when you try to stand. You find yourself rushing for the bathroom, barely making it before you chuck. You spend the next few minutes firmly planted in the stall, puking your guts up.");
 	output("\n\nUgh. You splash some water on your face and head back out into the tavern, carefully leaning on the walls as you go.");
@@ -128,7 +130,7 @@ function smashedEpilogueToDrinkBuyFromCandice():void
 
 //PC REALLY FUCKING DRUNK, SON
 //Append above
-function reallySmashedEpilogueToDrinkingWithCandice():void
+public function reallySmashedEpilogueToDrinkingWithCandice():void
 {
 	output("\n\nWell, you <i>try</i> to stagger back. Instead, you take one clumsy step and fall flat on your face, blacking out before you hit the deck.");
 
@@ -137,7 +139,7 @@ function reallySmashedEpilogueToDrinkingWithCandice():void
 	addButton(0,"Next",reallySmashedEpiloguetoDrinkingWithCandicePartII);
 }
 
-function reallySmashedEpiloguetoDrinkingWithCandicePartII():void
+public function reallySmashedEpiloguetoDrinkingWithCandicePartII():void
 {
 	clearOutput();
 	author("Savin");
@@ -258,7 +260,7 @@ function reallySmashedEpiloguetoDrinkingWithCandicePartII():void
 
 //[Watch Screen]
 //STEPH IRSON 4 GO (See Steph's Doc)
-function stephIrson4Go():void
+public function stephIrson4Go():void
 {
 	clearOutput();
 	author("Savin");
@@ -280,7 +282,7 @@ function stephIrson4Go():void
 	addButton(1,"Stop Watching",mainGameMenu);
 }
 
-function stephIrsonEpisode4Part2():void
+public function stephIrsonEpisode4Part2():void
 {
 	clearOutput();
 	author("Savin");
@@ -318,7 +320,7 @@ function stephIrsonEpisode4Part2():void
 	addButton(1,"Stop Watching",mainGameMenu);
 }
 
-function stephIrsonEpisode4Part3():void
+public function stephIrsonEpisode4Part3():void
 {
 	clearOutput();
 	author("Savin");
@@ -353,7 +355,7 @@ function stephIrsonEpisode4Part3():void
 	addButton(1,"Stop Watching",mainGameMenu);
 }
 
-function stephIrsonEpisode4Part4():void
+public function stephIrsonEpisode4Part4():void
 {
 	clearOutput();
 	author("Savin");
@@ -372,7 +374,7 @@ function stephIrsonEpisode4Part4():void
 	addButton(1,"Stop Watching",mainGameMenu);
 }
 
-function stephIrsonEpisode4Part5():void
+public function stephIrsonEpisode4Part5():void
 {
 	clearOutput();
 	author("Savin");

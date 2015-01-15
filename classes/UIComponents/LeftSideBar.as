@@ -1,7 +1,5 @@
 package classes.UIComponents 
 {
-	import classes.StatBarBig;
-	import classes.StatBarSmall;
 	import classes.UIComponents.MiniMap.MiniMap;
 	import classes.UIComponents.SideBarComponents.LocationHeader;
 	import fl.transitions.Tween;
@@ -15,6 +13,7 @@ package classes.UIComponents
 	import classes.UIComponents.SideBarComponents.GeneralInfoBlock;
 	import classes.UIComponents.SideBarComponents.SideBarButtonBlock;
 	import classes.UIComponents.StatusEffectComponents.StatusEffectsDisplay;
+	import classes.UIComponents.SideBarComponents.StatBar;
 	
 	/**
 	 * ...
@@ -36,13 +35,13 @@ package classes.UIComponents
 		
 		public function get miniMap():MiniMap { return _miniMapBlock.miniMap; }
 		
-		public function get encounterHp():StatBarBig { return _enemyEncounterBlock.hpBar; }
-		public function get encounterShield():StatBarBig { return _enemyEncounterBlock.shieldBar; }
-		public function get encounterLust():StatBarBig { return _enemyEncounterBlock.lustBar; }
-		public function get encounterEnergy():StatBarBig { return _enemyEncounterBlock.energyBar; }
-		public function get encounterLevel():StatBarSmall { return _enemyEncounterBlock.levelBar; }
-		public function get encounterRace():StatBarSmall { return _enemyEncounterBlock.raceBar; }
-		public function get encounterSex():StatBarSmall { return _enemyEncounterBlock.sexBar; }
+		public function get encounterHp():StatBar { return _enemyEncounterBlock.hpBar; }
+		public function get encounterShield():StatBar { return _enemyEncounterBlock.shieldBar; }
+		public function get encounterLust():StatBar { return _enemyEncounterBlock.lustBar; }
+		public function get encounterEnergy():StatBar { return _enemyEncounterBlock.energyBar; }
+		public function get encounterLevel():StatBar { return _enemyEncounterBlock.levelBar; }
+		public function get encounterRace():StatBar { return _enemyEncounterBlock.raceBar; }
+		public function get encounterSex():StatBar { return _enemyEncounterBlock.sexBar; }
 		public function get encounterStatusEffects():StatusEffectsDisplay { return _enemyEncounterBlock.statusEffects; }
 		
 		public function get timeText():TextField { return _genInfoBlock.time; }

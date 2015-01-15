@@ -166,13 +166,14 @@
 		//Fourth planet
 		include "../includes/myrellion.embassy.as";
 		include "../includes/myrellion.embry.as";
+		include "../includes/myrellion.liliana.as";
 		include "../includes/myrellion.lyralla.as";
 		include "../includes/myrellion.karaAndShade.as";
 		include "../includes/myrellion.nehzara.as";
+		include "../includes/myrellion.renvra.as";
 		include "../includes/myrellion.rooms.as";
 		include "../includes/myrellion.roomFunctions.as";
 		include "../includes/myrellion.tavern.as";
-
 		
 		public var chars:Object;
 		public var foes:Array;
@@ -223,13 +224,13 @@
 		public var itemScreen:*;
 		public var lootScreen:*;
 		
-		public var useItemFunction;
+		public var useItemFunction:Function;
 		public var itemUser:Creature;
 		public var itemTarget:Creature;
 
 		public var flags:Dictionary;
 
-		public var combatStage;
+		public var combatStage:*;
 
 		// LE MAP
 		public var mapper:Mapper;
@@ -256,7 +257,7 @@
 
 			trace("TiTS Constructor")
 
-			version = "0.5.15";
+			version = "0.5.16";
 
 			//temporary nonsense variables.
 			temp = 0;
@@ -752,6 +753,11 @@
 		public function get penny():Penny
 		{
 			return chars["PENNY"];
+		}
+
+		public function get renvra():Renvra
+		{
+			return chars["RENVRA"];
 		}
 
 		public function get embry():Embry

@@ -1,8 +1,5 @@
 import flash.events.MouseEvent;
 import flash.ui.Mouse;
-
-import classes.StatBarSmall;
-import classes.StatBarBig;
 	
 //Table of Contents
 //0. PARSER
@@ -12,7 +9,7 @@ import classes.StatBarBig;
 //4. MOVEMENTS
 
 
-function doParse(script:String, markdown=false):String 
+public function doParse(script:String, markdown:Boolean = false):String 
 {
 	return parser.recursiveParser(script, markdown);
 }
@@ -73,7 +70,7 @@ public function blockHeader(words:String):String
 
 public function num2Text(number:Number):String {
 	var returnVar:String = null;
-	var numWords = new Array("zero","one","two","three","four","five","six","seven","eight","nine","ten");
+	var numWords:Array = new Array("zero","one","two","three","four","five","six","seven","eight","nine","ten");
 	if (number > 10 || int(number) != number) {
 		returnVar = "" + number;
 	} 
@@ -84,7 +81,7 @@ public function num2Text(number:Number):String {
 }
 public function num2Text2(number:int):String {
 	var returnVar:String = null;
-	var numWords = new Array("zero","first","second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth");
+	var numWords:Array = new Array("zero","first","second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth");
 	if (number > 10) {
 		returnVar = "" + number + "th";
 	} 
@@ -100,7 +97,7 @@ public function author(arg:String):void
 }
 
 
-function upperCase(str:String):String {
+public function upperCase(str:String):String {
 	var firstChar:String = str.substr(0,1);
 	var restOfString:String = str.substr(1,str.length);
 	return firstChar.toUpperCase()+restOfString.toLowerCase();
@@ -132,59 +129,75 @@ public function possessive(str:String):String {
 	return str;
 }
 
-function leftBarClear():void {
+public function leftBarClear():void {
 	this.userInterface.leftBarClear();
 }
-function hidePCStats():void {
+public function hidePCStats():void {
 	this.userInterface.hidePCStats()
 }
-function showPCStats():void {
+public function showPCStats():void {
 	this.userInterface.showPCStats()
 }
-function showNPCStats():void {
+public function showNPCStats():void {
 	this.userInterface.showNPCStats()
 }
-function hideNPCStats():void {
+public function hideNPCStats():void {
 	this.userInterface.hideNPCStats()
 }
-function showMinimap():void {
+public function showMinimap():void {
 	this.userInterface.showMinimap();
 }
-function hideMinimap():void {
+public function hideMinimap():void {
 	this.userInterface.hideMinimap();
 }
-function deglow():void 
+public function deglow():void 
 {
 	this.userInterface.deglow()
-}	
-public function updatePCStats():void {
+}
+public function resetBarStates():void
+{
+	userInterface.playerShields.updateBar(0, 100, true);
+	userInterface.playerHP.updateBar(0, 100, true);
+	userInterface.playerEnergy.updateBar(0, 100, true);
+	
+	userInterface.playerPhysique.updateBar(0, 5, true);
+	userInterface.playerReflexes.updateBar(0, 5, true);
+	userInterface.playerAim.updateBar(0, 5, true);
+	userInterface.playerIntelligence.updateBar(0, 5, true);
+	userInterface.playerWillpower.updateBar(0, 5, true);
+	userInterface.playerLibido.updateBar(0, 5, true);
+	userInterface.playerXP.updateBar(0, 500, true);
+	userInterface.playerLevel.updateBar(0, 8, true);
+	userInterface.playerCredits.updateBar(0, 500, true);
+}
+public function updatePCStats(setBars:Boolean = false):void 
+{
 	if (pc.short != "uncreated" && pc.short.length > 0)
 		this.userInterface.setGuiPlayerNameText(pc.short);
 	else
 		this.userInterface.setGuiPlayerNameText("");
 
-	updateStatBar(this.userInterface.playerShields,pc.shields(),pc.shieldsMax());
+	userInterface.playerShields.updateBar(pc.shields(),pc.shieldsMax(), setBars);
 
-	updateStatBar(this.userInterface.playerHP,pc.HP(),pc.HPMax());
-	updateStatBar(this.userInterface.playerLust,pc.lust(),pc.lustMax());
-	updateStatBar(this.userInterface.playerEnergy,pc.energy(),pc.energyMax());
+	userInterface.playerHP.updateBar(pc.HP(),pc.HPMax(), setBars);
+	userInterface.playerLust.updateBar(pc.lust(),pc.lustMax(), setBars);
+	userInterface.playerEnergy.updateBar(pc.energy(),pc.energyMax(), setBars);
 	
-	updateStatBar(this.userInterface.playerPhysique,pc.physique(),pc.physiqueMax());	
-	updateStatBar(this.userInterface.playerReflexes,pc.reflexes(),pc.reflexesMax());
-	updateStatBar(this.userInterface.playerAim,pc.aim(),pc.aimMax());
-	updateStatBar(this.userInterface.playerIntelligence,pc.intelligence(),pc.intelligenceMax());
-	updateStatBar(this.userInterface.playerWillpower,pc.willpower(),pc.willpowerMax());
-	updateStatBar(this.userInterface.playerLibido, pc.libido(), pc.libidoMax());
-	updateStatBar(this.userInterface.playerXP, pc.XP(), pc.XPMax());
-
+	userInterface.playerPhysique.updateBar(pc.physique(),pc.physiqueMax(), setBars);	
+	userInterface.playerReflexes.updateBar(pc.reflexes(),pc.reflexesMax(), setBars);
+	userInterface.playerAim.updateBar(pc.aim(),pc.aimMax(), setBars);
+	userInterface.playerIntelligence.updateBar(pc.intelligence(),pc.intelligenceMax(), setBars);
+	userInterface.playerWillpower.updateBar(pc.willpower(),pc.willpowerMax(), setBars);
+	userInterface.playerLibido.updateBar(pc.libido(), pc.libidoMax(), setBars);
+	userInterface.playerXP.updateBar(pc.XP(), pc.XPMax(), setBars);
 	
-	this.userInterface.playerStatusEffects = this.chars["PC"].statusEffects;
-	this.userInterface.playerLevel.values.text = String(pc.level);
-	this.userInterface.playerCredits.values.text = String(pc.credits);
+	userInterface.playerStatusEffects = this.chars["PC"].statusEffects;
+	userInterface.playerLevel.updateBar(pc.level, Number.NaN, setBars);
+	userInterface.playerCredits.updateBar(pc.credits, Number.NaN, setBars);
 	
-	this.userInterface.time = timeText();
-	this.userInterface.days = String(days);
-	this.userInterface.showSceneTag();
+	userInterface.time = timeText();
+	userInterface.days = String(days);
+	userInterface.showSceneTag();
 	
 	if ((pc as PlayerCharacter).levelUpAvailable())
 	{
@@ -204,7 +217,7 @@ public function updatePCStats():void {
 	
 	updateNPCStats();
 }
-function timeText():String 
+public function timeText():String 
 {
 	var buffer:String = ""
 	
@@ -224,27 +237,35 @@ function timeText():String
 	return buffer;
 }
 
-function updateNPCStats():void {
+public function resetNPCBarStates():void
+{
+	userInterface.monsterShield.updateBar(0, 100, true);
+	userInterface.monsterHP.updateBar(0, 100, true);
+	userInterface.monsterLust.updateBar(0, 100, true);
+	userInterface.monsterEnergy.updateBar(0, 100, true);
+}
+
+public function updateNPCStats():void {
 	if(foes.length >= 1) {
-		updateStatBar(this.userInterface.monsterShield, foes[0].shields(),  foes[0].shieldsMax());
-		updateStatBar(this.userInterface.monsterHP,     foes[0].HP(),       foes[0].HPMax());
-		updateStatBar(this.userInterface.monsterLust,   foes[0].lust(),     foes[0].lustMax());
-		updateStatBar(this.userInterface.monsterEnergy, foes[0].energy(),   foes[0].energyMax());
+		userInterface.monsterShield.updateBar(foes[0].shields(),  foes[0].shieldsMax());
+		userInterface.monsterHP.updateBar(foes[0].HP(),       foes[0].HPMax());
+		userInterface.monsterLust.updateBar(foes[0].lust(),     foes[0].lustMax());
+		userInterface.monsterEnergy.updateBar(foes[0].energy(),   foes[0].energyMax());
 		
-		this.userInterface.monsterLevel.values.text = String(foes[0].level);
-		this.userInterface.monsterRace.values.text = StringUtil.toTitleCase(foes[0].originalRace);
+		this.userInterface.monsterLevel.value = String(foes[0].level);
+		this.userInterface.monsterRace.value = StringUtil.toTitleCase(foes[0].originalRace);
 		if(foes[0].hasCock()) {
 			if(foes[0].hasVagina())	
-				this.userInterface.monsterSex.values.text = "Herm";
-			else this.userInterface.monsterSex.values.text = "Male";
+				this.userInterface.monsterSex.value = "Herm";
+			else this.userInterface.monsterSex.value = "Male";
 		}
-		else if(foes[0].hasVagina()) this.userInterface.monsterSex.values.text = "Female";
-		else this.userInterface.monsterSex.values.text = "???";
+		else if(foes[0].hasVagina()) this.userInterface.monsterSex.value = "Female";
+		else this.userInterface.monsterSex.value = "???";
 		
 		this.userInterface.monsterStatusEffects = foes[0].statusEffects;
 	}
 }
-function updateStatBar(arg:MovieClip,value = undefined, max = undefined):void {
+public function updateStatBar(arg:MovieClip, value:* = undefined, max:* = undefined):void {
 	//if(title != "" && title is String) arg.masks.labels.text = title;
 	if(max != undefined) 
 		arg.setMax(max);
@@ -264,19 +285,19 @@ public function setLocation(title:String, planet:String = "Error Planet", system
 }
 
 //3. UTILITY FUNCTIONS
-function rand(max:Number):Number
+public function rand(max:Number):Number
 {
 	return int(Math.random()*max);
 }
 
-function clearList():void {
+public function clearList():void {
 	list = new Array();
 }
-var list:Array = new Array();
-function addToList(arg):void {
+public var list:Array = new Array();
+public function addToList(arg:*):void {
 	list[list.length] = arg;
 }
-function formatList():String {
+public function formatList():String {
 	var stuff:String = "";
 	if(list.length == 1) return list[0];
 	for(var x:int = 0; x < list.length; x++) {

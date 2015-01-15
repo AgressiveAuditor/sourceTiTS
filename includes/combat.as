@@ -9,6 +9,7 @@ import classes.Characters.SecurityDroids;
 import classes.Creature;
 import classes.Items.Guns.Goovolver;
 import classes.Items.Miscellaneous.GrayMicrobots;
+import classes.Characters.Varmint;
 
 //Tracks what NPC in combat we are on. 0 = PC, 1 = first NPC, 2 = second NPC, 3 = fourth NPC... totalNPCs + 1 = status tic
 
@@ -18,7 +19,7 @@ public function inCombat():Boolean
 	return (pc.hasStatusEffect("Round"));
 }
 
-function combatMainMenu():void 
+public function combatMainMenu():void 
 {
 	userInterface.showPrimaryOutput();
 	if(flags["COMBAT MENU SEEN"] == undefined)
@@ -148,14 +149,14 @@ function combatMainMenu():void
 		if(pc.hasStatusEffect("Trip")) this.addButton(8,"Stand Up",standUp,undefined,"Stand Up","Stand up, getting rid of the \"Trip\" status effect. This will consume your offensive action for this turn.");
 		this.addButton(9,"Fantasize",fantasize,undefined,"Fantasize","Fantasize about your foe until you're helpless and on your knees before them.");
 		this.addButton(14,"Run",runAway,undefined,"Run","Attempt to run away from your enemy. Success is greatly dependant on reflexes. Immobilizing your enemy before attempting to run will increase the odds of success.");
-		if(foes[0] is Varmint && pc.hasKeyItem("Lasso")) addButton(0,"Lasso",lassoAVarmint,undefined,"Lasso","Use the lasso you've been provided with to properly down this varmint.");
+		if(foes[0] is classes.Characters.Varmint && pc.hasKeyItem("Lasso")) addButton(0,"Lasso",lassoAVarmint,undefined,"Lasso","Use the lasso you've been provided with to properly down this varmint.");
 		//Bonus shit for stuff!
 		if(foes[0] is CaptainKhorganMech) khorganMechBonusMenu();
 	}
 	flags["COMBAT MENU SEEN"] = 1;
 }
 
-function specialsMenu():void {
+public function specialsMenu():void {
 	clearMenu();
 	addButton(14,"Back",combatMainMenu,undefined,"Go back to the main combat screen.");
 	addButton(13,"Wait",wait,undefined,"Wait","There's no real reason to this unless you're just dragging out combat to see what your enemy will do.");
@@ -367,7 +368,7 @@ function specialsMenu():void {
 	}
 }
 
-function updateCombatStatuses():void {
+public function updateCombatStatuses():void {
 	var temp:Number = 0;
 	//PC STATUSES!
 	if(pc.hasPerk("Shield Regen") && pc.shields() <= 0 && pc.shieldsMax() > 0 && !pc.hasStatusEffect("Used Shield Regen"))
@@ -633,7 +634,7 @@ function updateCombatStatuses():void {
 		}
 	}
 }
-function stunRecover(target:Creature):void 
+public function stunRecover(target:Creature):void 
 {
 	if(target.hasStatusEffect("Stunned")) {
 		if(target == pc) clearOutput();
@@ -660,7 +661,7 @@ function stunRecover(target:Creature):void
 	processCombat();
 }
 
-function standUp():void
+public function standUp():void
 {
 	clearOutput();
 	output("You climb up onto your [pc.feet].\n");
@@ -668,7 +669,7 @@ function standUp():void
 	processCombat();
 }
 
-function celiseMenu():void 
+public function celiseMenu():void 
 {
 	this.clearMenu();
 	if(pc.statusEffectv1("Round") == 1) 
@@ -679,7 +680,7 @@ function celiseMenu():void
 		this.addButton(5,"Tease",attackRouter,tease);
 }
 
-function processCombat():void 
+public function processCombat():void 
 {
 	flags["COMBAT MENU SEEN"] = undefined;
 	combatStage++;
@@ -735,7 +736,10 @@ function processCombat():void
 			if(pc.hasStatusEffect("Drone Down")) {
 				output("Your drone shudders to life, lifting back into the air and circling your target helpfully. ");
 				pc.removeStatusEffect("Drone Down");
+				//Reboot clears hack!
+				if(pc.hasStatusEffect("Porno Hacked Drone")) pc.removeStatusEffect("Porno Hacked Drone");
 			}
+			//ATTACK!
 			droneAttack(foes[flags["DRONE_TARGET"]]);
 			return;
 		}
@@ -748,8 +752,14 @@ function processCombat():void
 			}
 			else 
 			{
-				output("\n\n");
-				droneAttack(foes[flags["DRONE_TARGET"]]);
+				//Hacked drone no attack.
+				if(pc.hasStatusEffect("Porno Hacked Drone")) {}
+				//No hack? Attack!
+				else
+				{
+					output("\n\n");
+					droneAttack(foes[flags["DRONE_TARGET"]]);
+				}
 			}
 		}
 	}
@@ -760,7 +770,7 @@ function processCombat():void
 	this.addButton(0,"Next",combatMainMenu);
 }
 
-function grappleStruggle():void {
+public function grappleStruggle():void {
 	clearOutput();
 	if(pc.hasPerk("Escape Artist"))
 	{
@@ -796,7 +806,7 @@ function grappleStruggle():void {
 	processCombat();
 }
 
-function staticBurst():void {
+public function staticBurst():void {
 	clearOutput();
 	/*if(foes[0] is GoblinGadgeteer)
 	{
@@ -822,7 +832,7 @@ function staticBurst():void {
 	processCombat();
 }
 
-function allFoesDefeated():Boolean 
+public function allFoesDefeated():Boolean 
 {
 	for(var x:int = 0; x < foes.length; x++) {
 		//If a foe is up, fail.
@@ -832,7 +842,7 @@ function allFoesDefeated():Boolean
 	return true;
 }
 
-function combatMiss(attacker:Creature, target:Creature, overrideAttack:Number = -1, missModifier:Number = 1):Boolean 
+public function combatMiss(attacker:Creature, target:Creature, overrideAttack:Number = -1, missModifier:Number = 1):Boolean 
 {
 	if (overrideAttack == -1) overrideAttack = attacker.meleeWeapon.attack;
 	
@@ -850,7 +860,7 @@ function combatMiss(attacker:Creature, target:Creature, overrideAttack:Number = 
 	if(target.hasPerk("Melee Immune")) return true;
 	return false;
 }
-function rangedCombatMiss(attacker:Creature, target:Creature, overrideAttack:Number = -1, missModifier:Number = 1):Boolean 
+public function rangedCombatMiss(attacker:Creature, target:Creature, overrideAttack:Number = -1, missModifier:Number = 1):Boolean 
 {
 	if (overrideAttack == -1) overrideAttack = attacker.rangedWeapon.attack;
 	
@@ -876,7 +886,7 @@ function rangedCombatMiss(attacker:Creature, target:Creature, overrideAttack:Num
 	return false;
 }
 
-function attackRouter(destinationFunc):void 
+public function attackRouter(destinationFunc:Function):void 
 {
 	// Inject the mimbrane attack shit infront of the regular attacks
 	clearOutput();
@@ -907,12 +917,12 @@ function attackRouter(destinationFunc):void
 	this.addButton(button,"Back",combatMainMenu);
 }
 
-function enemyAttack(attacker:Creature):void 
+public function enemyAttack(attacker:Creature):void 
 {
 	attack(attacker, pc);
 }
 
-function playerAttack(target:Creature):void 
+public function playerAttack(target:Creature):void 
 {
 	attack(pc, target, true);
 	mimbraneHandBonusAttack(target);
@@ -926,7 +936,7 @@ function playerAttack(target:Creature):void
 	processCombat();
 }
 
-function concentratedFire(hit:Boolean = true):void
+public function concentratedFire(hit:Boolean = true):void
 {
 	if(pc.hasPerk("Concentrate Fire"))
 	{
@@ -954,13 +964,13 @@ function concentratedFire(hit:Boolean = true):void
 	}
 }
 
-function playerRangedAttack(target:Creature):void 
+public function playerRangedAttack(target:Creature):void 
 {
 	rangedAttack(pc, target);
 	playerMimbraneCloudAttack();
 }
 
-function attack(attacker:Creature, target:Creature, noProcess:Boolean = false, special:int = 0):void {
+public function attack(attacker:Creature, target:Creature, noProcess:Boolean = false, special:int = 0):void {
 	//Set drone target
 	setDroneTarget(target);
 	if (foes[0].short == "female zil") flags["HIT_A_ZILGIRL"] = 1;
@@ -1047,7 +1057,7 @@ function attack(attacker:Creature, target:Creature, noProcess:Boolean = false, s
 			if(target.hasStatusEffect("Stunned") && target.hasStatusEffect("Blind")) damage += attacker.level;
 		}
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		//Apply damage reductions
@@ -1090,7 +1100,7 @@ function attack(attacker:Creature, target:Creature, noProcess:Boolean = false, s
 
 //Special 1: Flurry attack - high miss chance.
 //Special 2: Flurry attack with no new screen display.
-function rangedAttack(attacker:Creature, target:Creature, noProcess:Boolean = false, special:int = 0):void 
+public function rangedAttack(attacker:Creature, target:Creature, noProcess:Boolean = false, special:int = 0):void 
 {
 	trace("Ranged shot...");
 	//Set drone target
@@ -1187,7 +1197,7 @@ function rangedAttack(attacker:Creature, target:Creature, noProcess:Boolean = fa
 				if(target.hasStatusEffect("Stunned") && target.hasStatusEffect("Blind")) damage += attacker.level;
 			}
 			//Randomize +/- 15%
-			var randomizer = (rand(31)+ 85)/100;
+			var randomizer:Number = (rand(31)+ 85)/100;
 			damage *= randomizer;
 			var sDamage:Array = new Array();
 			//Apply damage reductions
@@ -1255,7 +1265,7 @@ function rangedAttack(attacker:Creature, target:Creature, noProcess:Boolean = fa
 	if(!noProcess) processCombat();
 }
 
-function droneAttack(target:Creature):void {
+public function droneAttack(target:Creature):void {
 	if(pc.accessory is TamWolf) 
 	{
 		//In Combat:
@@ -1287,14 +1297,14 @@ function droneAttack(target:Creature):void {
 	processCombat();
 }
 //Broke this out so all can be adjusted at once as buffed/nerfed.
-function droneDamage():int
+public function droneDamage():int
 {
 	return (1+pc.level + rand(2 + pc.level/2));
 }
 
 public function genericDamageApply(damage:int,attacker:Creature, target:Creature,damTypeOverride:int = -1):void {
 	//Randomize +/- 15%
-	var randomizer = (rand(31)+ 85)/100;
+	var randomizer:Number = (rand(31)+ 85)/100;
 	damage *= randomizer;
 	var sDamage:Array = new Array();
 	//Apply damage reductions
@@ -1339,7 +1349,7 @@ public function genericDamageApply(damage:int,attacker:Creature, target:Creature
 }
 
 
-function HPDamage(victim:Creature,damage:Number = 0, damageType = GLOBAL.KINETIC,special:String = ""):Number 
+public function HPDamage(victim:Creature,damage:Number = 0, damageType:int = GLOBAL.KINETIC,special:String = ""):Number 
 {
 	var temp:Number = 0;
 	//Reduce damage by defense value
@@ -1369,7 +1379,7 @@ function HPDamage(victim:Creature,damage:Number = 0, damageType = GLOBAL.KINETIC
 	return damage;
 }
 
-function shieldDamage(victim:Creature,damage:Number = 0, damageType = GLOBAL.KINETIC, special:String = ""):Array 
+public function shieldDamage(victim:Creature,damage:Number = 0, damageType:int = GLOBAL.KINETIC, special:String = ""):Array 
 {
 	var initialDamage:Number = damage;
 	var soakedDamage:Number = 0;
@@ -1415,7 +1425,7 @@ function shieldDamage(victim:Creature,damage:Number = 0, damageType = GLOBAL.KIN
 	return [damage,leftoverDamage];
 }
 
-function teaseMenu(target:Creature):void 
+public function teaseMenu(target:Creature):void 
 {
 	if(target is Celise) {
 		clearOutput();
@@ -1448,22 +1458,22 @@ function teaseMenu(target:Creature):void
 		addButton(14,"Back",combatMainMenu,undefined,"Back","Back out. Recommended if you haven't yet used \"Sense\" to determine your foe's likes and dislikes. Remember you can pull up your appearance screen in combat or use the scene buffer buttons in the lower left corner to compare yourself to your foe's preferences!");
 	}
 }
-function teaseChest(target:Creature):void {
+public function teaseChest(target:Creature):void {
 	tease(target, "chest");
 }
-function teaseHips(target:Creature):void {
+public function teaseHips(target:Creature):void {
 	tease(target, "hips");
 }
-function teaseButt(target:Creature):void {
+public function teaseButt(target:Creature):void {
 	tease(target, "butt");
 }
-function teaseCrotch(target:Creature):void {
+public function teaseCrotch(target:Creature):void {
 	tease(target,"crotch");
 }
 
 //Name, long descript, lust descript, and '"
 // NO SIDEEFFECTS TO GAME DATA YO
-function displayMonsterStatus(targetFoe):void 
+public function displayMonsterStatus(targetFoe:Creature):void 
 {
 	clearOutput();
 	if(targetFoe.HP() <= 0) {
@@ -1505,7 +1515,7 @@ function displayMonsterStatus(targetFoe):void
 	}
 }
 
-function showMonsterArousalFlavor(targetFoe):void 
+public function showMonsterArousalFlavor(targetFoe:Creature):void 
 {
 	if(targetFoe.lust() < 50) { 
 		return; 
@@ -1537,7 +1547,7 @@ function showMonsterArousalFlavor(targetFoe):void
 	output("\n");
 }
 
-function enemyAI(aggressor:Creature):void 
+public function enemyAI(aggressor:Creature):void 
 {	
 	trace("AI CALL");
 	//Paralyze stops turns! AHHHH!
@@ -1584,7 +1594,7 @@ function enemyAI(aggressor:Creature):void
 	else if (aggressor is Kara) karaAI();
 	else enemyAttack(aggressor);
 }
-function victoryRouting():void 
+public function victoryRouting():void 
 {
 	hideNPCStats();
 	if(foes[0].short == "Celise") {
@@ -1702,7 +1712,7 @@ function victoryRouting():void
 	else genericVictory();
 }
 
-function defeatRouting():void 
+public function defeatRouting():void 
 {
 	hideNPCStats();
 	if(foes[0].short == "BONERS") {}
@@ -1826,22 +1836,24 @@ function defeatRouting():void
 	}
 }
 
-function genericLoss():void {
+public function genericLoss():void {
 	pc.removeStatusEffect("Round");
 	trace("GENERIC LOSS");
 	pc.clearCombatStatuses();
+	resetNPCBarStates();
 	trace("LOSS DONE");
 	this.clearMenu();
 	this.addButton(0,"Next",mainGameMenu);
 }
 
-function genericVictory():void 
+public function genericVictory():void 
 {
 	pc.clearCombatStatuses();
+	resetNPCBarStates();
 	getCombatPrizes();
 }
 
-function stealthCombatEnd():void
+public function stealthCombatEnd():void
 {
 	// Mimbranes could hook here to convert from the Combat version of their Venom attack to their Non-combat version?
 	// I think this is overall too complicated though, and just ignore the whole combat/noncombat distinction.
@@ -1849,7 +1861,7 @@ function stealthCombatEnd():void
 	pc.clearCombatStatuses();
 }
 
-function combatOver():void 
+public function combatOver():void 
 {
 	pc.removeStatusEffect("Round");
 	pc.clearCombatStatuses();
@@ -1858,7 +1870,7 @@ function combatOver():void
 }
 
 
-function getCombatPrizes(newScreen:Boolean = false):void 
+public function getCombatPrizes(newScreen:Boolean = false):void 
 {
 	if(newScreen) clearOutput();
 	
@@ -1939,7 +1951,7 @@ function getCombatPrizes(newScreen:Boolean = false):void
 	}
 }
 
-function startCombatLight():void
+public function startCombatLight():void
 {
 	flags["DRONE_TARGET"] = undefined;
 	combatStage = 0;
@@ -1953,7 +1965,7 @@ function startCombatLight():void
 	else if(foes[0] is SexBot) sexBotDisplay();
 }
 
-function startCombat(encounter:String):void 
+public function startCombat(encounter:String):void 
 {
 	//Reset drone target before a fight!
 	flags["DRONE_TARGET"] = undefined;
@@ -2075,7 +2087,7 @@ function startCombat(encounter:String):void
 	updateNPCStats();
 }
 
-function runAway():void {
+public function runAway():void {
 	clearOutput();
 	output("You attempt to flee from your opponent");
 	if(foes[0].plural || foes.length > 1) output("s");
@@ -2155,7 +2167,7 @@ function runAway():void {
 
 	}
 }
-function fantasize():void {
+public function fantasize():void {
 	clearOutput();
 	output("You decide you'd rather fantasize than fight back at this point. Why bother when your enem");
 	if(foes[0].plural || foes.length > 1) output("ies are");
@@ -2164,7 +2176,7 @@ function fantasize():void {
 	pc.lust(20+rand(20));
 	processCombat();
 }
-function wait():void {
+public function wait():void {
 	clearOutput();
 	output("You choose not to act.\n");
 	if (pc.hasStatusEffect("Grappled"))
@@ -2179,10 +2191,10 @@ function wait():void {
 
 //creature.sexualPreferences.getPref(SEXPREF_flag) will give you the direct set value; 2, 1, -1 or -2. Or 0 if the preference isn't set.
 //creature.sexualPreferences.getAveragePrefScore(SEXPREF_flag1, SEXPREF_flag2, ..., SEXPREF_flagn) will give you the *average* score of the provided flags.
-function tease(target:Creature, part:String = "chest"):void {
+public function tease(target:Creature, part:String = "chest"):void {
 	var damage:Number = 0;
 	var teaseCount:Number = 0;
-	var randomizer = (rand(31)+ 85)/100;
+	var randomizer:Number = (rand(31)+ 85)/100;
 	var likeAdjustments:Array = new Array();
 	var totalFactor:Number = 1;
 	var x:int = 0;
@@ -2352,14 +2364,14 @@ function tease(target:Creature, part:String = "chest"):void {
 	processCombat();
 }
 
-function teaseSkillUp(part:String):void {
+public function teaseSkillUp(part:String):void {
 	if(part == "crotch") flags["TIMES_CROTCH_TEASED"]++;
 	else if(part == "butt") flags["TIMES_BUTT_TEASED"]++;
 	else if(part == "hips") flags["TIMES_HIPS_TEASED"]++;
 	else if(part == "chest") flags["TIMES_CHEST_TEASED"]++;
 }
 
-function teaseReactions(damage:Number,target:Creature):String {
+public function teaseReactions(damage:Number,target:Creature):String {
 	var buffer:String = "";
 	var textRands:Array = [];
 	if (target is HuntressVanae)
@@ -2415,7 +2427,7 @@ function teaseReactions(damage:Number,target:Creature):String {
 	return buffer;
 }
 
-function crotchTeaseText(target:Creature):void {
+public function crotchTeaseText(target:Creature):void {
 	var temp:int = 0;
 	var choices:Array = new Array();
 	if(pc.hasCock()) {
@@ -2748,7 +2760,7 @@ function crotchTeaseText(target:Creature):void {
 	}
 }
 
-function buttTeaseText():void {
+public function buttTeaseText():void {
 	var choices:Array = new Array();
 	choices.push(3);
 	if(flags["TIMES_BUTT_TEASED"] > 75) choices.push(0);
@@ -2858,7 +2870,7 @@ function buttTeaseText():void {
 	}
 }
 
-function chestTeaseText():void {
+public function chestTeaseText():void {
 	if(pc.biggestTitSize() < 1) {
 		if(rand(3) != 0 && pc.tone >= 70)
 		{
@@ -2959,7 +2971,7 @@ function chestTeaseText():void {
 	}
 }
 
-function hipsTeaseText():void {
+public function hipsTeaseText():void {
 	var choices:Array = new Array();
 
 	if(pc.hipRating() < 4) choices.push(0);
@@ -3034,7 +3046,7 @@ function hipsTeaseText():void {
 	}
 }
 
-function sense(target:Creature):void {
+public function sense(target:Creature):void {
 	clearOutput();
 	output("You try to get a feel for " + possessive(target.a + target.short) + " likes and dislikes!\n");
 	if(target.lustDamageMultiplier() == 0) output("You don't think sexuality can win this fight!\n");
@@ -3081,7 +3093,7 @@ function sense(target:Creature):void {
 	processCombat();
 }
 
-function paralyzingShock(target:Creature):void {
+public function paralyzingShock(target:Creature):void {
 	clearOutput();
 	if(target.hasStatusEffect("Paralyzed")) {
 		if(target.plural) output(target.capitalA + target.short + " are already paralyzed!");
@@ -3107,7 +3119,7 @@ function paralyzingShock(target:Creature):void {
 	processCombat();
 }
 
-function volley(target:Creature):void {
+public function volley(target:Creature):void {
 	pc.energy(-20);
 	//Do normal attacks
 	rangedAttack(pc,target,true);
@@ -3122,7 +3134,7 @@ function volley(target:Creature):void {
 	processCombat();
 }
 
-function setDroneTarget(target:Creature):void
+public function setDroneTarget(target:Creature):void
 {
 	//Set drone target
 	if(pc.hasPerk("Attack Drone") || pc.accessory is TamWolf || pc.accessory is TamWolfDamaged)
@@ -3135,7 +3147,7 @@ function setDroneTarget(target:Creature):void
 	}
 }
 
-function overcharge(target:Creature):void {
+public function overcharge(target:Creature):void {
 	clearOutput();
 	pc.energy(-20);
 	setDroneTarget(target);
@@ -3162,7 +3174,7 @@ function overcharge(target:Creature):void {
 		//OVER CHAAAAAARGE
 		damage *= 1.5;
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		genericDamageApply(damage,pc,target,pc.rangedWeapon.damageType);
@@ -3176,7 +3188,7 @@ function overcharge(target:Creature):void {
 	processCombat();
 }
 
-function NPCOvercharge():void {
+public function NPCOvercharge():void {
 	foes[0].energy(-20);
 	output(foes[0].capitalA + foes[0].short + " smiles as a high-pitched hum emanates from " + foes[0].mfn("his","her","its") + " " + foes[0].rangedWeapon.longName + "! ");
 	//Attack missed!
@@ -3192,7 +3204,7 @@ function NPCOvercharge():void {
 		//OVER CHAAAAAARGE
 		damage *= 1.75;
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		genericDamageApply(damage,foes[0],pc,GLOBAL.THERMAL);
@@ -3204,7 +3216,7 @@ function NPCOvercharge():void {
 	processCombat();
 }
 
-function gravidicDisruptor(target:Creature):void 
+public function gravidicDisruptor(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3214,7 +3226,7 @@ function gravidicDisruptor(target:Creature):void
 	output("\n");
 	processCombat();
 }
-function thermalDisruptor(target:Creature):void 
+public function thermalDisruptor(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3225,7 +3237,7 @@ function thermalDisruptor(target:Creature):void
 	processCombat();
 }
 
-function powerSurge(target:Creature):void {
+public function powerSurge(target:Creature):void {
 	clearOutput();
 	output("You channel a surge of power into your shield generator, instantly restoring a portion of their lost energy.");
 	var amount:int = 8+pc.intelligence()/3 + rand(6);
@@ -3236,7 +3248,7 @@ function powerSurge(target:Creature):void {
 	processCombat();
 }
 
-function deflectorRegeneration(target:Creature):void {
+public function deflectorRegeneration(target:Creature):void {
 	clearOutput();
 	pc.energy(-20);
 	output("You fiddle with your shield, tuning it regenerate over the next few turns.\n");
@@ -3244,7 +3256,7 @@ function deflectorRegeneration(target:Creature):void {
 	processCombat();
 }
 
-function flashGrenade(target:Creature):void {
+public function flashGrenade(target:Creature):void {
 	pc.energy(-10);
 	clearOutput();
 	if(silly) output("With a cry of <i>\"Pocket sand!\"</i> you produce a handful of sand and throw it at " + target.a + target.short + ".");
@@ -3260,7 +3272,7 @@ function flashGrenade(target:Creature):void {
 	else output("\n" + target.capitalA + target.short + " manages to keep away from the blinding projectile.\n")
 	processCombat();
 }
-function NPCFlashGrenade():void {
+public function NPCFlashGrenade():void {
 	pc.energy(-10);
 	output(monster.capitalA + monster.short + "produces a flash grenade and hucks it in your direction!\n");
 	//Chance of bliiiiiiiind
@@ -3274,10 +3286,10 @@ function NPCFlashGrenade():void {
 }
 
 
-function headbutt(target:Creature):void {
+public function headbutt(target:Creature):void {
 	properHeadbutt(pc,target);
 }
-function properHeadbutt(attacker:Creature,target:Creature):void {
+public function properHeadbutt(attacker:Creature,target:Creature):void {
 	if(attacker == pc) clearOutput();
 	attacker.energy(-25);
 	if(attacker == pc) output("You lean back before whipping your head forward in a sudden headbutt.\n");
@@ -3307,7 +3319,7 @@ function properHeadbutt(attacker:Creature,target:Creature):void {
 		//Damage bonuses:
 		var damage:int = attacker.physique()/2 + attacker.level;
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		genericDamageApply(damage,attacker,target);
@@ -3332,7 +3344,7 @@ function properHeadbutt(attacker:Creature,target:Creature):void {
 	processCombat();
 }
 
-function lowBlow(target:Creature):void {
+public function lowBlow(target:Creature):void {
 	clearOutput();
 
 	pc.energy(-15);
@@ -3356,7 +3368,7 @@ function lowBlow(target:Creature):void {
 		//Damage bonuses:
 		var damage:int = pc.damage() + pc.physique()/2;
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		genericDamageApply(damage,pc,target);
@@ -3375,7 +3387,7 @@ function lowBlow(target:Creature):void {
 	processCombat();
 }
 
-function stealthFieldActivation():void {
+public function stealthFieldActivation():void {
 	clearOutput();
 	pc.energy(-20);
 	output("You activate your stealth field generator, fading into nigh-invisibility.\n");
@@ -3383,14 +3395,14 @@ function stealthFieldActivation():void {
 	processCombat();
 }
 
-function NPCstealthFieldActivation(user:Creature):void {
+public function NPCstealthFieldActivation(user:Creature):void {
 	user.energy(-20);
 	output(user.capitalA + user.short + " activates a stealth field generator, fading into nigh-invisibility.");
 	user.createStatusEffect("Stealth Field Generator",2,0,0,0,false,"Stealth Field","Provides a massive bonus to evasion chances!",true,0);
 	processCombat();
 }
 
-function disarmingShot(target:Creature):void {
+public function disarmingShot(target:Creature):void {
 	clearOutput();
 	pc.energy(-20);
 	if(target.hasStatusEffect("Disarm Immune")) output("You try to disarm " + target.a + target.short + " but can't. <b>It's physically impossible!</b>\n");
@@ -3402,7 +3414,7 @@ function disarmingShot(target:Creature):void {
 	}
 	processCombat();
 }
-function NPCDisarmingShot(user:Creature):void
+public function NPCDisarmingShot(user:Creature):void
 {
 	user.energy(-20);
 	if(pc.hasStatusEffect("Disarm Immune")) output(user.capitalA + user.short + " tries to shoot your weapons out of your hands but can't. <b>It's physically impossible!</b>\n");
@@ -3415,7 +3427,7 @@ function NPCDisarmingShot(user:Creature):void
 	processCombat();
 }
 
-function grenade(target:Creature):void 
+public function grenade(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3426,7 +3438,7 @@ function grenade(target:Creature):void
 	processCombat();
 }
 
-function gasGrenade(target:Creature):void 
+public function gasGrenade(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3445,7 +3457,7 @@ function gasGrenade(target:Creature):void
 	processCombat();
 }
 
-function goozookaCannon(target:Creature):void
+public function goozookaCannon(target:Creature):void
 {
 	clearOutput();
 	pc.destroyItem(new GrayMicrobots(), 1);
@@ -3495,7 +3507,7 @@ function goozookaCannon(target:Creature):void
 	processCombat();
 }
 
-function secondWind():void
+public function secondWind():void
 {
 	clearOutput();
 	pc.energy(Math.round(pc.energyMax()/2));
@@ -3505,7 +3517,7 @@ function secondWind():void
 	processCombat();
 }
 
-function burstOfEnergy():void
+public function burstOfEnergy():void
 {
 	clearOutput();
 	
@@ -3515,7 +3527,7 @@ function burstOfEnergy():void
 	processCombat();
 }
 
-function struggledStimulant():void
+public function struggledStimulant():void
 {
 	clearOutput();
 	pc.createStatusEffect("Used Smuggled Stimulant",3,0,0,0,true,"","",true,0);
@@ -3523,7 +3535,7 @@ function struggledStimulant():void
 	processCombat();
 }
 
-function rapidFire(target:Creature):void {
+public function rapidFire(target:Creature):void {
 	pc.energy(-20);
 	//Do normal attacks
 	rangedAttack(pc,target,true);
@@ -3533,7 +3545,7 @@ function rapidFire(target:Creature):void {
 	processCombat();
 }
 
-function powerStrike(target:Creature):void {
+public function powerStrike(target:Creature):void {
 	clearOutput();
 	pc.energy(-20);
 	//Set drone target
@@ -3561,7 +3573,7 @@ function powerStrike(target:Creature):void {
 		//OVER CHAAAAAARGE
 		damage *= 2;
 		//Randomize +/- 15%
-		var randomizer = (rand(31)+ 85)/100;
+		var randomizer:Number = (rand(31)+ 85)/100;
 		damage *= randomizer;
 		var sDamage:Array = new Array();
 		genericDamageApply(damage,pc,target,pc.meleeWeapon.damageType);
@@ -3570,7 +3582,7 @@ function powerStrike(target:Creature):void {
 	processCombat();
 }
 
-function takeCover():void {
+public function takeCover():void {
 	clearOutput();
 	pc.energy(-20);
 	output("You seek cover against ranged attacks.\n");
@@ -3578,7 +3590,7 @@ function takeCover():void {
 	processCombat();
 }
 
-function carpetGrenades():void 
+public function carpetGrenades():void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3595,7 +3607,7 @@ function carpetGrenades():void
 	output("\n");
 	processCombat();
 }
-function detCharge(target:Creature):void 
+public function detCharge(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3606,7 +3618,7 @@ function detCharge(target:Creature):void
 	processCombat();
 }
 
-function shieldHack(target:Creature):void 
+public function shieldHack(target:Creature):void 
 {
 	clearOutput();
 	pc.energy(-25);
@@ -3618,7 +3630,7 @@ function shieldHack(target:Creature):void
 	}
 	output("You attempt to wirelessly hack the shield protecting " + target.a + target.short + "! ");
 	var damage:Number = Math.round(25 + pc.level*5);
-	var randomizer = (rand(31)+ 85)/100;
+	var randomizer:Number = (rand(31)+ 85)/100;
 	damage *= randomizer;
 	var sDamage:Array = new Array();
 	sDamage = shieldDamage(target,damage,GLOBAL.ELECTRIC);
@@ -3636,7 +3648,7 @@ function shieldHack(target:Creature):void
 	processCombat();
 }
 
-function weaponHack(target:Creature):void {
+public function weaponHack(target:Creature):void {
 	clearOutput();
 	pc.energy(-20);
 	if(target.hasStatusEffect("Disarm Immune")) output("You try to hack " + target.a + target.short + " but can't. <b>It's physically impossible!</b>\n");
@@ -3649,7 +3661,7 @@ function weaponHack(target:Creature):void {
 	processCombat();
 }
 
-function aoeAttack(damage:int):void
+public function aoeAttack(damage:int):void
 {
 	// Add function to anything that does AOE damage so we can cheese shit
 	if (damage > 0)
