@@ -568,6 +568,7 @@ public function yesTechSpecialistsTakeTamWulf():void
 			processTime(4);
 			clearMenu();
 			addButton(0,"Next",mainGameMenu);
+			return;
 		}
 		//PC Succeeds: 
 		else
@@ -2907,7 +2908,10 @@ public function planetAsplodeWhileInNovaPartIII():void
 	output("Somehow, you didn't die, and neither did the raskvel - at least not the ones onboard Novahome. With no other option save extinction, the scrappy little aliens managed to get the engines and life support on this old boat running. ");
 	if(flags["MET_DEL"] == undefined) output("A dark-skinned girl");
 	else output("Del");
-	output(" spearheaded options to keep the refugees fed{ and suitably serviced} while the hangar was cleared. You helped out where you could, anything to see the hangar and your ship operational again. An escape vector is always nice.");
+	output(" spearheaded options to keep the refugees fed");
+	// 9999 all up in dis shit
+	if (timesDelilahSexed() > 3) output(" and suitably serviced");
+	output(" while the hangar was cleared. You helped out where you could, anything to see the hangar and your ship operational again. An escape vector is always nice.");
 	output("\n\nA day later, life calmed down enough for things to get back to something approaching normal on Novahome. While deciding what to do next, you catch wind that [rival.name] is in ");
 	if(flags["MET_SHEKKA"] != undefined) output("Shekka's shop");
 	else output("a nearby shop");
@@ -3199,7 +3203,7 @@ public function giveTheProbeToShekkaForNuttin():void
 	output("<i>\"");
 	if(pc.isNice()) output("Hey, I got what I needed from this thing. Why don't you take it and sell it someone? I'm sure you guys could use the cash more than me.");
 	else if(pc.isMischievous()) output("I must be nuts, but I don't have a use for this thing. How about you take it back to sell to someone else, and you can just owe me a favor, all right?");
-	else output("Hey, Shekka. I'm not carrying this piece of crap around me. You can keep it.");
+	else output("Hey, Shekka. I'm not carrying this piece of crap around with me. You can keep it.");
 	output("\"</i>");
 	output("\n\nShekka deadpans, <i>\"You're pulling my tail, right?\"</i>");
 	output("\n\n<i>\"Nah, I don't need it.\"</i>");

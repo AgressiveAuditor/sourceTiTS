@@ -1,9 +1,12 @@
-﻿import classes.Characters.GigaGoo;
+﻿import classes.Characters.Cockvine;
+import classes.Characters.GigaGoo;
 import classes.Characters.GrayGoo;
 import classes.Characters.GrayPrime;
 import classes.Characters.HuntressVanae;
 import classes.Characters.MaidenVanae;
 import classes.Characters.Mimbrane;
+import classes.Characters.NyreaAlpha;
+import classes.Characters.NyreaBeta;
 import classes.Characters.PhoenixPirates;
 import classes.Characters.SecurityDroids;
 import classes.Creature;
@@ -110,7 +113,8 @@ public function combatMainMenu():void
 		clearMenu();
 		output("\n<b>You are grappled and unable to fight normally!</b>");
 		addButton(0,"Struggle",grappleStruggle);
-		if(pc.hasPerk("Static Burst")) {
+		if (pc.hasPerk("Static Burst") && !(foes[0] is NyreaAlpha) && !(foes[0] is NyreaBeta)) 
+		{
 			if(pc.shields() <= 0) addDisabledButton(3,"StaticBurst","StaticBurst","You need shields available to overload in order for static burst to function.");
 			else if(pc.energy() >= 5) this.addButton(3,"StaticBurst",staticBurst);
 			else this.addDisabledButton(3,"StaticBurst");
@@ -148,7 +152,23 @@ public function combatMainMenu():void
 		this.addButton(6,"Sense",attackRouter,sense,"Sense","Attempts to get a feel for a foe's likes and dislikes. Absolutely critical for someone who plans on seducing " + pc.mf("his","her") + " way out of a fight.");
 		if(pc.hasStatusEffect("Trip")) this.addButton(8,"Stand Up",standUp,undefined,"Stand Up","Stand up, getting rid of the \"Trip\" status effect. This will consume your offensive action for this turn.");
 		this.addButton(9,"Fantasize",fantasize,undefined,"Fantasize","Fantasize about your foe until you're helpless and on your knees before them.");
-		this.addButton(14,"Run",runAway,undefined,"Run","Attempt to run away from your enemy. Success is greatly dependant on reflexes. Immobilizing your enemy before attempting to run will increase the odds of success.");
+		
+		if (pc.hasStatusEffect("Cockvine Grip") && pc.statusEffectv1("Cockvine Grip") > 0)
+		{
+			if (pc.hasPerk("Static Burst"))
+			{
+				if (pc.shields() <= 0) addDisabledButton(3,"StaticBurst","StaticBurst","You need shields available to overload in order for static burst to function.");
+				else if (pc.energy() >= 5) this.addButton(3, "Static Burst", staticBurst);
+				else this.addDisabledButton(3, "Static Burst");
+			}
+			
+			this.addButton(14, "Struggle", adultCockvineStruggleOverride, undefined, "Struggle", "Struggle free of the Cockvines crushing grip.");
+		}
+		else
+		{
+			this.addButton(14, "Run", runAway, undefined, "Run", "Attempt to run away from your enemy. Success is greatly dependant on reflexes. Immobilizing your enemy before attempting to run will increase the odds of success.");
+		}
+		
 		if(foes[0] is classes.Characters.Varmint && pc.hasKeyItem("Lasso")) addButton(0,"Lasso",lassoAVarmint,undefined,"Lasso","Use the lasso you've been provided with to properly down this varmint.");
 		//Bonus shit for stuff!
 		if(foes[0] is CaptainKhorganMech) khorganMechBonusMenu();
@@ -549,6 +569,18 @@ public function updateCombatStatuses():void {
 			output("<b>You are disarmed and cannot use weapon based attacks.</b>\n");
 		}
 	}
+	if (pc.hasStatusEffect("Combat Drone Disabled"))
+	{
+		pc.addStatusValue("Combat Drone Disabled", 1, -1);
+		if (pc.statusEffectv1("Combat Drone Disabled") <= 0)
+		{
+			pc.removeStatusEffect("Combat Drone Disabled");
+			if (pc.hasCombatDrone())
+			{
+				output("<b>There’s a familiar and welcome sound of whirring servos above you. Your righted drone moves back down to your side to aid you.</b>\n");
+			}
+		}
+	}
 	
 	// Annoquest stuffs
 	
@@ -733,8 +765,9 @@ public function processCombat():void
 		if(pc.shields() > 0) {
 			output("\n\n");
 			//Clear drone down if got shields healed.
-			if(pc.hasStatusEffect("Drone Down")) {
-				output("Your drone shudders to life, lifting back into the air and circling your target helpfully. ");
+			if (pc.hasStatusEffect("Drone Down")) {
+				// Hide the message of the drone is not available right now... something something
+				if (pc.hasCombatDrone()) output("Your drone shudders to life, lifting back into the air and circling your target helpfully. ");
 				pc.removeStatusEffect("Drone Down");
 				//Reboot clears hack!
 				if(pc.hasStatusEffect("Porno Hacked Drone")) pc.removeStatusEffect("Porno Hacked Drone");
@@ -747,7 +780,7 @@ public function processCombat():void
 		else if(!pc.hasStatusEffect("Drone Down")) {
 			if(!(pc.accessory is TamWolfDamaged || pc.accessory is TamWolf)) 
 			{
-				output("\n\nYour drone collapses along with your shields. It sputters weakly as it shuts down.<b> It won't be doing any more damage until you bring your shields back up!</b>");
+				if (pc.hasCombatDrone()) output("\n\nYour drone collapses along with your shields. It sputters weakly as it shuts down.<b> It won't be doing any more damage until you bring your shields back up!</b>");
 				pc.createStatusEffect("Drone Down",0,0,0,0,true,"","",true,0);
 			}
 			else 
@@ -772,6 +805,13 @@ public function processCombat():void
 
 public function grappleStruggle():void {
 	clearOutput();
+	
+	if (foes[0] is Cockvine)
+	{
+		adultCockvineStruggleOverride();
+		return;
+	}
+	
 	if(pc.hasPerk("Escape Artist"))
 	{
 		if(pc.reflexes() + rand(20) + 6 + pc.statusEffectv1("Grappled") * 5 > pc.statusEffectv2("Grappled")) {
@@ -786,6 +826,7 @@ public function grappleStruggle():void {
 			if (foes[0] is SexBot) output("You almost dislocate an arm doing it, but, ferret-like, you manage to wriggle out of the sexbot’s coils. Once your hands are free the droid does not seem to know how to respond and you are able to grapple the rest of your way out easily, ripping away from its molesting grip. The sexbot clicks and stutters a few times before going back to staring at you blankly, swinging its fibrous limbs over its head.");
 			else if (foes[0] is MaidenVanae || foes[0] is HuntressVanae) vanaeEscapeGrapple();
 			else if (foes[0] is GrayPrime) grayPrimeEscapeGrapple();
+			else if (foes[0] is NyreaAlpha || foes[0] is NyreaBeta) output("You pull and heave at the thick, knotted ropes of the nyrea's net, finally managing to prise a gap large enough for you to squeeze your frame through!");
 			//else if (foes[0] is GoblinGadgeteer) output("You manage to untangle your body from the net, and prepare to fight the goblin again.");
 			else output("With a mighty heave, you tear your way out of the grapple and onto your [pc.feet].");
 			pc.removeStatusEffect("Grappled");
@@ -798,6 +839,7 @@ public function grappleStruggle():void {
 		else if (foes[0] is Kaska) failToStruggleKaskaBoobs();
 		else if (foes[0] is MaidenVanae || foes[0] is HuntressVanae) output("You wriggle in futility, helpless as she lubes you up with her sensuous strokes. This is serious!");
 		else if (foes[0] is GrayPrime) grayPrimeFailEscape();
+		else if (foes[0] is NyreaAlpha || foes[0] is NyreaBeta) output("Try as you might, struggling against the heavy ropes of the nyrea huntresses net, you just can't find a way out of the net that has you restrained.");
 		//else if (foes[0] is GoblinGadgeteer) output("You manage to untangle your body from the net, and prepare to fight the goblin again.");
 		else output("You struggle madly to escape from the pin but ultimately fail. The pin does feel a little looser as a result, however.");
 		pc.addStatusValue("Grappled",1,1);
@@ -827,6 +869,11 @@ public function staticBurst():void {
 	{
 		pc.removeStatusEffect("Grappled");
 		output("\nYou slip free of the grapple.");
+	}
+	if (pc.hasStatusEffect("Cockvine Grip"))
+	{
+		pc.addStatusValue("Cockvine Grip", 1, -2);
+		if (pc.statusEffectv1("Cockvine Grip") < 0) pc.setStatusValue("Cockvine Grip", 1, 0);
 	}
 	output("\n");
 	processCombat();
@@ -1089,7 +1136,7 @@ public function attack(attacker:Creature, target:Creature, noProcess:Boolean = f
 	//Do multiple attacks if more are queued (does not stack with special!)
 	if(attacker.hasStatusEffect("Multiple Attacks") && special == 0) {
 		output("\n");
-		attack(attacker,target);
+		attack(attacker,target, noProcess);
 		return;
 	}
 	if(attacker == chars["PC"]) output("\n");
@@ -1266,6 +1313,8 @@ public function rangedAttack(attacker:Creature, target:Creature, noProcess:Boole
 }
 
 public function droneAttack(target:Creature):void {
+	if (!pc.hasCombatDrone()) return;
+	
 	if(pc.accessory is TamWolf) 
 	{
 		//In Combat:
@@ -1455,6 +1504,8 @@ public function teaseMenu(target:Creature):void
 		if(pc.hasCock() || pc.hasVagina()) addButton(2,"Crotch",teaseCrotch,target,"Crotch Tease","Use your [pc.crotch] to tease your enemy.");
 		else addDisabledButton(2,"Crotch");
 		addButton(3,"Hips",teaseHips,target,"Hips Tease","Use your [pc.hips] to tease your enemy.");
+		if(pc.milkType == GLOBAL.FLUID_TYPE_VANAE_HUNTRESS_MILK && pc.isLactating()) addButton(4,"Milk Squirt",teaseSquirt,target,"Milk Squirt","Spray the enemy with your vanae milk, arousing them.");
+		else if(pc.milkType == GLOBAL.FLUID_TYPE_VANAE_HUNTRESS_MILK) addDisabledButton(4,"Milk Squirt","Milk Squirt","You do not currently have enough milk available to squirt any.");
 		addButton(14,"Back",combatMainMenu,undefined,"Back","Back out. Recommended if you haven't yet used \"Sense\" to determine your foe's likes and dislikes. Remember you can pull up your appearance screen in combat or use the scene buffer buttons in the lower left corner to compare yourself to your foe's preferences!");
 	}
 }
@@ -1469,6 +1520,9 @@ public function teaseButt(target:Creature):void {
 }
 public function teaseCrotch(target:Creature):void {
 	tease(target,"crotch");
+}
+public function teaseSquirt(target:Creature):void {
+	tease(target,"squirt");	
 }
 
 //Name, long descript, lust descript, and '"
@@ -1497,7 +1551,12 @@ public function displayMonsterStatus(targetFoe:Creature):void
 		if(pc.statusEffectv1("Blind") <= 1) {
 			output("<b>You're fighting " + targetFoe.a + targetFoe.short  + ".</b>\n" + targetFoe.long + "\n");
 			if(targetFoe is Naleen) author("Savin");
-			if(targetFoe is ZilFemale) author("Savin");
+			if (targetFoe is ZilFemale) author("Savin");
+			if (targetFoe is Cockvine)
+			{
+				author("Nonesuch");			
+				adultCockvineCombatDescriptionExtension();
+			}
 			showMonsterArousalFlavor(targetFoe);
 			mutinousMimbranesCombat();
 			neglectedMimbranesCombat();
@@ -1592,6 +1651,9 @@ public function enemyAI(aggressor:Creature):void
 	else if (aggressor is Varmint) varmintAI();
 	else if (aggressor is Shade) shadeAI();
 	else if (aggressor is Kara) karaAI();
+	else if (aggressor is Cockvine) adultCockvineAI();
+	else if (aggressor is NyreaAlpha) alphaNyreaAI();
+	else if (aggressor is NyreaBeta) betaNyreaAI();
 	else enemyAttack(aggressor);
 }
 public function victoryRouting():void 
@@ -1708,6 +1770,14 @@ public function victoryRouting():void
 	{
 		//PC + Shade defeat Kara
 		pcAndShadeBeatKara();
+	}
+	else if (foes[0] is Cockvine)
+	{
+		adultCockvinePCVictory();
+	}
+	else if (foes[0] is NyreaAlpha || foes[0] is NyreaBeta)
+	{
+		pcVictoryOverNyrea();
 	}
 	else genericVictory();
 }
@@ -1828,6 +1898,17 @@ public function defeatRouting():void
 	{
 		//PC + Shade Defeated
 		pcAndShadeDefeated();
+	}
+	else if (foes[0] is Cockvine)
+	{
+		if (pc.hasCock() || pc.hasVagina())
+			adultCockvinePCLoses();
+		else
+			adultCockvineHahaFuckYouGenderless(true);
+	}
+	else if (foes[0] is NyreaAlpha || foes[0] is NyreaBeta)
+	{
+		pcLossToNyrea();
 	}
 	else {
 		output("You lost!  You rouse yourself after an hour and a half, quite bloodied.");
@@ -2077,6 +2158,15 @@ public function startCombat(encounter:String):void
 			chars["SHADE"].prepForCombat();
 			buildShadeAndKaraFight(true);
 			break;
+		case "Cockvine":
+			chars["COCKVINE"].prepForCombat();
+			break;
+		case "Nyrea Alpha":
+			chars["NYREA ALPHA"].prepForCombat();
+			break;
+		case "Nyrea Beta":
+			chars["NYREA BETA"].prepForCombat();
+			break;
 		default:
 			throw new Error("Tried to configure combat encounter for '" + encounter + "' but couldn't find an appropriate setup method!");
 			break;
@@ -2132,13 +2222,18 @@ public function runAway():void {
 
 		//Multiple NPCs? Raise difficulty class for each one!
 		difficulty += foes.length - 1;
-		if(difficulty > 5) difficulty = 5;
 		//Raise difficulty for having awkwardly huge genitalia/boobs sometime! TODO!
+		if(pc.ballDiameter() >= 9) difficulty++;
+		if(pc.ballDiameter() >= 18) difficulty++;
+
+		//Cap it
+		if(difficulty > 5) difficulty = 5;
 
 		//Lower difficulty for flight if enemy cant!
 		if(pc.canFly() && (!foes[0].canFly() || foes[0].isImmobilized())) difficulty--;
 		//Lower difficulty for immobilized foe
 		if(foes[0].isImmobilized()) difficulty--;
+		
 
 		//Set threshold value and check!
 		if(difficulty < 0) difficulty = 100;
@@ -2150,15 +2245,22 @@ public function runAway():void {
 		else difficulty = 5;
 		trace("Successful escape chance: " + difficulty + " %")
 		//Success!
-		if(rand(100) + 1 <= difficulty) {
-			if(pc.canFly()) output("Your feet leave the ground as you fly away, leaving the fight behind.")
+		if (rand(100) + 1 <= difficulty) {
+			if (foes[0] is Cockvine)
+			{
+				adultCockvinePCEscapes();
+				leaveCombat();
+				return;
+			}
+			if (pc.canFly()) 
+			{
+				if (pc.legCount == 1) output("Your [pc.foot] leaves");
+				else output("Your [pc.feet] leave");
+				output(" the ground as you fly away, leaving the fight behind.");
+			}
 			else output("You manage to leave the fight behind you.")
 			processTime(8);
-			pc.removeStatusEffect("Round");
-			pc.clearCombatStatuses();
-			this.userInterface.hideNPCStats(); // Putting it here is kinda weird, but seeing the enemy HP value drop to 0 also seems a bit weird too
-			this.clearMenu();
-			this.addButton(0,"Next",mainGameMenu);
+			leaveCombat();
 		}
 		else {
 			output(" It doesn't work!\n");
@@ -2166,6 +2268,15 @@ public function runAway():void {
 		}
 
 	}
+}
+
+public function leaveCombat():void
+{
+	pc.removeStatusEffect("Round");
+	pc.clearCombatStatuses();
+	userInterface.hideNPCStats();
+	clearMenu();
+	addButton(0, "Next", mainGameMenu);
 }
 public function fantasize():void {
 	clearOutput();
@@ -2218,6 +2329,27 @@ public function tease(target:Creature, part:String = "chest"):void {
 		
 		clearOutput();
 		chestTeaseText();
+	}
+	else if(part == "squirt")
+	{
+		//Get tease count updated
+		if(flags["TIMES_CHEST_TEASED"] == undefined) flags["TIMES_CHEST_TEASED"] = 0;
+		teaseCount = flags["TIMES_CHEST_TEASED"];
+		if(teaseCount > 100) teaseCount = 100;
+		
+		if(pc.biggestTitSize() >= 5 && target.sexualPreferences.getPref(GLOBAL.SEXPREF_BIG_BREASTS) > 0)
+			likeAdjustments[likeAdjustments.length] = target.sexualPreferences.getPref(GLOBAL.SEXPREF_BIG_BREASTS);
+		if(pc.biggestTitSize() < 4 && target.sexualPreferences.getPref(GLOBAL.SEXPREF_SMALL_BREASTS) > 0)
+			likeAdjustments[likeAdjustments.length] = target.sexualPreferences.getPref(GLOBAL.SEXPREF_SMALL_BREASTS);
+		if((pc.bRows() > 1 || pc.totalBreasts() / pc.bRows() > 2) && target.sexualPreferences.getPref(GLOBAL.SEXPREF_MULTIPLES) > 0) 
+			likeAdjustments[likeAdjustments.length] = target.sexualPreferences.getPref(GLOBAL.SEXPREF_MULTIPLES);
+		if(pc.biggestTitSize() >= 25 && target.sexualPreferences.getPref(GLOBAL.SEXPREF_HYPER) > 0) 
+			likeAdjustments[likeAdjustments.length] = target.sexualPreferences.getPref(GLOBAL.SEXPREF_HYPER);
+		if(pc.hasFuckableNipples() && target.sexualPreferences.getPref(GLOBAL.SEXPREF_NIPPLECUNTS) > 0) 
+			likeAdjustments[likeAdjustments.length] = target.sexualPreferences.getPref(GLOBAL.SEXPREF_NIPPLECUNTS);
+		
+		clearOutput();
+		squirtTeaseText(target);
 	}
 	else if(part == "hips")
 	{
@@ -2307,6 +2439,8 @@ public function tease(target:Creature, part:String = "chest"):void {
 		//Misc Bonuses
 		var bonus:int = 0;
 		if(pc.hasPerk("Pheromone Cloud")) bonus = 1;
+		if(part == "squirt") bonus += 2;
+
 		//Does the enemy resist?
 		if(target.willpower()/2 + rand(20) + 1 > pc.level * 2.5 * totalFactor + 10 + teaseCount/10 + pc.sexiness() + bonus || target.lustDamageMultiplier() == 0)
 		{
@@ -2320,6 +2454,11 @@ public function tease(target:Creature, part:String = "chest"):void {
 				if(target.plural) output("don't");
 				else output("doesn't");
 				output(" seem to care to care for your eroticly-charged display. (0)</b>\n");
+			}
+			else if(part == "squirt") 
+			{
+				output("\nYour milk goes wide. (0)\n");
+				teaseSkillUp(part);
 			}
 			else if (target is HuntressVanae || target is MaidenVanae)
 			{
@@ -2341,6 +2480,7 @@ public function tease(target:Creature, part:String = "chest"):void {
 		else {
 			//Calc base damage
 			damage += 10 * (teaseCount/100 + 1) + pc.sexiness()/2;
+			if(part == "squirt") damage += 5;
 			//Any perks or shit go below here.
 			if(pc.hasPerk("Pheromone Cloud")) damage += 1+rand(4);
 			//Apply randomization
@@ -2352,7 +2492,12 @@ public function tease(target:Creature, part:String = "chest"):void {
 			damage = Math.ceil(damage);
 
 			output("\n");
-			output(teaseReactions(damage,target));
+			if(part == "squirt") 
+			{
+				if(target.plural) output(target.capitalA + target.short + " are splattered with your [vanae.milk], unable to get it off. All of a sudden, their faces begin to flush, and they look quite aroused.");
+				else output(target.capitalA + target.short + " is splattered with your [vanae.milk], unable to get it off. All of a sudden, " + target.mfn("his","her","its") + " " + target.face() + " begins to flush, and " + target.mfn("he","she","it") + " looks quite aroused.");
+			}
+			else output(teaseReactions(damage,target));
 			target.lust(damage);
 			output(" ("+ damage + ")\n");
 			teaseSkillUp(part);
@@ -2369,6 +2514,7 @@ public function teaseSkillUp(part:String):void {
 	else if(part == "butt") flags["TIMES_BUTT_TEASED"]++;
 	else if(part == "hips") flags["TIMES_HIPS_TEASED"]++;
 	else if(part == "chest") flags["TIMES_CHEST_TEASED"]++;
+	else if(part == "squirt") flags["TIMES_CHEST_TEASED"]++;
 }
 
 public function teaseReactions(damage:Number,target:Creature):String {
@@ -2425,6 +2571,11 @@ public function teaseReactions(damage:Number,target:Creature):String {
 		else buffer = target.capitalA + target.short + " licks " + target.mfn("his","her","its") + " lips in anticipation, " + target.mfn("his","her","its") + " hands idly stroking " + target.mfn("his","her","its") + " own body.";
 	}
 	return buffer;
+}
+
+public function squirtTeaseText(target:Creature):void {
+	output("You grab the sides of your [pc.breasts]. With a single squeeze, you squirt a stream of [pc.milk] at your opponent!");
+	pc.milked(25);
 }
 
 public function crotchTeaseText(target:Creature):void {
@@ -2690,7 +2841,7 @@ public function crotchTeaseText(target:Creature):void {
 		output("\n\n“<i>");
 		if(pc.hasCock() && pc.hasVagina()) output("[pc.CumFlavor] and [pc.girlCumFlavor], two great tastes that go great together. Herm " + pc.mf("boys","girls") + " really do get the best of everything.");
 		//Male: 
-		else if(pc.hasCock()) output("Sure you don’t want some of this [pc.cumNoun] for yourself? It’s nice and [pc.cumFlavor], " + pc.mf("a real man’s spunk","high femininity: perfect for a “girl” like me") + ".");
+		else if(pc.hasCock()) output("Sure you don’t want some of this [pc.cumNoun] for yourself? It’s nice and [pc.cumFlavor], " + pc.mf("a real man’s spunk","perfect for a “girl” like me") + ".");
 		else if(pc.hasVagina()) 
 		{
 			output("Mmm, can’t get enough of that all-natural [pc.girlCumFlavor] taste. Come get some");
@@ -2933,7 +3084,7 @@ public function chestTeaseText():void {
 			}
 			//Big TiTS!
 			else if(pc.biggestTitSize() >= 4) {
-				if(pc.isChestGarbed()) output("You peel away your [pc.upperGarments] with careful, slow tugs to expose your [pc.fullChest]. Only after you've put yourself on display do you look back at your target and truly begin to tease, starting with a knowing wink. Then, you grab hold of your [pc.chest] and cup them to enhance your cleavage, lifting one than the other in slow, sensuous display. Covering them up is something you do a little a regretfully.");
+				if(pc.isChestGarbed()) output("You peel away your [pc.upperGarments] with careful, slow tugs to expose your [pc.fullChest]. Only after you've put yourself on display do you look back at your target and truly begin to tease, starting with a knowing wink. Then, you grab hold of your [pc.chest] and cup them to enhance your cleavage, lifting one then the other in a slow, sensuous display. Covering them up is something you do a little a regretfully.");
 				else output("You delicately trace a finger up your [pc.belly] to your exposed cleavage, slowing it nestles in place. Your motion causes your breasts to gently sway as you explore yourself, and you pause to look at your target. With one hand, you squeeze your left tit, crushing your other hand's finger in tit while you grope yourself. With your erotic display complete, you release yourself and stretch, glad to be uncovered.");
 			}
 			//Petite ones!
@@ -3048,6 +3199,14 @@ public function hipsTeaseText():void {
 
 public function sense(target:Creature):void {
 	clearOutput();
+	
+	if (target is Cockvine)
+	{
+		adultCockvineSenseOverride();
+		processCombat();
+		return;
+	}
+	
 	output("You try to get a feel for " + possessive(target.a + target.short) + " likes and dislikes!\n");
 	if(target.lustDamageMultiplier() == 0) output("You don't think sexuality can win this fight!\n");
 	var buffer:String = "";
@@ -3272,6 +3431,7 @@ public function flashGrenade(target:Creature):void {
 	else output("\n" + target.capitalA + target.short + " manages to keep away from the blinding projectile.\n")
 	processCombat();
 }
+
 public function NPCFlashGrenade():void {
 	pc.energy(-10);
 	output(monster.capitalA + monster.short + "produces a flash grenade and hucks it in your direction!\n");
@@ -3285,10 +3445,10 @@ public function NPCFlashGrenade():void {
 	processCombat();
 }
 
-
 public function headbutt(target:Creature):void {
 	properHeadbutt(pc,target);
 }
+
 public function properHeadbutt(attacker:Creature,target:Creature):void {
 	if(attacker == pc) clearOutput();
 	attacker.energy(-25);
@@ -3433,7 +3593,14 @@ public function grenade(target:Creature):void
 	pc.energy(-25);
 	output("Tossing an explosive in the general direction of your target, you unleash an explosive blast of heat on " + target.a + target.short + "! ");
 	var damage:Number = Math.round(40 + rand(10));
-	genericDamageApply(damage,pc,target,GLOBAL.THERMAL);
+	
+	if (foes[0] is Cockvine)
+	{
+		adultCockvineGrenadesInEnclosedSpaces(damage, false, false, false);
+	}
+	
+	genericDamageApply(damage, pc, target, GLOBAL.THERMAL);
+	
 	output("\n");
 	processCombat();
 }
@@ -3446,6 +3613,11 @@ public function gasGrenade(target:Creature):void
 	
 	var damage:Number = 14 + pc.level + rand(10);
 
+	if (foes[0] is Cockvine)
+	{
+		adultCockvineGrenadesInEnclosedSpaces(damage, false, false, true);
+	}
+	
 	//Any perks or shit go below here.
 	damage *= target.lustDamageMultiplier();
 	if(target.lust() + damage > target.lustMax()) damage = target.lustMax() - target.lust();
@@ -3498,6 +3670,7 @@ public function goozookaCannon(target:Creature):void
 			damage = 33 * target.lustDamageMultiplier();
 			if (target.lust() + damage > target.lustMax()) damage = target.lustMax() - target.lust();
 			damage = Math.ceil(damage);
+			output("\n");
 			output(teaseReactions(damage, target));
 			target.lustDamage(damage);
 			output(" (" + damage + ")\n");
@@ -3595,15 +3768,23 @@ public function carpetGrenades():void
 	clearOutput();
 	pc.energy(-25);
 	output("You sling an array of microgrenades at everything in the area! ");
+	
 	var damage:Number = Math.round(30 + rand(10));
+	
+	if (foes[0] is Cockvine)
+	{
+		adultCockvineGrenadesInEnclosedSpaces(damage, true, false, false);
+	}
+
 	for(var x:int = 0; x < foes.length; x++)
 	{
-		damage = Math.round(30 + rand(10));
 		//Double damage against plural enemies
 		if(foes[x].plural) genericDamageApply(damage*2,pc,foes[x],GLOBAL.THERMAL);
 		else genericDamageApply(damage,pc,foes[x],GLOBAL.THERMAL);
 	}
+	
 	aoeAttack(damage);
+	
 	output("\n");
 	processCombat();
 }
@@ -3612,8 +3793,15 @@ public function detCharge(target:Creature):void
 	clearOutput();
 	pc.energy(-25);
 	output("You toss a bundle of explosives in the direction of " + target.a + target.short + "! ");
+	
 	var damage:Number = Math.round(50 + rand(10));
-	genericDamageApply(damage,pc,target,GLOBAL.THERMAL);
+	
+	if (foes[0] is Cockvine)
+	{
+		adultCockvineGrenadesInEnclosedSpaces(damage, false, false, false);
+	}
+	genericDamageApply(damage, pc, target, GLOBAL.THERMAL);
+
 	output("\n");
 	processCombat();
 }

@@ -96,7 +96,7 @@
 					kGAMECLASS.output(" come away under your fingers, ");
 					if(pc.skinType == GLOBAL.SKIN_TYPE_FUR) kGAMECLASS.output("fur");
 					else kGAMECLASS.output("scales");
-					kGAMECLASS.output(" falling in clumps until the new, smooth [pc.skinColor] skin underneath is exposed.");
+					kGAMECLASS.output(" falling in clumps until the new, smooth [pc.skinTone] skin underneath is exposed.");
 					pc.skinType = GLOBAL.SKIN_TYPE_SKIN;
 					changes++;
 				}
@@ -149,6 +149,7 @@
 					if(pc.cockTotal() == 1) kGAMECLASS.output("dick");
 					else kGAMECLASS.output("dicks");
 					kGAMECLASS.output(" hanging free like a human’s.");
+					pc.removeStatusEffect("Genital Slit");
 				}
 
 				//Feminine TFs
@@ -165,7 +166,7 @@
 				{
 					if(target.vaginaTypeUnlocked(x,GLOBAL.TYPE_HUMAN))
 					{
-						kGAMECLASS.output("\n\nYour [pc.vagina " + x + "] feels strange, like its entire length is squirming. The flesh of your folds and outer lips reshapes, becoming a simple slit with a pink interior and a single clit nestled within. <b>[pc.oneVagina] is now human-like</b>.");
+						kGAMECLASS.output("\n\nYour [pc.vagina " + x + "] feels strange, like its entire length is squirming. The flesh of your folds and outer lips reshapes, becoming a simple slit with a pink interior and a single clit nestled within. <b>[pc.OneVagina] is now human-like</b>.");
 						pc.lust(5+rand(3));
 						pc.libido(1);
 						changes++;
@@ -173,7 +174,7 @@
 					}
 					else
 					{
-						kGAMECLASS.output(target.vaginaTypeLockedMessage());
+						kGAMECLASS.output("\n\n" + target.vaginaTypeLockedMessage());
 					}
 				}
 				//Breasts down to F-cup

@@ -116,7 +116,7 @@ public function dontTakeTheRewardWhaddaYouGayOrSomething():void
 	
 	output("\n\nYou nod, and slip out of the booth, heading towards the door. Over your shoulder, you hear her call, <i>“See you around, hero!”</i>");
 
-	clearOutput();
+	clearMenu();
 	addButton(0, "Next", mainGameMenu);
 }
 
@@ -185,9 +185,9 @@ public function saendrasBarMenu():void
 public function saendraSexMenu():void
 {
 	clearMenu();
-
-	if (!saendra.hasCock()) addButton(0, "Take Strapon", takeSaensStrappedyDappedyCock, undefined, "Take Strapon", "Saendra dons a strapon and goes to town on your ass.");
-	else addButton(0, "Get Buttfucked", takeSaensCompletelyReasonablyProportionedFutaCock, undefined, "Get Buttfucked", "Put Saendra's new cock to work on your ass.");
+	
+	if (saendra.hasCock()) addButton(0, "Get Buttfucked", takeSaensCompletelyReasonablyProportionedFutaCock, undefined, "Get Buttfucked", "Put Saendra's new cock to work on your ass.");
+	else addButton(0, "Take Strapon", takeSaensStrappedyDappedyCock, undefined, "Take Strapon", "Saendra dons a strapon and goes to town on your ass.");
 
 	addButton(10, "Probe Sex", saendraProbesYourCuntWithHerMechaArm, undefined, "Probe Sex", "Saendra's mechanical arm has some interesting features...");
 	
@@ -1203,7 +1203,8 @@ public function takeSaensStrappedyDappedyCock():void
 	//Strapon buttsecks. Not available after FutaSaen rises.
 	saenHeader(true);
 	var selCunt:int;
-	if (pc.hasVagina()) selCunt = pc.cuntThatFits(33.5);
+	
+	if (pc.cuntThatFits(33.5) >= 0) selCunt = pc.cuntThatFits(33.5);
 	else selCunt = 0;
 
 	output("Dangling on the side of Saen’s nightstand is a very tempting toy indeed, a thick, footlong vibrator hooked onto a set of sheer black leather straps. Following your gaze, Saen gets a big grin on her face as she reaches over and grabs the oversized strapon.");

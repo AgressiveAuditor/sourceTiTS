@@ -383,12 +383,12 @@ public function millieMilkersPartDues():void
 			output("\n\nMillie's hands are all over you, seasoning for the feast of pleasure your [pc.fullChest] are producing. They knead your pliant flesh like a skilled masseuse, eliminating tension wherever they find it, insulating you from the real world with a padded realm of pure pleasure. The feeling of her cushy form over your own barely registers, and the taste of her cherry flavor on your lips has your tongue lolling out, probing her silky depths in between grunting moos.");
 			output("\n\nThere is nothing but her fingers, her taste, and the ever-present sensation of giving milk like a good little cow.");
 		}
+		pc.libido(1);
 		pc.orgasm();
 		pc.orgasm();
 		pc.orgasm();
 		pc.orgasm();
 	}
-	processTime(45);
 	pc.orgasm();
 	clearMenu();
 	addButton(0,"Next",millieMilkingFinale);
@@ -422,7 +422,9 @@ public function millieMilkingFinale():void
 		if(pc.milkType == GLOBAL.FLUID_TYPE_MILK) output("own");
 		else output("[pc.milkNoun]");
 		output(". Gasping, you squirm away, still far too sensitive after so much time hooked up to the machine. The cow stops, grabbing you a towel. “<i>Here, clean up.</i>”");
-		output("\n\nYou wipe yourself up, avoiding your sore, completely emptied tits until last, giving them as long as possible to recover from the rough treatment. Still, when you finish, you’re clean, even if the stall smells like milk{, [pc.milkNoun],} and cherries - the source of the last the obvious damp patch that Millie’s denim has acquired.");
+		output("\n\nYou wipe yourself up, avoiding your sore, completely emptied tits until last, giving them as long as possible to recover from the rough treatment. Still, when you finish, you’re clean, even if the stall smells like milk");
+		if (pc.isLactating()) output(", [pc.milkNoun],");
+		output(" and cherries - the source of the last the obvious damp patch that Millie’s denim has acquired.");
 	}
 	//Treated
 	else
@@ -473,8 +475,8 @@ public function millieMilkingFinale():void
 	if(milkAmount > 1000) output(milkAmount/1000 + " Ls</b>")
 	else output(milkAmount + " mLs</b>");
 
-	processTime(20);
 	pc.milked(pc.milkFullness);
+	processTime(65);
 	pc.boostLactation(1);
 	flags["MILLIE_LAST_ACTION"] = "Milker";
 
@@ -711,7 +713,7 @@ public function millieFuckFinale(cumQ:Number):void
 	
 	if(cumQ >= 1200) output("... oh gosh, so much!</i>” She rubs her belly in awe.");
 	else output(" cum.</i>”");
-	output(" Her New Texan account comes through much thicker than before you met, and her eyes are a little glassier than normal. You suppose it can be forgiven in light of the dozens of climaxes she just endured.");
+	output(" Her New Texan accent comes through much thicker than before you met, and her eyes are a little glassier than normal. You suppose it can be forgiven in light of the dozens of climaxes she just endured.");
 
 	output("\n\nThe well-fucked cow ");
 	//Knot:

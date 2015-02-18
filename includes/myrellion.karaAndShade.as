@@ -572,7 +572,7 @@ public function meetUpWithKaraInTheBackAlley():void
 	showKara();
 	output("\n\n“<i>You’re here,</i>” Kara says, taking a step out of the shadows and lowers the hood down to her shoulders, letting her cobalt-blue cat ears peek out at you.");
 	//if PC fucked Shade:
-	if(flags["SEXED_SHADE"] != undefined) output("\n\n“<i>Finally! I thought you weren’t coming. Then again, maybe you </i>did<i> cum huh?");
+	if(flags["SEXED_SHADE"] != undefined) output("\n\n“<i>Finally! I thought you weren’t coming. Then again, maybe you </i>did<i> cum huh? ");
 	else output("“<i>");
 	output("Looks like I made a good call with you. You’ve more than earned your reward.</i>”");
 
@@ -648,6 +648,12 @@ public function karaAI():void
 	{
 		karaStimulantBoost();
 		foes[0].createStatusEffect("Stimmed");
+	}
+	//No gun? GRAB DAT GUN
+	else if(foes[0].hasStatusEffect("Disarmed"))
+	{
+		output("Kara dives after her disarmed weapon, forfeiting her chance to attack in order to re-arm herself!");
+		foes[0].removeStatusEffect("Disarmed");
 	}
 	//Force Edge (High-damage melee attack, moderate cooldown)
 	else if(!foes[0].hasStatusEffect("Force Edge Cooldown") && rand(3) == 0)
@@ -1201,7 +1207,10 @@ public function rimAndWankOrLickAndWankWhoKnowsSloot():void
 	output("\n\nShade answers it with a playful grope, sinking her fingers into your [pc.butt] until you draw a sharp, gasping breath. A glance over your shoulder shows Shade grinning, her pussy-tail swishing happily behind her as she stretches languidly out behind you, nestling her cheeks against your raised behind. You feel her tongue snake out again, this time caressing the ");
 	if(y >= 0) output("outer lips of ");
 	else output("dark, sensitive skin around ");
-	output("your [pc.vagOrAss " + y + "]. You hear a pleased little purr behind you and a thrum of vibration on the {lips/rim} of your hole as Shade’s lips press against your [pc.vagOrAss " + y + "].");
+	output("your [pc.vagOrAss " + y + "]. You hear a pleased little purr behind you and a thrum of vibration on the");
+	if (pc.hasVagina()) output(" lips");
+	else output(" rim"); 
+	output(" of your hole as Shade’s lips press against your [pc.vagOrAss " + y + "].");
 
 	output("\n\nYou moan and bite your lip, hard, as Shade’s tongue traces around your hole, licking and teasing, drawing closer and closer to the entrance. Instinctively, your fingers clutch at the pillow under your head, clawing for purchase. Your lover carries on relentlessly, dragging her tongue through the cleft of your ");
 	if(y >= 0) output("cunt");
@@ -1623,7 +1632,7 @@ public function runesYouTurdShade():void
 		output("a small, silver necklace out from her shirt. It looks like a vertical bar pierced by a triangle, sort of like a sideways hat.");
 		flags["SHADE_CULT_TALK"] = 1;
 	}
-	output(" “<i>I told their leader I didn’t buy into the whole gods and giants thing, but he just smiled and me and nodded, all fatherly understanding. Said belief wasn’t what mattered, but the way you behaved. He told me about their philosophy, honor in battle, wisdom before action. They preached self-empowerment and courage more than gods; hell, some of the oldest members confessed to me while I was there that </i>they<i> didn’t believe in the gods, but they liked the message. I suppose I could have picked a worse religion to fall in with than one that encouraged me to be a warrior, even trained me. Plus they had a pretty serious fetility and sex-potency undertone going on, so it didn’t hurt that I came to them with a kid on the way.</i>”");
+	output(" “<i>I told their leader I didn’t buy into the whole gods and giants thing, but he just smiled and me and nodded, all fatherly understanding. Said belief wasn’t what mattered, but the way you behaved. He told me about their philosophy, honor in battle, wisdom before action. They preached self-empowerment and courage more than gods; hell, some of the oldest members confessed to me while I was there that </i>they<i> didn’t believe in the gods, but they liked the message. I suppose I could have picked a worse religion to fall in with than one that encouraged me to be a warrior, even trained me. Plus they had a pretty serious fertility and sex-potency undertone going on, so it didn’t hurt that I came to them with a kid on the way.</i>”");
 
 	output("\n\n“<i>You talk like you stayed there for a while. Didn’t you join up just to leave?</i>”");
 
@@ -1661,6 +1670,8 @@ public function tailCuntOvipositionForShade():void
 //Let Shade take care of business.
 public function takinCareOfBusinessEveryDayWithShadeSheWorksForUPS():void
 {
+	flags["SHADE_INSEMINATION_COUNTER"] = undefined;
+	
 	clearOutput();
 	showShade();
 	output("You release your lover’s arm, and she rewards you with a slight grin. “<i>Back in a while.");
@@ -1677,6 +1688,8 @@ public function takinCareOfBusinessEveryDayWithShadeSheWorksForUPS():void
 //Ask Shade if she needs any help. Or at least, would like some company while she lays.
 public function goWithShadeToTakeCareOfBusinessYuSlut():void
 {
+	flags["SHADE_INSEMINATION_COUNTER"] = undefined;
+	
 	clearOutput();
 	showShade();
 	output("“<i>Need a hand?</i>” you ask, squeezing her hand affectionately. “<i>Like you said, they’re probably mine anyway.</i>”");
@@ -1709,7 +1722,7 @@ public function helpShadeLayHerEgg2():void
 	output("\n\n“<i>If you want to help... grab my tail and rub the tip. Help it relax.</i>”");
 	output("\n\nThat you can do. You reach out with tentative hands, gently wrapping them around the bulbous crown of Shade’s reptilian tail. The squirming creature struggles in your grasp for a moment before your massaging fingers settle it down, lulling it into a fitful acquiescence. With the tail calmed, you begin to gently caress its length, massaging the head around the drooling pussylips. A bit of moisture trickles onto your fingers, letting you move along its polished scales easily. The length of her tail swells slightly after a moment, and Shade throws her head back with a low moan as the egg starts to move down the vaginal passage.");
 	output("\n\nShade’s hand shifts up to her breast, cupping and squeezing through the straining fabric of her shirt. “<i>Oh, fuck, now we’re getting somewhere,</i>” she moans, breathing hard and grunting as she forces the egg down her tail. Femcum and lube squirts out of tailpussy, slathering your hands and drenching the stuffing at the bottom of the bucket.");
-	output("\n\nA mischievous grin spreads across your lips as your bear witness to Shade’s sexual moans. You shift the lips of her tail up to your mouth and let your [pc.tongue] play across them, licking her reptilian cunt cunt its owner makes a cry of pleasure. The egg traveling down her passage starts coming faster in answer to your movements, sliding through her passage with increasing speed as you eat her tail-pussy out. Shade’s voice quavers as she moans, trying to tell you to either lick faster or fuck her - she wobbles in between extremes, her voice picking up to an ecstatic scream. You keep your [pc.tongue] moving quickly, teasing the hooded little clit near her tail’s broad tip until you can feel the lips spreading, parting around the thick, white surface of the cunt-snake’s egg.");
+	output("\n\nA mischievous grin spreads across your lips as your bear witness to Shade’s sexual moans. You shift the lips of her tail up to your mouth and let your [pc.tongue] play across them, licking her reptilian cunt its owner makes a cry of pleasure. The egg traveling down her passage starts coming faster in answer to your movements, sliding through her passage with increasing speed as you eat her tail-pussy out. Shade’s voice quavers as she moans, trying to tell you to either lick faster or fuck her - she wobbles in between extremes, her voice picking up to an ecstatic scream. You keep your [pc.tongue] moving quickly, teasing the hooded little clit near her tail’s broad tip until you can feel the lips spreading, parting around the thick, white surface of the cunt-snake’s egg.");
 	output("\n\nShade screams as an orgasm rocking through her, spurred on by the egg cresting from her pussylips. You get your face out of the way and level her cunt-tail with the bin, letting the egg roll out of her twat and onto the thick layer of stuffing waiting for it. Shade groans and flops onto her back, breathing hard, hands on her belly.");
 	output("\n\n“<i>Oof. Never get used to that,</i>” she laughs, running a hand through her silver hair. You cover the egg up with some fluff and crawl into bed beside your lover, slipping an arm around her waist. She gives you a wan smile, and her juicy tale caresses your [pc.leg].");
 	processTime(15);

@@ -1,16 +1,17 @@
 ﻿import classes.Characters.PlayerCharacter;
 import classes.Creature;
+import classes.DataManager.Errors.VersionUpgraderError;
 import classes.DataManager.Serialization.ItemSaveable;
 import classes.ItemSlotClass;
 import classes.StorageClass;
 import classes.StringUtil;
 import classes.TiTS;
 
-public function useItem(item:ItemSlotClass):void {
+public function useItem(item:ItemSlotClass):Boolean {
 	if (item.isUsable == false)
 	{
 		trace("Need to find where the use button for this item was generated and disable it with isUsable == false checks.");
-		return;
+		return false;
 	}
 	if (item.quantity == 0) 
 	{
@@ -18,7 +19,7 @@ public function useItem(item:ItemSlotClass):void {
 		output("Attempted to use " + item.longName + " which had zero quantity.");
 		this.clearMenu();
 		this.addButton(14,"Back",useItemFunction);
-		return;
+		return false;
 	}
 	else 
 	{
@@ -31,6 +32,7 @@ public function useItem(item:ItemSlotClass):void {
 			// item replacement. The player can have a "full" inventory including the item they've just equipped!
 			if (pc.inventory.indexOf(item) != -1) pc.inventory.splice(pc.inventory.indexOf(item), 1);
 			equipItem(item);
+			return true;
 		}
 		//Else try to use a stored function!
 		else 
@@ -63,6 +65,8 @@ public function useItem(item:ItemSlotClass):void {
 					pc.inventory.splice(pc.inventory.indexOf(item), 1);
 				}
 			}
+			
+			return false;
 		}
 	}
 }
@@ -151,6 +155,11 @@ public function shop(keeper:Creature):void {
 	if(keeper is Renvra)
 	{
 		approachRenvra();
+		return;
+	}
+	if(keeper is Xanthe)
+	{
+		enterTheSilkenSerenityWhyDidWashHaveToDie();
 		return;
 	}
 	clearOutput();
@@ -612,14 +621,27 @@ public function replaceItemPicker(lootList:Array):void {
 			this.addButton(x,butDesc,replaceItemGo,[x, lootList]);  // HAAACK. We can only pass one arg, so shove the two args into an array
 		}
 	}
-	this.addButton(14,"Back",itemCollect,true);
+	
+	this.addButton(14, "Back",
+		(function(c_lootList:Array):Function
+		{
+			return function():void
+			{
+				itemCollect(c_lootList, true);
+			}
+		}(lootList)), undefined);
 }
 
 public function useLoot(lootList:Array):void {
 	var loot:ItemSlotClass = lootList[0];
-	useItem(loot);
 	
-	if (loot.quantity <= 0)
+	// Remove equipped items from the list
+	// useLoot returns true during an equip-call
+	if (useItem(loot))
+	{
+		lootList.splice(0, 1);
+	}
+	else if (loot.quantity <= 0)
 	{
 		lootList.splice(0,1);
 	}
@@ -684,10 +706,11 @@ public function hasRoom(target:Creature,item:ItemSlotClass):Boolean {
 
 public function hasShipStorage():Boolean
 {
-	if (flags["SHIP_STORAGE_WARDROBE"] != undefined) return true;
-	if (flags["SHIP_STORAGE_EQUIPMENT"] != undefined) return true;
-	if (flags["SHIP_STORAGE_CONSUMABLES"] != undefined) return true;
-	return false;
+	if (flags["SHIP_STORAGE_WARDROBE"] == undefined) flags["SHIP_STORAGE_WARDROBE"] = 10;
+	if (flags["SHIP_STORAGE_EQUIPMENT"] == undefined) flags["SHIP_STORAGE_EQUIPMENT"] = 10;
+	if (flags["SHIP_STORAGE_CONSUMABLES"] == undefined) flags["SHIP_STORAGE_CONSUMABLES"] = 10;
+	
+	return true;
 }
 
 public function shipStorageMenuRoot():void
@@ -812,6 +835,11 @@ public function getListOfType(from:Array, type:String):Array
 	return items;
 }
 
+public function getNumberOfStoredType(from:Array, type:String):int
+{
+	return getListOfType(from, type).length;
+}
+
 public function outputStorageListForType(type:String):Array
 {
 	var items:Array = getListOfType(pc.ShipStorageInventory, type);
@@ -869,7 +897,7 @@ public function storeItem(args:Array):void
 	
 	// If we're this far in, we couldn't fit everything into an existing stack.
 	// See if we can place a new stack in the inventory
-	if (pc.ShipStorageInventory.length < flags["SHIP_STORAGE_" + type] && item.quantity > 0)
+	if (getNumberOfStoredType(pc.ShipStorageInventory, type) < flags["SHIP_STORAGE_" + type] && item.quantity > 0)
 	{
 		pc.ShipStorageInventory.push(item);
 		pc.inventory.splice(pc.inventory.indexOf(item), 1);
@@ -882,6 +910,7 @@ public function storeItem(args:Array):void
 		clearMenu();
 		addButton(0, "Switch", replaceInStorage, [item, type], "Switch Items", "Switch an item in your ships storage with one in your inventory.");
 		addButton(1, "Back", shipStorageMenuType, type);
+		return;
 	}
 	
 	shipStorageMenuType(type);
@@ -894,9 +923,12 @@ public function replaceInStorage(args:Array):void
 	var type:String = args[1];
 	
 	clearMenu();
-	for (var i:int = 0; i < pc.ShipStorageInventory.length; i++)
+	
+	var items:Array = getListOfType(pc.ShipStorageInventory, type);
+	
+	for (var i:int = 0; i < items.length; i++)
 	{
-		addItemButton(i, pc.ShipStorageInventory[i], doStorageReplace, [invItem, pc.ShipStorageInventory[i], type]);
+		addItemButton(i, items[i], doStorageReplace, [invItem, items[i], type]);
 	}
 }
 
@@ -910,7 +942,7 @@ public function doStorageReplace(args:Array):void
 	pc.ShipStorageInventory.push(invItem);
 	
 	pc.ShipStorageInventory.splice(pc.ShipStorageInventory.indexOf(tarItem), 1);
-	pc.inventory.push(invItem);
+	pc.inventory.push(tarItem);
 	
 	shipStorageMenuType(type);
 }
@@ -972,10 +1004,12 @@ public function replaceInInventory(args:Array):void
 	var invItem:ItemSlotClass = args[0];
 	var type:String = args[1];
 	
+	var items:Array = getListOfType(pc.inventory, type);
+	
 	clearMenu();
-	for (var i:int = 0; i < pc.inventory.length; i++)
+	for (var i:int = 0; i < items.length; i++)
 	{
-		addItemButton(i, pc.inventory[i], doInventoryReplace, [invItem, pc.inventory[i], type]);
+		addItemButton(i, items[i], doInventoryReplace, [invItem, items[i], type]);
 	}
 }
 
@@ -989,7 +1023,7 @@ public function doInventoryReplace(args:Array):void
 	pc.inventory.push(invItem);
 	
 	pc.inventory.splice(pc.inventory.indexOf(tarItem), 1);
-	pc.ShipStorageInventory.push(invItem);
+	pc.ShipStorageInventory.push(tarItem);
 	
 	shipStorageMenuType(type);
 }

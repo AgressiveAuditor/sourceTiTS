@@ -19,6 +19,8 @@ public function flyToMyrellion():void
 	{
 		clearOutput();
 		author("Savin");
+		showBust("MYR_GOLD_PILOT");
+		showName("MYR\nESCORT");
 		output("You guide your vessel into the space around Myrellion, the only inhabited planet in the system. While most planets in the Rush are magnets for explorers and pioneers, this is the first world where you've seen warships in orbit: your sensors pick up a small battle group of Ausar Federation and Terran-Space Coalition ships holding in high orbit: a cursory glance says that their shields are up and their weapons are locked on the planet below.");
 		output("\n\nYour shipboard computer automatically syncs with the U.G.C. Scout Authority beacon hanging in the atmosphere as you glide down towards the surface. A warning appears on screen:\n\n<i>Notice: the Myrellion System has been flagged as Extremely Dangerous to civilians. There is a high risk of bodily harm or death while exploring this world, especially beyond the U.G.C. embassy on the surface. Your safety cannot be guaranteed beyond the planet's atmosphere.</i>");
 		output("\n\nWhat's going on here? You let the autopilot guide you down towards the surface, homing in on the embassy you've been told to go to. As you start to near it, your sensors bleep an urgent warning: <i>several unidentified aircraft incoming!</i> You glance at your display, watching a half-dozen bogies zip towards you from behind. You're about to power up weapons when your emergency radio beeps.");
@@ -52,7 +54,9 @@ public function flyToMyrellion():void
 		//This check ensures older save files will re-unlock the relevant entries.
 		CodexManager.unlockEntry("Red Myr");
 		CodexManager.unlockEntry("Gold Myr");
-		output("Flying to Myrellion is no quick jaunt down the road, but before you know it, you're guiding your ship back through the atmosphere for a flawless landing on the tarmac.");
+		showBust("MYR_GOLD_PILOT");
+		showName("MYR\nESCORT");
+		output("Flying to Myrellion is no quick jaunt down the road, but before you know it, you're guiding your ship back through the atmosphere for a flawless landing on the tarmac, escorted by a squadron of myr pilots in old-timey biplanes.");
 	}
 }
 
@@ -178,4 +182,63 @@ public function gildenmereElevatorBottomBonus():Boolean
 	//Elevator with pass:
 	else output("You flash the pass Lyralla gave you to the guards. They nod and gesture to the elevator. You can go to greater Gildenmere at your leisure.");
 	return false;
+}
+
+public function noManzLandBonus():Boolean
+{
+	if(flags["ENCOUNTERS_DISABLED"] != undefined) return false;
+	if(flags["NO_MANS_STEP"] == undefined) flags["NO_MANS_STEP"] = 1;
+	else {
+		//if(pc.accessory is JungleLure) flags["NO_MANS_STEP"]++;
+		flags["NO_MANS_STEP"]++;
+	}
+	
+	var choices:Array = new Array();
+	//If walked far enough w/o an encounter
+	if(flags["NO_MANS_STEP"] >= 5 && rand(4) == 0) {
+		//Reset step counter
+		flags["NO_MANS_STEP"] = 0;
+		
+		//Build possible encounters
+		choices[choices.length] = adultCockvineEncounter;
+		choices[choices.length] = cockvineSeedlingEncounter;
+
+		//Run the event
+		choices[rand(choices.length)]();
+		return true;
+	}
+	return false;
+}
+
+//==========================
+//  GILDENMERE SHITZ
+//==========================
+public function gildenmereStreetBonus():Boolean
+{
+	if(flags["IRELLIA_QUEST_STATUS"] == 1  && (rand(35) == 0 || debug))
+	{
+		unificationInvitationEventProcInGildenmere();
+	}
+	return false;
+}
+
+public function southwestMushroomParkBonus():Boolean
+{
+	if(flags["IRELLIA_QUEST_STATUS"] == 2 && hours == 18 && minutes < 30)
+	{
+		unificationRallyEvent();
+		return true;
+	}
+	return false;
+}
+
+public function gildenmereCornerStreetBonus():Boolean
+{
+	if(flags["IRELLIA_QUEST_STATUS"] == 3 && hours == 23 && minutes >= 30)
+	{
+		beADumbShitFallGuyForTheRebels();
+		return true;
+	}
+	//No explosion? Do normal street corner.
+	return southwestMushroomParkBonus();
 }

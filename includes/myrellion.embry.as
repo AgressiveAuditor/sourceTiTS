@@ -353,12 +353,12 @@ public function callWaitress():void
 		//You spot an unoccupied table and seat yourself. A new ship has just arrived, and the bar is full of planet rushers. It seems like everyone's eager to get a drink planetside.
 		output("Despite the crowd, it's not long before someone comes up to take your order. Squeezing through the throng is a pink-haired individual. You catch sight of a brilliant blue eye staring at you from under candyfloss hair.");
 		output("\n\n'Cute'. That’s the word that immediately springs to mind. Her face is unbelievably pretty, even breathtakingly so. At first glance, she appears human, but her hair is tucked behind an ear that’s just a bit too large and oddly shaped. A pink monkey tail bobs behind her holding a small notepad.");
-		if(CodexManager.entryUnlocked("Simii")) output(" Between that and her pink furred forearms, it’s clear that she’s a simii.");
+		if(CodexManager.entryViewed("Simii")) output(" Between that and her pink furred forearms, it’s clear that she’s a simii.");
 
 		output("\n\nHer outfit has a lot of frill and puff. She’s wearing a lacy, maid-style headpiece with a black bow on either side, and a cute collar around her neck. Her peasant-style dress runs from shoulder to toe, modestly covering her slim frame. The black and white dress is very conservative by Myrellion standards, covering her surprisingly flat chest.");
 
 		// if first time meeting a Simii
-		if(!CodexManager.entryUnlocked("Simii"))
+		if(!CodexManager.entryViewed("Simii"))
 		{
 			output("\n\nHer forearms, one of the few things uncovered by her outfit, are covered in pink downy fur. Her feet are like large hands, and are just like that of a terran primate.");
 		}
@@ -378,7 +378,10 @@ public function callWaitress():void
 		else if(pc.femininity >= 60) output("feminine");
 		else output("androgynous");
 		output(" features, and her cheeks are clearly flushed. “<i>...Um, if there’s, you know... anything you want, j-just ask!</i>” she finishes, her eyes on the table.");
-
+		
+		CodexManager.unlockEntry("Simii");
+		output("\n\nYour codex beeps, informing you about the species Embry belongs to. <b>You have unlocked the entry for Simii!</b>");
+		
 		embryMenu();
 	}
 	//Second Time’
@@ -595,10 +598,18 @@ public function embryAppearance():void
 	output("she ");
 	if(flags["EMBRY_RELATIONSHIP"] != 0) output("shyly averts her gaze");
 	else output("endures your stare");
-	output(". She’s a short simii waitress, and the textbook definition of ‘cute’.");
+	output(". She’s a short");
+	if (CodexManager.entryViewed("Simii")) output(" simii");
+	output(" waitress, and the textbook definition of ‘cute’.");
 
-	output("\n\nThe most noticeable thing about her is her mid-length pink hair. It’s a little wavy and cascades down the side of her face, the other side tucked between one of her large simii ears. She has a lacy maid-like headpiece with a tiny black bow on each side.");
-	output("\n\nLike every simii, [embry.name] has a button shaped nose, slightly darker compared to the rest of her skin, a trait of her species.");
+	output("\n\nThe most noticeable thing about her is her mid-length pink hair. It’s a little wavy and cascades down the side of her face, the other side tucked between one of her large");
+	if (CodexManager.entryViewed("Simii")) output(" simii");
+	output(" ears. She has a lacy maid-like headpiece with a tiny black bow on each side.");
+	if (CodexManager.entryViewed("Simii")) output("\n\nLike every simii, ");
+	else output("\n\n"); 
+	output("[embry.name] has a button shaped nose, slightly darker compared to the rest of her skin");
+	if (CodexManager.entryViewed("Simii")) output(", a trait of her species.");
+	else output(".");
 	output("\n\nHer sky-blue eyes are framed by long, dark lashes that add to her feminine appeal. A touch of dark eyeshadow has been meticulously applied. She is also wearing light pink glossy lipstick. Her nose is cute and small, much like the rest of her.");
 	
 	//if Embry.armor = PeasantDress
@@ -606,7 +617,7 @@ public function embryAppearance():void
 	{
 		output("\n\nShe is wearing a lace collar with frilled edges around her slender neck. It’s cute, chic, and oddly conspicuous.");
 		output("\n\nFrom her neck right down to her toes, everything is covered by a peasant-style dress. It’s white with black trimming and frills. From the waist to the hem, the dress is rippled, giving it a very traditional look.");
-		output("\n\nIt’s hard to discern her figure underneath under so much puff. ");
+		output("\n\nIt’s hard to discern her figure under so much puff. ");
 		if(embry.biggestTitSize() < 1) output("Her breasts are non existent, and she doesn’t have much curve to speak of other than what the dress gives her.");
 		else output("She has small, A-cup breasts, and girlish curves that are emphasised by her feminine dress.");
 	}
@@ -1488,7 +1499,7 @@ public function thirdEmbryTransitionApproach():void
 		output("You sit down at an unoccupied table at the bar, and look around for [embry.name]. She’s nowhere in sight.");
 		output("\n\nOne of the other waitresses, an older looking Kaithrit lady, comes up to you with a knowing smile on her face. <i>\"Looking for someone, hun? You look like you’ve been stood up for a date!</i>”");
 		output("\n\n<i>\"Is [embry.name] working today? I can’t see her around,</i>” you ask, peering about even as you speak.");
-		output("\n\nA look of recognition spreads across the woman’s face. <i>\"OH! You’re [pc.name], aren’t you? You’re [embry.name]’s " + pc.mf("boy","girl") + "friend!</i>” She sounds thoroughly delighted by this. <i>\"Oh, where are my manners? I’m Dishisa.</i>”");
+		output("\n\nA look of recognition spreads across the woman’s face. <i>\"OH! You’re [pc.name], aren’t you? You’re [embry.name]’s " + pc.mf("boy","girl") + "friend!</i>” She sounds thoroughly delighted by this. <i>\"Oh, where are my manners? I’m Dishasha.</i>”");
 		output("\n\n<i>\"That little girl has been shy as a sheech ever since she started working here. Then one day she starts asking all these </i>questions<i> about " + pc.mf("boys","girls") + ", and coming out of her shell. I hear we have you to thank?</i>”");
 		output("\n\nThat definitely sounds like [embry.name] - she did mention that she was asking the other waitresses for advice. It’s also so like her to turn to a mature kaithrit woman for advice.");
 		output("\n\n<i>\"She’s taken the day off, dear. She said something about a special package arriving. Every time she says that, that girl shows up here with a bigger set of breasts!</i>” Dishasha chuckles.");
@@ -1541,7 +1552,7 @@ public function hunnnnnnnngGlasses():void
 	else
 	{
 		output("\n\n<i>\"You should definitely wear them more often - they make you look even cuter,</i>” you tell her. Her cheeks flush and she nervously adjusts her glasses.");
-		output("\n\n<i>\"W-wha--wait, what--?</i> the pink-haired girl bashfully stammers. This was <i>clearly</i> not the reaction she was expecting. <i>\"B-but I look like a geek--!</i>”");
+		output("\n\n<i>\"W-wha--wait, what--?</i>\" the pink-haired girl bashfully stammers. This was <i>clearly</i> not the reaction she was expecting. <i>\"B-but I look like a geek--!</i>”");
 		//if (pc.isTech)
 		if(pc.characterClass == GLOBAL.CLASS_ENGINEER)
 		{
@@ -1912,7 +1923,7 @@ public function drinkEpilogueWithSimii():void
 {
 	output("\n\n<i>\"We simii can’t really get tipsy off regular alcohol anyway - our body breaks it down too fast. If you ever end up in a tavern on Omorii, my home planet, the drinks there knock most off-worlder’s socks off,</i>” she tells you, sipping her raspberry tea. “<i>... A lot of simii bartenders will still serve it to travellers, though, because they find it funny to watch.</i>”");
 	output("\n\n“<i>... Wouldn’t they die of alcohol poisoning?</i>” you ask. If it’s that powerful, they’d probably need their stomach - or stomachs - pumped afterwards.");
-	output("\n\n<i>\"Sometimes. There’s not a whole lot of law on Omorii, other than what the sheriffs decide to enforce. There’s not a lot of love lost between my people and off-worlders,<i> the pink haired waitress explains.");
+	output("\n\n<i>\"Sometimes. There’s not a whole lot of law on Omorii, other than what the sheriffs decide to enforce. There’s not a lot of love lost between my people and off-worlders,</i>\" the pink haired waitress explains.");
 	output("\n\nSeems like you’ll need to watch the bartenders if you ever end up on Omorii.");
 	processTime(5);
 	clearMenu();
@@ -2905,6 +2916,7 @@ public function vagisilSexForEmbry(spentTime:Boolean = false):void
 		else output("\n\n");
 		output("You slowly sink your [pc.cockNounSimple] inside of her slick yet narrow tunnel. It squeezes your achingly hard length with impossible tightness. Every inch inside her is an effort - she’s so tight you feel like you’ll cum before your cock bottoms out!");
 		pc.cockChange();
+		//embry.cuntChange(0, pc.biggestCockVolume(), false, false, false);
 		output("\n\nDistracting yourself, you bite your lip hard, and try to focus on anything other than her divine tightness utterly wringing your [pc.cockNoun]. When your [pc.hips] finally meet hers, you tremble involuntarily with delight.");
 		output("\n\nYou feel the touch of slender fingers dancing along your cheeks. Looking down, you see [embry.name] gazing up at you ");
 		if(flags["EMBRY_GLASSES"] != undefined) output("through her glasses. Her baby blue eyes are filled ");
@@ -2952,6 +2964,7 @@ public function vagisilSexForEmbry(spentTime:Boolean = false):void
 	output("\n\nYou return to the bar with a smile.");
 	flags["SEXED_EMBRY"] = 1;
 	processTime(45);
+	embry.loadInCunt(pc);
 	pc.orgasm();
 	embry.vaginalVirgin = false;
 	clearMenu();

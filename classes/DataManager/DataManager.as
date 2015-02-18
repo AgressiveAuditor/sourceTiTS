@@ -2,6 +2,7 @@
 {
 	import classes.Items.Apparel.TSTArmor;
 	import classes.Items.Miscellaneous.PHAccess;
+	import classes.Items.Miscellaneous.TestGrenade;
 	import classes.Items.Protection.DBGShield;
 	import classes.kGAMECLASS;
 	import classes.ShipClass;
@@ -31,7 +32,7 @@
 	public class DataManager 
 	{
 		// Define the current version of save games.
-		private static const LATEST_SAVE_VERSION:int = 18;
+		private static const LATEST_SAVE_VERSION:int = 19;
 		private static const MINIMUM_SAVE_VERSION:int = 18;
 		
 		private var _autoSaveEnabled:Boolean = false;
@@ -61,11 +62,13 @@
 			var sv15:SaveVersionUpgrader15;
 			var sv16:SaveVersionUpgrader16;
 			var sv17:SaveVersionUpgrader17;
+			var sv18:SaveVersionUpgrader18;
 			
 			// I'm putting this fucking thing here for the same reason.
 			var dbgShield:DBGShield;
 			var tstArmor:TSTArmor;
 			var phAccess:PHAccess;
+			var tGen:TestGrenade;
 		}
 		
 		/**
@@ -281,8 +284,28 @@
 			// Call helper method(s) to do the actual saving of datas
 			this.saveBaseData(dataBlob);
 			
+			var verified:Boolean = false;
+			
+			try
+			{
+				verified = this.verifyBlob(dataBlob);
+			}
+			catch (e:Error)
+			{
+				var brokenFile:SharedObject = SharedObject.getLocal("broken_save", "/");
+				this.replaceDataWithBlob(brokenFile, dataBlob);
+				brokenFile.flush();
+				
+				kGAMECLASS.clearOutput2();
+				kGAMECLASS.userInterface.dataButton.Glow();
+				kGAMECLASS.output2("Save data verification failed. Please send the files 'broken_save.sol' and 'TiTs_" + slotNumber + ".sol' to Fenoxo or file a bug report!");
+				kGAMECLASS.output2("\n\n" + e.message);
+				kGAMECLASS.userInterface.clearGhostMenu();
+				kGAMECLASS.addGhostButton(14, "Back", this.showDataMenu);
+			}
+			
 			// VERIFY SAVE DATA BEFORE DOING FUCK ALL ELSE
-			if (this.verifyBlob(dataBlob))
+			if (verified)
 			{
 				// Verification successful, do things
 				this.replaceDataWithBlob(dataFile, dataBlob);
@@ -302,19 +325,6 @@
 					kGAMECLASS.userInterface.clearGhostMenu();
 					kGAMECLASS.addGhostButton(0, "Retry", this.retrySave, [dataFile, dataBlob, slotNumber]);
 				}
-			}
-			else
-			{
-				// Verification failed, ERROR ERROR ABORT
-				var brokenFile:SharedObject = SharedObject.getLocal("broken_save", "/");
-				this.replaceDataWithBlob(brokenFile, dataBlob);
-				brokenFile.flush();
-				
-				kGAMECLASS.clearOutput2();
-				kGAMECLASS.userInterface.dataButton.Glow();
-				kGAMECLASS.output2("Save data verification failed. Please send the files 'broken_save.sol' and 'TiTs_" + slotNumber + ".sol' to Fenoxo or file a bug report!");
-				kGAMECLASS.userInterface.clearGhostMenu();
-				kGAMECLASS.addGhostButton(14, "Back", this.showDataMenu);
 			}
 		}
 		
@@ -348,7 +358,27 @@
 			var dataBlob:Object = { };
 			this.saveBaseData(dataBlob);
 			
-			if (this.verifyBlob(dataBlob))
+			var verified:Boolean = false;
+			
+			try
+			{
+				verified = this.verifyBlob(dataBlob);
+			}
+			catch (e:Error)
+			{
+				var brokenFile:SharedObject = SharedObject.getLocal("broken_save", "/");
+				this.replaceDataWithBlob(brokenFile, dataBlob);
+				brokenFile.flush();
+				
+				kGAMECLASS.clearOutput2();
+				kGAMECLASS.userInterface.dataButton.Glow();
+				kGAMECLASS.output2("Save data could not be verified.");
+				kGAMECLASS.output2("\n\n" + e.message);
+				kGAMECLASS.userInterface.clearGhostMenu();
+				kGAMECLASS.addGhostButton(14, "Back", this.showDataMenu);
+			}
+			
+			if (verified)
 			{
 				kGAMECLASS.clearOutput2();
 				kGAMECLASS.userInterface.dataButton.Glow();
@@ -609,10 +639,20 @@
 			var gamePtr:* = kGAMECLASS;
 			
 			// We should now have the latest version of a game save structure -- Final verify
-			if (!dataErrors)
-			{
-				dataErrors = !this.verifyBlob(dataObject);
-			}
+			//try
+			//{
+				//if (!dataErrors)
+				//{
+					//dataErrors = !this.verifyBlob(dataObject);
+				//}
+			//}
+			//catch (e:Error)
+			//{
+				//dataErrors = false;
+				//
+			//}
+			
+			dataErrors = false;
 			
 			// Now we can shuffle data into disparate game systems 
 			var saveBackup:Object = new Object();
@@ -649,7 +689,7 @@
 		 * Need to add some error handling in here
 		 * @param	obj
 		 */
-		private function loadBaseData(obj:Object, curGameObj:Object):Object
+		private function loadBaseData(obj:Object, curGameObj:Object):Boolean
 		{
 			trace("loadBaseData");
 			// Base/Primary information
@@ -672,7 +712,7 @@
 			// Game data
 			kGAMECLASS.chars = new Object();
 			var aRef:Object = kGAMECLASS.chars;
-			var failure:Boolean = false
+			var failure:Boolean = false;
 			
 			for (prop in obj.characters)
 			{
@@ -792,19 +832,86 @@
 			// The idea is to check for many, basic properties on the data file to make sure we have EVERYTHING defined as a final-verify step before actually saving or loading a file
 			// During save, we're going to operate under the assumption that our complex-type save method (ie creature.getSaveObject() has done its own verification)
 			// We COULD pass the blob back and run another verify, but this is a quick, cheap-ish way 
-			if (data.version == undefined) throw new Error("Version failed");	
-			if (data.minVersion == undefined) throw new Error("minVersion failed");
-			if (data.saveName == undefined) throw new Error("saveName failed");
-			if (data.playerGender == undefined) throw new Error("playerGender failed");
-			if (data.saveLocation == undefined) throw new Error("saveLocation failed");
-			if (data.playerLocation == undefined) throw new Error("playerLocation failed");
-			if (data.shipLocation == undefined) throw new Error("shipLocation failed");
-			if (data.daysPassed == undefined) throw new Error("daysPassed failed");
-			if (data.currentHours == undefined) throw new Error("currentHours failed");
-			if (data.currentMinutes == undefined) throw new Error("currentMinutes failed");
-			if (data.characters == undefined) throw new Error("characters failed");
-			if (data.flags == undefined) throw new Error("flags failed");
-			if ((data.sillyMode == undefined || data.easyMode == undefined || data.debugMode == undefined) && data.gameOptions == undefined) throw new Error("Game options failed");
+			if (data.version == undefined)
+			{
+				throw new Error("Version failed");	
+				return false;
+			}
+			if (data.minVersion == undefined)
+			{
+				throw new Error("minVersion failed");
+				return false;
+			}
+			if (data.saveName == undefined)
+			{
+				throw new Error("saveName failed");
+				return false;
+			}
+			if (data.playerGender == undefined)
+			{
+				throw new Error("playerGender failed");
+				return false;
+			}
+			if (data.saveLocation == undefined)
+			{
+				throw new Error("saveLocation failed");
+				return false;
+			}
+			if (data.playerLocation == undefined) 
+			{
+				throw new Error("playerLocation failed");
+				return false;
+			}
+			if (data.shipLocation == undefined) 
+			{
+				throw new Error("shipLocation failed");
+				return false;
+			}
+			if (data.daysPassed == undefined) 
+			{
+				throw new Error("daysPassed failed");
+				return false;
+			}
+			if (data.currentHours == undefined) 
+			{
+				throw new Error("currentHours failed");
+				return false;
+			}
+			if (data.currentMinutes == undefined) 
+			{
+				throw new Error("currentMinutes failed");
+				return false;
+			}
+			if (data.characters == undefined) 
+			{
+				throw new Error("characters failed");
+				return false;
+			}
+			if (data.flags == undefined) 
+			{
+				throw new Error("flags failed");
+				return false;
+			}
+			if ((data.sillyMode == undefined || data.easyMode == undefined || data.debugMode == undefined) && data.gameOptions == undefined) 
+			{
+				throw new Error("Game options failed");
+				return false;
+			}
+			
+			// Adding some verification for Jack/Jill shit
+			if (data.characters["RIVAL"].short == "Jack/Jill")
+			{
+				throw new Error("Rival has been serialized with default properties.");
+				return false;
+			}
+			// Check a transient property that is shared between both forms of Lane (m/f) that isn't set in the default stat block.
+			// If this isn't set, but any of lane-related flags ARE, then the creature blob has reverted to defaults
+			if (data.characters["LANE"].eyeColor != "dark blue" && data.flags["MET_LANE"] != undefined)
+			{
+				throw new Error("Lane has been serialized with default properties.");
+				return false;
+			}
+			
 			return true;
 		}
 		
@@ -813,7 +920,6 @@
 		 */
 		public function executeGame():void
 		{
-			
 			//Purge out the event buffer so people can't buy something, load, and then get it.
 			kGAMECLASS.eventQueue = new Array();
 			kGAMECLASS.eventBuffer = "";
@@ -821,6 +927,9 @@
 			
 			// If the text input was being displayed, hide it
 			kGAMECLASS.removeInput();
+			
+			// If the clock is hidden, show it
+			kGAMECLASS.userInterface.showTime();
 			
 			// If the PC has previously had the Level Up availability message, ensure the level up button is available for use.
 			if ((kGAMECLASS.pc as PlayerCharacter).levelUpAvailable()) kGAMECLASS.userInterface.levelUpButton.Activate();
@@ -849,6 +958,17 @@
 			{
 				kGAMECLASS.userInterface.setMapData(kGAMECLASS.mapper.generateMap(kGAMECLASS.currentLocation));
 				kGAMECLASS.userInterface.showMinimap();
+				
+				var aRef:* = kGAMECLASS.chars;
+				// Some plebshit
+				if (kGAMECLASS.chars["RIVAL"].short == "Jack" || kGAMECLASS.chars["RIVAL"].short == "Jill")
+				{
+					kGAMECLASS.flags["RIVALCONFIGURED"] = 1;
+				}
+				else
+				{
+					kGAMECLASS.flags["RIVALCONFIGURED"] = 2;
+				}
 			}
 			
 			kGAMECLASS.mainGameMenu();

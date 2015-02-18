@@ -74,6 +74,7 @@ package classes.GameData.Pregnancy
 			_canFertilizeEggs = true;
 			_pregnancyQuantityMinimum = 1;
 			_pregnancyQuantityMaximum = 1;
+			_definedAverageLoadSize = 250;
 			
 			_stageProgressions = new Array();
 			
@@ -200,7 +201,7 @@ package classes.GameData.Pregnancy
 			for (i = 0; i < triggeredPSPs.length; i++)
 			{
 				if (_debugTrace) trace("Triggered StageProgression for duration index " + triggeredPSPs[i].triggersAtDuration);
-				triggeredPSPs[i].execute();
+				triggeredPSPs[i].execute(pregSlot);
 			}
 			
 			if (newInc <= 0 && oldInc > 0)
@@ -311,7 +312,7 @@ package classes.GameData.Pregnancy
 				if (thisPtr.debugTrace) trace("Total Pregnancy Chance as Int = " + iTotalChance);
 				if (thisPtr.debugTrace) trace("Rolled " + roll);
 				
-				if (roll > iTotalChance)
+				if (roll < iTotalChance)
 				{
 					if (thisPtr.debugTrace) trace("Preggo Confirmed!");
 					pregChanceSuccessful = true;
@@ -364,10 +365,6 @@ package classes.GameData.Pregnancy
 			if (quantity > thisPtr.pregnancyQuantityMaximum) quantity = thisPtr.pregnancyQuantityMaximum;
 			
 			pData.pregnancyQuantity = quantity;
-			
-			// Orgasmo
-			father.orgasm();
-			mother.orgasm();
 		}
 		
 		protected var _onSuccessfulImpregnationOutput:Function;
@@ -460,16 +457,15 @@ package classes.GameData.Pregnancy
 						psp = new PregnancyStageProgression();
 						psp.triggersAtDuration = args[cIndex];
 						psp.triggerFunc = args[cIndex + 1];
+						
+						if (args.length > 2 && args[cIndex + 2] is Boolean) psp.useSlotArgument = args[cIndex + 2];
+						
 						_stageProgressions.push(psp);
-						cIndex += 2;
+						cIndex += 3;
 					}
-					else if (args[cIndex] is Function && args[cIndex + 1] is int)
+					else
 					{
-						psp = new PregnancyStageProgression();
-						psp.triggersAtDuration = args[cIndex + 1];
-						psp.triggerFunc = args[cIndex];
-						_stageProgressions.push(psp);
-						cIndex += 2;
+						throw new Error("Incorrect initilization of a PregnancyStageProgression.");
 					}
 				}
 			}

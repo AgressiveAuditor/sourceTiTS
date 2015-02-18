@@ -459,7 +459,7 @@ public function askBurtAboutHimself():void {
 	//Scene 2 (Won’t happen until PC has bought a drink.)
 	else if(flags["TIMES_FUCKED_BURT"] == undefined)
 	{
-		output("Burt sighs and pulls out his bar towel, spending a long and silent moment just wiping down the bar top, trying to get some imagined smudge out of the way between himself and you. When he finally talks, his voice is low and quiet,<i> “So I was born a hop, skip and a jump from old Earth herself, back coreward, and I had a pretty good life. I was the kinda guy you would expect from the civilized parts of the galaxy, straight laced and closed minded. I even joined the T.S.C. military and learned discipline and duty.”</i>");
+		output("Burt sighs and pulls out his bar towel, spending a long and silent moment just wiping down the bar top, trying to get some imagined smudge out of the way between himself and you. When he finally talks, his voice is low and quiet,<i> “So I was born a hop, skip and a jump from old Earth herself, back coreward, and I had a pretty good life. I was the kinda guy you would expect from the civilized parts of the galaxy, straight laced and closed-minded. I even joined the T.S.C. military and learned discipline and duty.”</i>");
 		output("\n\n<i>“Everything started to go wrong when my mom died. She wasn’t killed or anything, she just died. Old age. She couldn’t afford the age treatments, I mean, who can. I resigned my commission and went to deal with the liquidation of her estate, and after that I started drifting among the core worlds, trying to find direction in life. I thought I had found it too... but, it wasn’t to be. My old life is gone, and I can’t go back, so I ended up out here, tending a bar on the sleaziest backwater on the frontier.”</i>");
 		output("\n\nBurt chuckles and tucks his rag back into his apron pocket,<i> “Well [pc.name], if you want to know more than that, you are going to have to get to know me better.”</i> and he gives you a bit of a suggestive wink.");
 	}
@@ -717,11 +717,34 @@ public function getOralFromBurt():void {
 			else output("He licks across the base of [pc.eachCock], tasting the musk on your [pc.skin] as his hands pump your sensitive flesh.");
 			output(" He smirks as he looks at your flanks, saying,<i> “I don’t often play with boys like this, so forgive my inexperience.”</i> He keeps teasing and caressing [pc.eachCock], slowly working you to the edge of climax. When it looks like you are about to blow, he backs his head away and aims [pc.eachCock] at the floor as though milking a cow. He grins at you as your orgasm rips through your body, and watches as ");
 			//[if (cumNormal = true)]
-			if(pc.cumQ() <= 25) output("[pc.eachCock] twitches in his hands, splashing the floor with your [pc.cum].");
-			else if(pc.cumQ() <= 75) output("[pc.eachCock] pulses in his hands, splashing the floor and his cot with your ample [pc.cum].");
-			else if(pc.cumQ() <= 150) output("[pc.eachCock] jerks in his grip, sending pulse after pulse of your [pc.cum] splashing across the floor and his cot.");
-			else if(pc.cumQ() <= 500) output("[pc.eachCock] jerk{s} in his grip, hosing the floor and his cot with your [pc.cum].");
-			else output("[pc.eachCock] bursts like an overtaxed dam, drenching his cot in a thick [pc.cumColor] puddle as you pump out enough [pc.cum] that it could have filled a mead barrel.");
+			if (pc.cumQ() <= 25)
+			{
+				output("[pc.eachCock] twitch");
+				if (pc.cocks.length == 1) output("es");
+				output(" in his hands, splashing the floor with your [pc.cum].");
+			}
+			else if (pc.cumQ() <= 75)
+			{
+				output("[pc.eachCock] pulse");
+				if (pc.cocks.length == 1) output("s");
+				output(" in his hands, splashing the floor and his cot with your ample [pc.cum].");
+			}
+			else if (pc.cumQ() <= 150)
+			{
+				output("[pc.eachCock] jerk");
+				if (pc.cocks.length == 1) output("s");
+				output(" in his grip, sending pulse after pulse of your [pc.cum] splashing across the floor and his cot.");
+			}
+			else if (pc.cumQ() <= 500) 
+			{
+				output("[pc.eachCock] jerk");
+				if (pc.cocks.length == 1) output("s");
+				output(" in his grip, hosing the floor and his cot with your [pc.cum].");
+			}
+			else 
+			{
+				output("[pc.eachCock] bursts like an overtaxed dam, drenching his cot in a thick [pc.cumColor] puddle as you pump out enough [pc.cum] that it could have filled a mead barrel.");
+			}
 			output(" He catches his breath and smirks, asking,<i> “Was it good for you?”</i>");
 		}
 		//[if (gender = herm)]
@@ -1242,11 +1265,11 @@ public function stephIrsonBountHunterEpisodeOne():void {
 
 	output("\n\nIs she insane?");
 	
-	output("\n\n<i>“W-what are you doing, strange little girl?”</i>  the naleen hisses as Steph creeps up. The huntresses rises off the rock, her feline half looming over the show's hostess menacingly.");
+	output("\n\n<i>“W-what are you doing, strange little girl?”</i> the naleen hisses as Steph creeps up. The snake-girl rises off the rock, her feline half looming over the show's hostess menacingly.");
 	
 	output("\n\n<i>“Uh-oh, she's noticed me! If I try to run, she'll hunt me down in an instant! All I can do is lie perfectly still and hope she backs off! As a predator, the naleen shouldn't bother me if I'm dead still.”</i>");
 	
-	output("\n\n<i>“... I can hear you,”</i>  the busty monster sighs, cocking an eyebrow at Stepth as she lies face-down in the dirt, heart-shaped ass swaying just inches in front of the camera.");
+	output("\n\n<i>“... I can hear you,”</i>  the busty monster sighs, cocking an eyebrow at Steph as she lies face-down in the dirt, heart-shaped ass swaying just inches in front of the camera.");
 	
 	output("\n\n<i>“Crikey! Looks like she's coming in for the kill! All I can do now is try to overpower her!”</i>  Steph shouts, leaping to her feet and tackling the naleen, throwing the two of them over the boulder and into the brush. The camera drone speedily follows the brawl as Steph and the naleen tumble around in the dirt, eventually rolling into a wet mud-pit at the edge of the clearing.");
 	

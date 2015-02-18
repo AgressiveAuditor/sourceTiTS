@@ -1,7 +1,10 @@
 ﻿import classes.Characters.PlayerCharacter;
+import classes.GameData.Pregnancy.Handlers.RenvraEggPregnancy;
+import classes.GameData.Pregnancy.Handlers.NyreaHuntressPregnancy;
 import classes.GameData.Pregnancy.PregnancyManager;
 import classes.GUI;
 import classes.Items.Miscellaneous.HorsePill;
+import classes.RoomClass;
 import classes.StorageClass;
 import classes.UIComponents.SquareButton;
 import flash.events.Event;
@@ -98,18 +101,36 @@ public function mainGameMenu():void {
 	//Turn off encounters since you're already here. Moving clears this.
 	flags["ENCOUNTERS_DISABLED"] = 1;
 
-	if(this.rooms[this.currentLocation].northExit) 
-		this.addButton(6,"North",move,this.rooms[this.currentLocation].northExit);
-	if(this.rooms[this.currentLocation].eastExit) 
-		this.addButton(12,"East",move,this.rooms[this.currentLocation].eastExit);
-	if(this.rooms[this.currentLocation].southExit) 
-		this.addButton(11,"South",move,this.rooms[this.currentLocation].southExit);
-	if(this.rooms[this.currentLocation].westExit) 
-		this.addButton(10,"West",move,this.rooms[this.currentLocation].westExit);
-	if(this.rooms[this.currentLocation].inExit) 
-		this.addButton(5,this.rooms[this.currentLocation].inText,move,this.rooms[this.currentLocation].inExit);
-	if(this.rooms[this.currentLocation].outExit) 
-		this.addButton(7,this.rooms[this.currentLocation].outText,move,this.rooms[this.currentLocation].outExit);
+	if(pc.hasStatusEffect("Endowment Immobilized"))
+	{
+		if(this.rooms[this.currentLocation].northExit) 
+			this.addDisabledButton(6,"North","North","You can't move - you're immobilized!");
+		if(this.rooms[this.currentLocation].eastExit) 
+			this.addDisabledButton(12,"East","East","You can't move - you're immobilized!");
+		if(this.rooms[this.currentLocation].southExit) 
+			this.addDisabledButton(11,"South","South","You can't move - you're immobilized!");
+		if(this.rooms[this.currentLocation].westExit) 
+			this.addDisabledButton(10,"West","West","You can't move - you're immobilized!");
+		if(this.rooms[this.currentLocation].inExit) 
+			this.addDisabledButton(5,rooms[currentLocation].inText,rooms[currentLocation].inText,"You can't move - you're immobilized!");
+		if(rooms[currentLocation].outExit) 
+			addDisabledButton(7,rooms[currentLocation].outText,rooms[currentLocation].outText,"You can't move - you're immobilized!");
+	}
+	else
+	{
+		if(this.rooms[this.currentLocation].northExit) 
+			this.addButton(6,"North",move,this.rooms[this.currentLocation].northExit);
+		if(this.rooms[this.currentLocation].eastExit) 
+			this.addButton(12,"East",move,this.rooms[this.currentLocation].eastExit);
+		if(this.rooms[this.currentLocation].southExit) 
+			this.addButton(11,"South",move,this.rooms[this.currentLocation].southExit);
+		if(this.rooms[this.currentLocation].westExit) 
+			this.addButton(10,"West",move,this.rooms[this.currentLocation].westExit);
+		if(this.rooms[this.currentLocation].inExit) 
+			this.addButton(5,this.rooms[this.currentLocation].inText,move,this.rooms[this.currentLocation].inExit);
+		if(this.rooms[this.currentLocation].outExit) 
+			this.addButton(7,this.rooms[this.currentLocation].outText,move,this.rooms[this.currentLocation].outExit);
+	}
 	if(this.currentLocation == shipLocation) 
 		this.addButton(1,"Enter Ship",move,"SHIP INTERIOR");
 
@@ -211,7 +232,7 @@ public function rest():void {
 		pc.HP(Math.round(pc.HPMax() * .2));
 	}
 	if(pc.energy() < pc.energyMax()) {
-		pc.energy(Math.round(pc.energyMax() * .2));
+		pc.energy(Math.round(pc.energyMax() * .33));
 	}
 	var minutes:int = 230 + rand(20) + 1;
 	processTime(minutes);
@@ -297,6 +318,8 @@ public function sleepHeal():void
 
 public function shipMenu():Boolean {
 	
+	rooms["SHIP INTERIOR"].outExit = shipLocation;
+	
 	setLocation("SHIP\nINTERIOR",rooms[rooms["SHIP INTERIOR"].outExit].planet,rooms[rooms["SHIP INTERIOR"].outExit].system);
 	
 	// Lane follower hook
@@ -310,8 +333,7 @@ public function shipMenu():Boolean {
 	{
 		return true;
 	}
-	
-	rooms["SHIP INTERIOR"].outExit = shipLocation;
+
 	this.addButton(9,"Fly",flyMenu);
 	if(currentLocation == "SHIP INTERIOR") {
 		if(crew(true) > 0) {
@@ -452,7 +474,10 @@ public function move(arg:String, goToMainMenu:Boolean = true):void {
 	}
 	//Reset the thing that disabled encounters
 	flags["ENCOUNTERS_DISABLED"] = undefined;
+
 	var moveMinutes:int = rooms[currentLocation].moveMinutes;
+	//Huge nuts slow you down
+	if(pc.hasStatusEffect("Egregiously Endowed")) moveMinutes *= 2;
 	if(pc.hasItem(new Hoverboard())) {
 		moveMinutes -= 1;
 		if(moveMinutes < 1) moveMinutes = 1;
@@ -469,10 +494,16 @@ public function move(arg:String, goToMainMenu:Boolean = true):void {
 }
 
 public function statusTick():void {
-	var shitToCut:Array = new Array();
+	var expiredStatuses:Array = new Array();
 	var y:int = 0;
 	for(var x:int = pc.statusEffects.length-1; x >= 0; x--) 
 	{
+		//Some hardcoded removal stuff
+		//Cut condensol if all cocks are gone.
+		if((pc.statusEffects[x].storageName == "Condensol-B" || pc.statusEffects[x].storageName == "Condensol-A") && !pc.hasCock())
+		{
+			expiredStatuses[expiredStatuses.length] = x;
+		}
 		//trace("Checking status effect: " + x + " of " + (pc.statusEffects.length-1));
 		//If times, count dat shit down.
 		if(pc.statusEffects[x].minutesLeft > 0) 
@@ -481,9 +512,9 @@ public function statusTick():void {
 			//TIMER OVER!
 			if(pc.statusEffects[x].minutesLeft <= 0) 
 			{
-				if (pc.statusEffects[x].storageName.indexOf("Lane's Hypnosis") != -1)
+				if ((pc.statusEffects[x] as StorageClass).storageName.indexOf("Lane's Hypnosis") != -1)
 				{
-					baseHypnosisWearsOff(pc.statusEffects[x].storageName);
+					baseHypnosisWearsOff((pc.statusEffects[x] as StorageClass).storageName);
 				}
 				//CERTAIN STATUSES NEED TO CLEAR SOME SHIT.
 				if(pc.statusEffects[x].storageName == "Crabbst") 
@@ -568,19 +599,18 @@ public function statusTick():void {
 					pc.reflexesMod += pc.statusEffects[x].value1;
 				}
 				//Mark out the ones that need cut!
-				shitToCut[shitToCut.length] = x;
+				expiredStatuses[expiredStatuses.length] = x;
 				//trace("Marking slot: " + x + " to cut");
 			}
-			
 		}
 	}	
 	
 	//Cut the statuses that expired and need cut.
-	while(shitToCut.length > 0)
+	while(expiredStatuses.length > 0)
 	{
-		trace("REMOVING " + chars["PC"].statusEffects[shitToCut[0]].storageName + " in slot " + shitToCut[0] + " due to status effect time out.");
-		pc.statusEffects.splice(shitToCut[0],1);
-		shitToCut.splice(0,1);
+		trace("REMOVING " + chars["PC"].statusEffects[expiredStatuses[0]].storageName + " in slot " + expiredStatuses[0] + " due to status effect time out.");
+		pc.statusEffects.splice(expiredStatuses[0],1);
+		expiredStatuses.splice(0,1);
 	}
 }
 
@@ -676,18 +706,48 @@ public function variableRoomUpdateCheck():void
 		if(!rooms["DEEP JUNGLE 2"].hasFlag(GLOBAL.PLANT_BULB)) rooms["DEEP JUNGLE 2"].addFlag(GLOBAL.PLANT_BULB);
 	}
 	else rooms["DEEP JUNGLE 2"].removeFlag(GLOBAL.PLANT_BULB);
+
+	//Irellia quest stuff.
+	//IrelliaQuest incomplete. No east passage, people token in main room.
+	if(flags["IRELLIA_QUEST_STATUS"] == undefined || flags["IRELLIA_QUEST_STATUS"] < 6)
+	{
+		if(!rooms["746"].hasFlag(GLOBAL.NPC)) rooms["746"].addFlag(GLOBAL.NPC);
+		if(rooms["747"].hasFlag(GLOBAL.NPC)) rooms["747"].removeFlag(GLOBAL.NPC);
+		rooms["746"].eastExit = "";
+	}
+	//IrelliaQuest complete: establish east/west link and move people token to Irellia's chambers
+	else
+	{
+		rooms["746"].eastExit = "747";
+		if(rooms["746"].hasFlag(GLOBAL.NPC)) rooms["746"].removeFlag(GLOBAL.NPC);
+		if(!rooms["747"].hasFlag(GLOBAL.NPC)) rooms["747"].addFlag(GLOBAL.NPC);
+	}
 }
 
 public function processTime(arg:int):void {
 	var x:int = 0;
+	
 	var tightnessChanged:Boolean = false;
-	if(pc.ballFullness < 100) pc.cumProduced(arg);
-	var productionFactor:Number = 100/(1920) * ((pc.libido() * 3 + 100)/100);
+	
+	var productionFactor:Number = 100 / (1920) * ((pc.libido() * 3 + 100) / 100);
+	
+	// Ideally most of this character updating shit needs to be shifted into the Creature class itself
+	// Then everything can just get stuffed in this loop as like chars[prop].processTime(arg) and hook everything like that.
+	for (var prop:String in chars)
+	{
+		if(chars[prop].ballFullness < 100 || chars[prop] == pc) chars[prop].cumProduced(arg);
+	}
+	
 	//Double time
-	if(pc.hasPerk("Extra Ardor")) productionFactor *= 2;
+	if (pc.hasPerk("Extra Ardor")) productionFactor *= 2;
+	//Huge nuts double time!
+	if (pc.hasStatusEffect("Ludicrously Endowed")) productionFactor *= 1.5;
+	if (pc.hasStatusEffect("Overwhelmingly Endowed")) productionFactor *= 2;
+	
 	//BOOZE QUADRUPLES TIEM!
 	if(pc.hasStatusEffect("X-Zil-rate") || pc.hasStatusEffect("Mead") || pc.hasStatusEffect("X-Zil-rate"))
 	productionFactor *= 4;
+	
 	//Half time.
 	else if (pc.hasPerk("Ice Cold")) productionFactor /= 2;
 
@@ -704,7 +764,11 @@ public function processTime(arg:int):void {
 	else if(pc.lust() > lustCap)
 	{
 		var reduce:Number = arg * productionFactor / 4;
-		pc.lust(-reduce)
+		//Ice Cold - Ice cold becomes extra effective here., effectively multiplying loss by x4 (since it halved gains earlier)
+		if (pc.hasPerk("Ice Cold")) reduce *= 4;
+		//The reverse for Extra Ardor. Reduces much slower.
+		if (pc.hasPerk("Extra Ardor")) reduce /= 4;
+		pc.lust(-reduce);
 	}
 	//Gonna hit the cap? Change to cap.
 	else
@@ -720,6 +784,7 @@ public function processTime(arg:int):void {
 	//milk is chunked out all at once due to lazies
 	if(arg > 0 && pc.canLactate()) 
 	{
+		//trace("time rested: " + arg);
 		pc.milkProduced(arg);
 		milkGainNotes();
 	}
@@ -742,7 +807,7 @@ public function processTime(arg:int):void {
 	//Queue up procs for boobswell shit
 	if (pc.hasStatusEffect("Boobswell Pads")) boobswellStuff(arg);
 	variableRoomUpdateCheck();
-
+	//Laneshit
 	processLaneDetoxEvents(arg);
 	
 	if (tryProcDommyReahaTime(arg))
@@ -750,6 +815,30 @@ public function processTime(arg:int):void {
 		eventQueue.push(reahaDommyFuxTime);
 	}
 	
+	// Extra special handler for Renvra's egg messages
+	if (pc.hasStatusEffect("Renvra Eggs Messages Available") || pc.hasStatusEffect("Nyrea Eggs Messages Available"))
+	{
+		var cRoom:RoomClass = rooms[currentLocation];
+		var pSpace:Boolean = cRoom.hasFlag(GLOBAL.PUBLIC);
+		
+		// This should avoid doubling messages up if the player has both pregnancies at the same time.
+		if (pc.hasStatusEffect("Renvra Eggs Messages Available")) RenvraEggPregnancy.renvraEggsMessageHandler(pSpace, arg);
+		else if (pc.hasStatusEffect("Nyrea Eggs Messages Available")) NyreaHuntressPregnancy.nyreaEggsMessageHandler(pSpace, arg);
+	}
+	
+	// I named this badly, but this is the secondary pregnancy variant that Renvra has. It's much more complicated, so
+	// all the checking is done at the target callsite.
+	renvraMessageHandler();
+
+	//========== Stuff that gets checked once every time that time passes ===========//
+	//Blue balls removed for not having cock and balls.
+	if(!pc.hasCock() && pc.balls == 0)
+	{
+		if(pc.hasStatusEffect("Blue Balls")) pc.removeStatusEffect("Blue Balls");
+	}
+	//Remove Racial Perks No Longer Qualified For
+	racialPerkUpdateCheck();
+
 	//loop through every minute
 	while(arg > 0) {
 		//Check for shit that happens.
@@ -810,7 +899,22 @@ public function processTime(arg:int):void {
 				flags["GOBBLES_COOLDOWN"]++;
 				if(flags["GOBBLES_COOLDOWN"] > 24) flags["GOBBLES_COOLDOWN"] = 24;
 			}
-
+			if(flags["IRELLIA_QUEST_STATUS"] == 3 && hours == 24 && currentLocation != "725") missedRebelExplosion();
+			if(flags["IRELLIA_QUEST_STATUS"] == 4 && hours == 24) 
+			{
+				eventBuffer += "\n\nYou receive a missive from your codex informing you that Queen Irellia would like to speak to you. Sounds like someone's about to get paid!";
+				flags["IRELLIA_QUEST_STATUS"] = 5;
+			}
+			//Mushroom park meeting.
+			if(flags["IRELLIA_QUEST_STATUS"] == 2 && hours == 18 && currentLocation == "708") eventQueue.push(unificationRallyEvent);
+			//Bomb explosion bad-end meeting
+			if(flags["IRELLIA_QUEST_STATUS"] == 3 && hours >= 24 && currentLocation == "725") eventQueue.push(beADumbShitFallGuyForTheRebels);
+			//Irellia's sex cooldown
+			if(flags["IRELLIA_SEX_COOLDOWN"] != undefined)
+			{
+				if(flags["IRELLIA_SEX_COOLDOWN"] <= 0) flags["IRELLIA_SEX_COOLDOWN"] = undefined;
+				else flags["IRELLIA_SEX_COOLDOWN"]--;
+			}
 			//Lactation effect updates
 			lactationUpdateHourTick();
 			//Horse pill procs!
@@ -881,6 +985,8 @@ public function processTime(arg:int):void {
 			//Days ticks here!
 			if(this.hours >= 24) {
 				this.days++;
+				//Reset Orryx shipments!
+				if(flags["ORRYX_SHIPPED_TODAY"] != undefined) flags["ORRYX_SHIPPED_TODAY"] = undefined;
 				if(days >= 2 && flags["NEW_TEXAS_COORDINATES_GAINED"] == undefined) newTexasEmail();
 				this.hours = 0;
 				if(chars["ALISS"].lust() >= 70)
@@ -909,8 +1015,10 @@ public function processTime(arg:int):void {
 		}
 		arg--;
 	}
-	//Check to see if something changed in this department
+	//Check to see if something changed in body part notices
 	milkMultiplierGainNotificationCheck();
+	nutSwellUpdates();
+
 	//Queue up dumbfuck procs
 	if(pc.hasStatusEffect("Dumbfuck"))
 	{
@@ -936,6 +1044,153 @@ public function processTime(arg:int):void {
 	
 	flags["HYPNO_EFFECT_OUTPUT_DONE"] = undefined;
 	updatePCStats();
+}
+
+public function racialPerkUpdateCheck():void
+{
+	if(pc.hasPerk("'Nuki Nuts"))
+	{
+		if(pc.nukiScore() < 3)
+		{
+			if(pc.balls > 0)
+			{
+				//Nuts inflated:
+				if(pc.perkv1("'Nuki Nuts") > 0)
+				{
+					eventBuffer += "\n\nThe extra size in your [pc.balls] bleeds off, making it easier to walk. You have a hunch that without all your kui-tan body-mods, you won't be swelling up with excess [pc.cumNoun] any more.";
+				}
+				//Nuts not inflated:
+				else
+				{
+					eventBuffer += "\n\nA tingle spreads through your [pc.balls]. Once it fades, you realize that your [pc.sack] is noticeably less elastic. Perhaps you've replaced too much kui-tan DNA to reap the full benefits.";
+					pc.removePerk("'Nuki Nuts");
+				}
+				eventBuffer += "\n\n(<b>Perk Lost: 'Nuki Nuts</b>)";
+				pc.ballSizeMod -= pc.perkv1("'Nuki Nuts");
+				pc.removePerk("'Nuki Nuts");
+				nutStatusCleanup();
+			}
+			else
+			{
+				eventBuffer += "\n\n(<b>Perk Lost: 'Nuki Nuts</b> - You no longer meet the requirements. You've lost too many kui-tan transformations.)";
+				pc.removePerk("'Nuki Nuts");
+			}
+		}
+	}
+}
+
+public function nutSwellUpdates():void
+{
+	if(pc.balls > 0)
+	{
+		//Hit basketball size >= 9
+		if(pc.ballDiameter() >= 9 && !pc.hasStatusEffect("Egregiously Endowed"))
+		{
+			if(pc.hasPerk("'Nuki Nuts") && pc.balls > 1) eventBuffer += "\n\nUgh, you could really a chance to offload some [pc.cumNoun]. Your balls have reached the size of basketballs and show no signs of stopping. The squishy, sensitive mass will definitely slow your movements.";
+			//Status - Egregiously Endowed - Movement between rooms takes twice as long, and fleeing from combat is more difficult.
+			pc.createStatusEffect("Egregiously Endowed", 0,0,0,0,false,"Icon_Poison", "Movement between rooms takes twice as long, and fleeing from combat is more difficult.", false, 0);
+		}
+		//Hit beachball size >= 15
+		if(pc.ballDiameter() >= 15 && !pc.hasStatusEffect("Ludicrously Endowed"))
+		{
+			if(pc.hasPerk("'Nuki Nuts") && pc.balls > 1) eventBuffer += "\n\nEvery movement is accompanied by a symphony of sensation from your swollen nutsack, so engorged with [pc.cumNoun] that they wobble from their own internal weight. You have to stop from time to time just to keep from being overwhelmed by your own liquid arousal.";
+			pc.createStatusEffect("Ludicrously Endowed", 0,0,0,0,false,"Icon_Poison", "The shifting masses of your over-sized testes cause you to gain fifty percent more lust over time.", false, 0);
+		}
+		//Hit barrel size
+		if(pc.ballDiameter() >= 25 && !pc.hasStatusEffect("Overwhelmingly Endowed"))
+		{
+			if(pc.hasPerk("'Nuki Nuts") && pc.balls > 1) eventBuffer += "\n\nWhoah, this is awkward. Your nuts are practically barrel-sized! If you aren’t careful, they drag softly on the ground. Grass is no longer scenery - it’s hundreds of slender tongues tickling your nuts. Mud is an erotic massage. Even sand feels kind of good against your thickened sack, like a vigorous massage.";
+			pc.createStatusEffect("Overwhelmingly Endowed", 0,0,0,0,false,"Icon_Poison", "The shifting masses of your over-sized testes cause you to gain twice as much lust over time.", false, 0);
+		}
+		//hit person size
+		if(pc.ballDiameter() >= 40 && !pc.hasStatusEffect("Endowment Immobilized"))
+		{
+			if(pc.balls > 1) 
+			{
+				eventBuffer += "\n\nYou strain as hard as you can, but there’s just no helping it. You’re immobilized. Your balls are just too swollen to allow you to move anywhere. The bulk of your body weight is right there in your testes, and there’s nothing you can do about it.";
+				if(canShrinkNuts()) eventBuffer += ".. well, almost nothing. A nice, long orgasm ought to fix this!";
+				else 
+				{
+					eventQueue[eventQueue.length] = bigBallBadEnd;
+					if(pc.hasPerk("'Nuki Nuts")) eventBuffer += " If a quick fap wasn't illegal here, this would be far simpler. Too bad.";
+				}
+				pc.createStatusEffect("Endowment Immobilized", 0,0,0,0,false,"Icon_Poison", "Your endowments prevent you from moving.", false, 0);
+			}
+		}
+	}
+	nutStatusCleanup();
+}
+
+public function canShrinkNuts():Boolean
+{
+	//Can fap it away!
+	if(pc.hasPerk("'Nuki Nuts"))
+	{
+		//NO FAPS!
+		if(rooms[currentLocation].hasFlag(GLOBAL.NOFAP)) return false;
+		if(rooms[currentLocation].hasFlag(GLOBAL.FAPPING_ILLEGAL)) return false;
+		return true;
+	}
+	return false;
+}
+
+public function nutStatusCleanup():void
+{
+	if(pc.hasStatusEffect("Endowment Immobilized") && (pc.balls == 0 || pc.ballDiameter() < 40))
+	{
+		eventBuffer += "\n\nYou're no longer immobilized by your out-sized equipment!";
+		pc.removeStatusEffect("Endowment Immobilized");
+	}
+	if((pc.balls == 0 || pc.ballDiameter() < 25) && pc.hasStatusEffect("Overwhelmingly Endowed")) pc.removeStatusEffect("Overwhelmingly Endowed");
+	if((pc.balls == 0 || pc.ballDiameter() < 15) && pc.hasStatusEffect("Ludicrously Endowed")) pc.removeStatusEffect("Ludicrously Endowed");
+	if((pc.balls == 0 || pc.ballDiameter() < 9) && pc.hasStatusEffect("Egregiously Endowed")) pc.removeStatusEffect("Egregiously Endowed");
+}
+
+public function bigBallBadEnd():void
+{
+	clearOutput();
+	author("Fenoxo");
+	//Dangerous area, can’t unswell:
+	if(rooms[currentLocation].hasFlag(GLOBAL.HAZARD))
+	{
+		output("It isn’t long before the natives of this place take you as an amusement - a live-in toy whose virility is the show-piece of an alien exhibit. You never do manage to get your dad’s fortune, but hey, at least you get to live in relative comfort and have all the orgasms your body can handle.");
+		badEnd();
+	}
+	//Not a dangerous area:
+	else 
+	{
+		output("Eventually, you manage to get someone to pick you up and take you in for treatment. It isn’t cheap either. ");
+		if(pc.credits >= 10000)
+		{
+			pc.credits -= 10000;
+			output("Your finances are ");
+			if(pc.credits < 1000) output("completely ");
+			output("drained by your own libidinous foolishness, but at least you can move around normally again!");
+		}
+		else
+		{
+			pc.credits = 0;
+			output("Your finances aren’t capable of footing the bill, but at least the medical experimentation that pays for it all isn’t too bad.");
+			if(pc.biggestTitSize() >= 1 && rand(2) == 0 && pc.breastRows[0].breasts < 3) 
+			{
+				output("A third breast is a small price to pay, after all.");
+				pc.breastRows[0].breasts = 3;
+			}
+			else if(pc.balls < 3) 
+			{
+				output(" A trio of smaller nuts is a small price to pay, after all.");
+				pc.balls = 3;
+			}
+		}
+		pc.ballSizeRaw = 30;
+		currentLocation = "SHIP INTERIOR";
+		var map:* = mapper.generateMap(currentLocation);
+		userInterface.setMapData(map);
+		processTime(1382);
+		clearMenu();
+		addButton(0,"Next",mainGameMenu);
+	}
+	
 }
 
 public function boobswellStuff(time:Number = 0):void
@@ -1025,8 +1280,10 @@ public function milkGainNotes():void
 			if(pc.breastRows[x].breastRatingRaw >= 5) pc.breastRows[x].breastRatingLactationMod = 3.5;
 			else pc.breastRows[x].breastRatingLactationMod = 2;
 		}
+		
 		eventBuffer += "\n\nYour [pc.nipples] are extraordinarily puffy at the moment, practically suffused with your neglected [pc.milk]. It's actually getting kind of painful to hold in all that liquid weight, and if ";
-		if(pc.upperUndergarment is BountyBra) eventBuffer += "you weren't wearing a <b>Bounty Bra</b>, your body would be slowing down production";
+		if(pc.hasPerk("Milky") && pc.hasPerk("Treated Milk")) eventBuffer += "it wasn't for your genetically engineered super-tits, your body would be slowing down production";
+		else if(pc.upperUndergarment is BountyBra) eventBuffer += "you weren't wearing a <b>Bounty Bra</b>, your body would be slowing down production";
 		else eventBuffer += "you don't take care of it soon, a loss of production is likely";
 		eventBuffer += ". Right now, they're swollen up to [pc.breastCupSize]s.";
 		pc.removeStatusEffect("Pending Gain Milk Note: 150");
@@ -1041,8 +1298,10 @@ public function milkGainNotes():void
 			if(pc.breastRows[x].breastRatingRaw >= 5) pc.breastRows[x].breastRatingLactationMod = 4.5;
 			else pc.breastRows[x].breastRatingLactationMod = 3;
 		}
+		
 		eventBuffer += "\n\nThe tightness in your [pc.fullChest] is almost overwhelming. You feel so full – so achingly stuffed – that every movement is a torture of breast-swelling delirium. You can't help but wish for relief or a cessation of your lactation, whichever comes first. ";
-		if(pc.upperUndergarment is BountyBra) eventBuffer += "<b>Your Bounty Bra will keep your [pc.fullChest] producing despite the uncomfortable fullness.</b>";
+		if(pc.hasPerk("Milky") && pc.hasPerk("Treated Milk")) eventBuffer += "<b>However, with your excessively active udders, you are afraid the production will never stop.</b>";
+		else if(pc.upperUndergarment is BountyBra) eventBuffer += "<b>Your Bounty Bra will keep your [pc.fullChest] producing despite the uncomfortable fullness.</b>";
 		else eventBuffer += "<b>If you don't tend to them, your [pc.breastCupSize]s will stop producing [pc.milk].</b>";
 		pc.removeStatusEffect("Pending Gain Milk Note: 200");
 	}

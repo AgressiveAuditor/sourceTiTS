@@ -855,7 +855,7 @@ public function bendShekkaOverHerWorkbenchAndHaveHerFixWhileYouBang():void
 	if(pc.cockTotal() == 1) output("is as hard as a titanium bar");
 	else output("are as hard as titanium bars");
 	output(", and there's no way you're going to pass up on your raskvel honey's pussy.");
-	output("\n\nYou pull away from the fidgeting mechanic. Her hands are shaking as she swaps components, and her breath is as ragged as and endurance runner's. She's still managing to do her work, though. The jumpsuit gives way around her hips, stretching before rolling down her scaly hips. It clings to her sopping-wet slit in liquid-assisted defiance before finally breaking away, carrying a glossy sheen as a moment of its time wedged into her crotch. You grunt in appreciation of the fine ass you've revealed while you push her clothing to the ground.");
+	output("\n\nYou pull away from the fidgeting mechanic. Her hands are shaking as she swaps components, and her breath is as ragged as an endurance runner's. She's still managing to do her work, though. The jumpsuit gives way around her hips, stretching before rolling down her scaly hips. It clings to her sopping-wet slit in liquid-assisted defiance before finally breaking away, carrying a glossy sheen as a moment of its time wedged into her crotch. You grunt in appreciation of the fine ass you've revealed while you push her clothing to the ground.");
 	output("\n\nShekka's tail pats the side of your face, right on your cheek, and she purrs, <i>\"Mmmm, good " + pc.mf("boy","girl") + ", but I think I might get this repaired before you can cum inside me.\"</i> The naughty little limb snakes down your neck to your chest then around to your [pc.butt]. It slaps you for good measure. <i>\"If this is the best you've got, maybe I should just let you at me the whole damn day. I could get so much done before you even wring a single orgasm out of my dripping... wet... cunt.\"</i> She steps further apart to show you just how wet she's become.");
 	output("\n\nOh wow, is it ever. Her violet lips are absolutely sopping. Beads of clear lubricant hang from her labia as rain clings to a spider’s web. Plump and engorged, her meaty vulva is begging for a fuck. Both her clits are jutting out from between the soaked lips, and droplets hang on slick strands from them, sometimes releasing to patter on the floor. A small puddle has formed beneath the juicy raskvel, matching the one in her suit, proof of just how badly she needs you to fuck her.");
 	output("\n\nIt's too much: her taunting words, the tantalizing gates of pleasure so close that can feel the heat steaming off of them, and the submissive, bent-over pose. Even if you were determined not to fuck her, you couldn't stop your [pc.hips] from lurching forward. You couldn't stop your [pc.cock " + x + "] from spreading them wide");
@@ -983,7 +983,7 @@ public function bendShekkaOverHerWorkbenchAndHaveHerFixWhileYouBang():void
 		}
 		output("\n\nYou go limp, your ardor spent and your softening length");
 		if(y >= 0) output("s");
-		output(" slipping halfway out of her. You take the moment to appreciate the shapeliness of her shoulder blades and the natural scent of her air.");
+		output(" slipping halfway out of her. You take the moment to appreciate the shapeliness of her shoulder blades and the natural scent of her feathery hair air.");
 	}
 	//Merge
 	output("\n\nAfter a while of holding her like this, she comes down from her own plateau and cranes her head around to look at you, smiling. It isn't a mere sated smile either - the kind that telegraphs just how well fucked she's been. No. It's a gloating, knowing smile. She flicks a switch on the flashlight, and a beam of incandescent light illuminates her work area. Shekka gently pushes you back with her feet, letting your soaked [pc.cocks] fall away. She pulls herself up onto her workbench, rubbing her belly, a slightly vacant look in her eyes. <i>\"I think we both won that little competition.\"</i>");
@@ -2040,7 +2040,7 @@ public function mendovaShekkaBot():void
 	if(pc.hasVagina()) output("against your womb");
 	else output("deeper into [pc.ass]");
 	output(". If this keeps up for much longer you might be in trouble.");
-	output("\n\n<i>\"If you cant take it you should stop going easy on me with your choices,”</i> the rosey-scaled engineer says with a wink. You can only grunt and moan in reply, feeling haggard from the constant dicking. The warm embrace of orgasm looms on the horizon, looking quite inviting.");
+	output("\n\n<i>\"If you can't take it, you should stop going easy on me with your choices,”</i> the rosey-scaled engineer says with a wink. You can only grunt and moan in reply, feeling haggard from the constant dicking. The warm embrace of orgasm looms on the horizon, looking quite inviting.");
 	processTime(1);
 	chars["SHEKKA"].lust(5);
 	pc.lust(10);

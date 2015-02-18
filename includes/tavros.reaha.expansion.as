@@ -207,6 +207,13 @@ public function showReahaTalkMenu(func:Function = null):void
 	if (func != reahaTalkHerLife) addButton(4, "Her Life", reahaTalkHerLife, undefined, "Her Life", "Ask Reaha to tell you a little bit about her life before she became a slave");
 	else addDisabledButton(4, "Her Life");
 	
+	if (func == reahaMilkTalk) addDisabledButton(5, "Milk Mods");
+	else
+	{
+		if (flags["REAHA_MILKMODS_UNLOCKED"] == undefined) addDisabledButton(5, "Milk Mods", "Lactation Gene Mods", "You should discuss how Reaha ended up looking like she does first...");
+		else addButton(5, "Milk Mods", reahaMilkTalk, undefined, "Lactation Gene Mods", "Ask Reaha if she would be willing to take a few more mods...");
+	}
+	
 	addButton(14, "Back", approachShipBoardReahaWhyDidntSavinCodeThisHeWasntExhaustedYesterday, false);
 }
 
@@ -619,6 +626,8 @@ public function reahaTalkGeneMods():void
 {
 	clearOutput();
 	reahaHeader();
+	
+	flags["REAHA_MILKMODS_UNLOCKED"] = 1;
 
 	output("<i>“Tell me about these mods of yours,”</i> you ask, looking the busty bovine over from horned head to cute little toe.");
 	
@@ -911,7 +920,7 @@ public function reahaAddictionTherapy():void
 	reahaAddiction(-5);
 	reahaConfidence(5);
 
-	output("\n\n<i>“Time to work on getting rid of");
+	output("<i>“Time to work on getting rid of");
 	if (reahaAddiction() > REAHA_ADDICTION_LOW) output(" those");
 	else output(" that");
 	output(", you say, pointing to the pleasure patch");
@@ -1387,7 +1396,7 @@ public function reahaMilkTalk():void
 
 	output("<i>“So... you mentioned being alright with changing what you lactate,”</i> you say, eyeing the");
 	if (9999 == 0) output(" topless");
-	output(" cow’s buxom chest, a tiny bead of [reahaMilk] cresting the peaks of her swollen teats. It’s hard not to lick your lips at the thought of the sweet taste. ");
+	output(" cow’s buxom chest, a tiny bead of [reaha.milk] cresting the peaks of her swollen teats. It’s hard not to lick your lips at the thought of the sweet taste. ");
 	
 	output("\n\nReaha shifts her weight a bit, avoiding your eyes.");
 	if (!reahaFree()) output(" <i>“I guess. If that’s what your want, [pc.master]”</i>");
@@ -1395,12 +1404,14 @@ public function reahaMilkTalk():void
 	{
 		output(" <i>“Yeah, if you want.");
 		if (flags["REAHA_MILK_CHANGED"] != undefined) output(" I’ve already changed it anyway, after all.");
-		output(" I got myself into this mess by gene-modding, trying to be the best cow-girl I could be, but... if you’re paying for it, I guess I don’t mind.");
+		output(" I got myself into this mess by gene-modding, trying to be the best cow-girl I could be, but... if you’re paying for it, I guess I don’t mind.”</i>");
 	}
 
 	output("\n\nGood. Now, what to do about Reaha’s milk...");
 
 	processTime(2);
+	
+	clearMenu();
 
 	// [Give Honeydew] [Give ChocoLac]
 	if (pc.hasItem(new Honeydew()))
@@ -1415,7 +1426,7 @@ public function reahaMilkTalk():void
 		if (reaha.milkType != GLOBAL.FLUID_TYPE_CHOCOLATE_MILK) addButton(1, "Chocolac", reahaMilkTalkChocolac, undefined, "Give Chocolac", "Give Reaha some Chocolac.");
 		else addDisabledButton(0, "Chocolac", "ChocoLac", "Reaha is already producing chocolate-milk!");
 	}
-	else addDisabledButton(1, "Chocolac", "You could probably give Reaha some Chocolac if you had any to hand.");
+	else addDisabledButton(1, "Chocolac", "Give Chocolac", "You could probably give Reaha some Chocolac if you had any to hand.");
 
 	addButton(14, "Back", showReahaTalkMenu);
 }

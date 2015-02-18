@@ -10,6 +10,7 @@ import classes.Items.Guns.HoldOutPistol;
 import classes.Items.Guns.LaserPistol;
 import classes.Items.Guns.ScopedPistol;
 import classes.Items.Guns.ZKRifle;
+import classes.Items.Melee.ShockBlade;
 import classes.Items.Miscellaneous.EmptySlot;
 import classes.Items.Miscellaneous.HorseCock;
 import classes.Items.Miscellaneous.PHAccess;
@@ -21,6 +22,7 @@ import classes.Items.Protection.DecentShield;
 import classes.Items.Apparel.TSTArmor;
 import classes.Items.Accessories.JungleLure;
 import classes.Items.Accessories.JungleRepel;
+import classes.Items.Transformatives.Bovinium;
 import classes.Util.RandomInCollection;
 
 public function mhengaShipHangarFunc():Boolean
@@ -94,6 +96,24 @@ public function debugMenus():void
 	
 	//addButton(0, "Lights Out", startLightsOut, testVictoryFunc);
 	
+	addButton(0, "GiveMilky", thisIsWhyWeCantHaveNiceThings, undefined, "Give Milky", "Get the Milky perk.");
+	
+	addButton(9, "ForceError", thisIsWhyWeCantHaveNiceThings, undefined, "Force an Error", "Force an error to test error handling.");
+	
+	addButton(10, "ShipStorage", thisIsWhyWeCantHaveNiceThings);
+	
+	addButton(4, "Cashmoney", thisIsWhyWeCantHaveNiceThings, undefined, "Cashmoney", "Sauce says you are TURRIBLE.");
+	
+	addButton(5, "XP", thisIsWhyWeCantHaveNiceThings);
+	
+	addButton(6, "Pass Time", thisIsWhyWeCantHaveNiceThings);
+}
+
+public function debugMenusTwo():void
+{
+	clearMenu();
+	output("The secondary room of debug. Because we can't have nice things.");
+	
 	addItemButton(0, new LightningDuster(), function():void {
 		output("\n\nLightning Duster.\n");
 		
@@ -107,22 +127,10 @@ public function debugMenus():void
 		itemCollect(foundLootItems);
 	});
 	
-	addItemButton(1, new NaleenArmor(), function():void {
-		output("\n\nHorsecock get.\n");
+	addItemButton(1, new ShockBlade(), function():void {
+		output("\n\Shockblade Get.\n");
 		
-		var foundLootItems:Array = [new HorseCock()];
-		
-		itemScreen = mainGameMenu;
-		lootScreen = mainGameMenu;
-		useItemFunction = mainGameMenu;
-		
-		itemCollect(foundLootItems);
-	});
-	
-	addItemButton(2, new TSTArmorMkII(), function():void {
-		output("\n\nNaleenscale Armor get.\n");
-		
-		var foundLootItems:Array = [new TSTArmorMkII];
+		var foundLootItems:Array = [new ShockBlade()];
 		
 		itemScreen = mainGameMenu;
 		lootScreen = mainGameMenu;
@@ -131,48 +139,48 @@ public function debugMenus():void
 		itemCollect(foundLootItems);
 	});
 	
-	addButton(3, "Preggers Test", function():void {
-		processTime(800);
-		processTime(800);
+	addItemButton(2, new Bovinium(), function():void {
+		output("\n\nBovinium Get.\n");
 		
-		mainGameMenu();
+		var items:Array = [];
+		var bov:Bovinium = new Bovinium();
+		bov.quantity = 10;
+		items.push(bov);
+		
+		itemScreen = mainGameMenu;
+		lootScreen = mainGameMenu;
+		useItemFunction = mainGameMenu;
+		
+		itemCollect(items);
 	});
 	
-	addButton(7, "Test Nades", function():void {
-		
-		var tNades:TestGrenade = new TestGrenade();
-		tNades.quantity = 10;
-		
-		quickLoot(tNades);
-		
-	}, undefined, "Test Grenades", "Get some testing grenades for combat stuff.");
+	addButton(5, "F. Rival", debugFuckWithRival);
+}
+
+public function debugFuckWithRival():void
+{
+	rival.short = "Jack/Jill";
+}
+
+public function debugMenusThree():void
+{
+	clearOutput();
+	output("Debug combat room.");
 	
-	addButton(8, "Test HP.B", function():void {
-		
-		var tBooster:TestHPBooster = new TestHPBooster();
-		tBooster.quantity = 10;
-		
-		quickLoot(tBooster);
-		
-	}, undefined, "Test Booster", "Get some test HP boosters.");
+	addButton(0, "R. Nyrea", encounterNyreaHuntress, NYREA_UNKNOWN); // arg optional
+	addButton(1, "Alpha N.", encounterNyreaHuntress, NYREA_ALPHA);
+	addButton(2, "Beta N.", encounterNyreaHuntress, NYREA_BETA);
+	addButton(3, "SexBot", encounterASexBot);
+}
+
+public function thisIsWhyWeCantHaveNiceThings():void
+{
+	clearOutput();
 	
-	addButton(9, "ForceError", function():void {
-		throw new Error("This is a test error!");
-	}, undefined, "Force an Error", "Force an error to test error handling.");
+	output("This is why we can't have nice things.");
 	
-	addButton(10, "ShipStorage", function():void {
-		flags["SHIP_STORAGE_WARDROBE"] = 10;
-		flags["SHIP_STORAGE_EQUIPMENT"] = 10;
-		flags["SHIP_STORAGE_CONSUMABLES"] = 10;
-	});
-	
-	addButton(4, "Cashmoney", function():void {
-		pc.credits += 100000;
-	}, undefined, "Cashmoney", "Sauce says you are TURRIBLE.");
-	
-	addButton(5, "XP", function():void {
-		(pc as PlayerCharacter).XPRaw = (pc as PlayerCharacter).XPMax();
-	});
+	clearMenu();
+	addButton(0, "Next", mainGameMenu);
 }
 
 public function quickLoot(... args):void
@@ -217,7 +225,11 @@ public function checkOutBountyBoard():void
 	
 public function barBackRoomBonus():Boolean
 {
-	if(flags["KELLY_MET"] == 1 && (hours >= 17 || hours < 6)) kellyAtTheBar();
+	if((hours >= 17 || hours < 6))
+	{
+		if(flags["KELLY_MET"] == 1) kellyAtTheBar();
+		else output("\n\nA bunny-girl is back here with another patron, too busy to pay any attention to you.")
+	}
 	return false;
 }
 

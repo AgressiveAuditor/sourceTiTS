@@ -1,4 +1,6 @@
-﻿/*Renvra
+﻿import classes.Characters.PlayerCharacter;
+import classes.PregnancyData;
+/*Renvra
 Half-Nyrean Shopkeeper
 
 Character Notes
@@ -194,9 +196,11 @@ public function askRenvraAboutKids():void
 	output("\n\n“<i>That was... easy.</i>”");
 	output("\n\nThe halfbreed in your arms snorts and slips a hand ");
 	if(!pc.armor is EmptySlot) output("under your [pc.armor]");
-	else if(pc.isCrotchGarbed()) output("under your [pc.lowerUndergament]");
+	else if(pc.isCrotchGarbed()) output("under your [pc.lowerUndergarment]");
 	else output("between your [pc.thighs]");
 	output(" and brushes her fingers along the cleft of your sex. “<i>What? You’d think you’d realize by now... I’m easy.</i>”");
+	
+	flags["RENVRA_KIDS_TALK"] = 1;
 
 	//Fem sex scene here, starting at {combine} under Fuck Her. 
 	clearMenu();
@@ -332,7 +336,7 @@ public function bendItLikeBeckhamForRenvra():void
 	if(x >= 0) output("[pc.vagina " + x + "]");
 	else output("[pc.asshole]");
 
-	output("\n\nWith a nice, thick sheen on spit-lube and excess aphrodesiac coating her cockhead, Ren pushes forward with a slow, steady confidence. You clutch at the table, mouth twisting open in a husky moan of pleasure as the halfbreed’s massive ovipositor-slash-horsecock slides into your ");
+	output("\n\nWith a nice, thick sheen on spit-lube and excess aphrodisiac coating her cockhead, Ren pushes forward with a slow, steady confidence. You clutch at the table, mouth twisting open in a husky moan of pleasure as the halfbreed’s massive ovipositor-slash-horsecock slides into your ");
 	if(x >= 0) output("[pc.vagina " + x + "]");
 	else output("[pc.asshole]");
 	output(". Ren’s voice joins your own, groaning and cupping a breast as she eases her hips forward.");
@@ -351,7 +355,7 @@ public function bendItLikeBeckhamForRenvra():void
 	output("! Renvra’s movements are unyielding, refusing to accept anything less than fully burying her monstrously-large member in your ");
 	if(x >= 0) output("cunt");
 	else output("asshole");
-	output(". Your belly stretches to accommodate it, distening into a cock-shaped bulge by the time her egg-laden balls slap against ");
+	output(". Your belly stretches to accommodate it, distending into a cock-shaped bulge by the time her egg-laden balls slap against ");
 	if(pc.balls == 0) output("your behind");
 	else if(pc.balls == 1) output("your own churning orb");
 	else output("your own churning orbs");
@@ -379,7 +383,7 @@ public function getRenvraFuckedPart2():void
 	//else:
 	else output("“<i>Oh, fuck,</i>” you manage to grunt out, the first coherent thought you’ve put together since the first inches of her girthy cock speared you.");
 
-	output("\n\n“<i>That’s the plan,</i>” your lover sneers, adjust her grip up to your [pc.hips] and starting to move again. She drags herself out slowly, but her sheer length only allows her a fraction of its length without having to step back with it. Rather than shift her stance, Ren seems content to pound you in short, forceful thrusts. Her hips hammering against your [pc.butt], making the cheap metal desk supporting your weight shift forward with the impact. Between that and all the drug-laden pre her alien cock is pumping into you, filling your body with burning desire, you don’t have a snowball’s chance to hold back. You scream, a wail of absolute and unrepentant pleasure as you’re hammered into the climactic throes of orgasm.");
+	output("\n\n“<i>That’s the plan,</i>” your lover sneers, adjusting her grip up to your [pc.hips] and starting to move again. She drags herself out slowly, but her sheer length only allows her a fraction of its length without having to step back with it. Rather than shift her stance, Ren seems content to pound you in short, forceful thrusts. Her hips hammer against your [pc.butt], making the cheap metal desk supporting your weight shift forward with the impact. Between that and all the drug-laden pre her alien cock is pumping into you, filling your body with burning desire, you don’t have a snowball’s chance to hold back. You scream, a wail of absolute and unrepentant pleasure as you’re hammered into the climactic throes of orgasm.");
 
 	if(pc.hasCock())
 	{
@@ -389,7 +393,7 @@ public function getRenvraFuckedPart2():void
 		output(", you’re left limp and moaning, putty in the halfbreed’s hands. Even after your orgasm abates, nothing more than a trickle of spunk drooling from your [pc.cockHeads], she continues to fuck you.");
 
 	}
-	output("\n\nRenvra’s both insatiable and unrelenting, plowing through your orgasm without a moment’s hesitation. The sounds of flesh slapping, hard and wet, echoes deafeningly throughout the office. The only other sound you can focus on is the tensing breath of your halfbreed lover, growing more and more ragged as she pounds your ");
+	output("\n\nRenvra’s both insatiable and unrelenting, plowing through your orgasm without a moment’s hesitation. The sounds of flesh slapping, hard and wet, echo deafeningly throughout the office. The only other sound you can focus on is the tensing breath of your halfbreed lover, growing more and more ragged as she pounds your ");
 	if(x >= 0) output("[pc.vagina " + x + "]");
 	else output("[pc.asshole]");
 	output(". Your instincts scream out in preparation for her nearing climax.");
@@ -466,6 +470,12 @@ public function getEggsInShit(x:int = -1):void
 	output("\n\nRenvra releases you and turns on a heel towards the door. Finishing with your own gear, you follow her back out to the trading post’s main floor.");
 
 	//There’s a 10% chance that the PC’s going to get fertilized nyrea eggs. See Pregshit, below. 
+	if (x >= 0) pc.loadInCunt(renvra, x);
+	else pc.loadInAss(renvra);
+	
+	pc.orgasm();
+	renvra.orgasm();
+	
 	processTime(14);
 	flags["RENVRA_SEXED"] = 1;
 	pc.lust(20);
@@ -485,7 +495,7 @@ public function takeAShotOJizzInZeWomb(x:int = -1):void
 	output("\n\n“<i>Here we go,</i>” she moans, speaking in perfect cadence with her thrusts. “<i>Get ready!</i>”");
 	output("\n\nYou’re as ready as you’re going to be, and tell her as much with another orgasmic scream, letting your body carry you to the peaks of pleasure as its filled with a sudden, massive load of aphrodisiacs. Every touch seems to send you shivering and screaming to climax again, and Renvra’s pounding thrusts make your whole body feel as sensitive as [pc.oneClit], awash in sensation. Your hands instinctively go to your [pc.belly], wandering across the taut flesh there as you’re filled with your lover’s wonderfully thick semen.");
 	output("\n\nWhen she’s finally spent, Renvra gives a weak moan and falls forward, head collapsing into your [pc.chest]. You smile and run a hand through her spine-like hair, stroking her as her cock twitches and drools inside you.");
-	output("\n\n“<i>There’s nothing in the world like that,</i>” Ren finally manages to say, reaching up to cup your [pc.breast], fingers squeezing one of your [pc.nipples]. Slowly, she starts to withdraw from you, stepping back to pull the huge length of her ovicock from your slit. She does so with a moan, and unleashes of a torrent of pent-up pink spooge in the process that floods down onto the concrete floor. Still, you can feel more than enough of her lust-riddled spunk sloshing around deep inside you that you’re sure her swimmers have a fair chance of reaching their goal.");
+	output("\n\n“<i>There’s nothing in the world like that,</i>” Ren finally manages to say, reaching up to cup your [pc.breastNoun], fingers squeezing one of your [pc.nipples]. Slowly, she starts to withdraw from you, stepping back to pull the huge length of her ovicock from your slit. She does so with a moan, and unleashes of a torrent of pent-up pink spooge in the process that floods down onto the concrete floor. Still, you can feel more than enough of her lust-riddled spunk sloshing around deep inside you that you’re sure her swimmers have a fair chance of reaching their goal.");
 	output("\n\n“<i>Yuck,</i>” Ren sneers, patting your thigh affectionately and taking a wide step around the puddle to grab a towel from a drawer nearby. You watch her clean up, drying off her dick and thighs before turning her attention to you. It’s hard not to wince as the warrior woman leans back into your abused sex, but she’s surprisingly tender as she wipes away the mess she’s made of you.");
 	output("\n\nWhen she’s satisfied, Ren tosses the towel into a waste bin and grabs her clothes. While she’s pulling on her shirt and searching for her belt, you stagger up to your [pc.feet] and rub your sore ");
 	if(x >= 0) output("pussy");
@@ -495,6 +505,14 @@ public function takeAShotOJizzInZeWomb(x:int = -1):void
 	output("\n\nAs you gather your [pc.gear], Ren steps over to you, grabbing your chin and pulling you up to look her in the eye. “<i>Let’s do this again,</i>” she says, quickly pressing her lips to yours. “<i>Especially when you’ve birthed this clutch for me... I’ve got plenty more for you.</i>”");
 	output("\n\nRenvra releases you and turns on a heel towards the door. Finishing with your own gear, you follow her back out to the trading post’s main floor.");
 
+	renvra.impregnationType = "RenvraFullPregnancy";
+	if (x >= 0) pc.loadInCunt(renvra, x);
+	else pc.loadInAss(renvra);
+	renvra.impregnationType = "RenvraEggPregnancy";
+	
+	pc.orgasm();
+	renvra.orgasm();
+	
 	processTime(10);
 	pc.lust(15);
 	flags["RENVRA_SEXED"] = 1;
@@ -522,7 +540,7 @@ public function buttFuckRenvra():void
 	clearOutput();
 	showRenvra();
 	output("You answer Ren’s unsubtle question by wrapping your hands under her firm ass and pulling her off the ground. She gasps and laughs, her legs wrapping around your waist and arms around your neck. An unsteady step takes the two of you up against a wall, pressing Renvra’s back against it. She moans as your mouth finds one of her rosy nipples, and her back arches into your embraces as you lick and kiss and gently suckle. After a few moments of that treatment, you start to feel a trickle of a candy-sweet moisture beading from her teat, and you’re eager to drink it down. It tastes wonderful!");
-	output("\n\n“<i>You’re like I’m not like other reds,</i>” Renvra laughs, stroking your [pc.hair] while you suckle from her. “<i>Most would punch you right in the face for that...</i>”");
+	output("\n\n“<i>You’re lucky I’m not like other reds,</i>” Renvra laughs, stroking your [pc.hair] while you suckle from her. “<i>Most would punch you right in the face for that...</i>”");
 	output("\n\nShe rolls her eyes when you look up at her -- a strange sight with round, pitch-black eyes like hers. You answer her exasperated gesture by switching from one breast to the other, greedily suckling the halfbreed’s sweet nectar just as fast as you can get it. The more your [pc.tongue] teases her teats, though, the more urgently you can feel the huge slab of ovipositing meat between her legs throb. A trickle of hot, creamy pink pre drools down your [pc.leg], leaking from the halfbreed’s apple-sized gonads and through her pony-sized pecker. You shift slightly, hefting Renvra’s weight up onto the edge of her desk, and grab her cock by the shaft.");
 	output("\n\nThough it’s a bit awkward from your current positions, you heft her dick up from dangling between her legs, and flop its shaft onto her belly. The crown settles perfectly into the valley of her cleavage, and happily spurts a little dribble of pink pre onto her tits. Putting on a bit of a show, Renvra moves her shoulders in a way that squeezes her tits together around her cock, giving herself an impromptu titfuck as your attentions move downward.");
 	output("\n\nWith her weight settled on the desk, your hands are free to cup and squeeze Renvra’s tight ass, caressing the muscular curve of it until your wandering ministrations reach the gulf between her legs. You cup her pseudo-balls, letting two egg-filled sacs roll between your fingers. Gently, you lift them up and out of the way, revealing the small, dark ring of Ren’s asshole. Seeing its target, your own [pc.cock] jumps to attention, and a few tentative strokes bring it to full hardness. Ren’s legs tense around your waist, pulling you a little closer until your [pc.cockHead] is pressed flush against her backdoor.");
@@ -541,7 +559,7 @@ public function buttFuckRenvra():void
 	output("\n\nYou both ");
 	if(silly) output("have a bit of a giggle");
 	else output("laugh");
-	output(" at that, letting Ren spend a few necessary moment’s adjusting to your girth inside her. For the time being, you’re content to enjoy the feeling of her muscular anal walls clenching around your shaft, inadvertently massagingg you as they try to repulse your advance. You feel like you could cum easily just from that, the raw tightness and heat of Renvra’s asshole.");
+	output(" at that, letting Ren spend a few necessary moments adjusting to your girth inside her. For the time being, you’re content to enjoy the feeling of her muscular anal walls clenching around your shaft, inadvertently massaging you as they try to repulse your advance. You feel like you could cum easily just from that, the raw tightness and heat of Renvra’s asshole.");
 
 	output("\n\nAfter a while, Ren leans back against the wall and gives you a slight nod. “<i>Alright... go ahead. I’m as ready as I’m going to be.</i>”");
 
@@ -555,7 +573,9 @@ public function buttFuckRenvra():void
 	output("\n\nThe moment your fingers wrap around Ren’s bitch-breaker, she throws her head back with a primal cry of pleasure. A few vigorous strokes keeps her moaning, and sets off a chain reaction through her body that ends with her heavy balls throbbing against the shaft of your prick and a jet of pink cream spraying up from her thick ovicock, blasting Renvra straight in the chin and raining down on her tits.");
 	output("\n\n“<i>Gah! Fuck!</i>” she shouts, fingers clutching at your shoulders as she cums. “<i>Stroke it! Strokeitstrokeitstrokeit.</i>”");
 	output("\n\nYou do as you’re bid, massaging the turgid knot and pumping her equine-like shaft. In turn, Renvra’s ass clenches hard around your thrusting [pc.cock], desperately trying to milk the cum from you. With the sight of Ren creaming herself to urge you on, it’s an attempt you’re quite willing to accommodate. You hook your hands under her legs and ram yourself home in her, letting yourself go utterly under her anal ministrations.");
-	output("\n\nRen sucks in a sharp breath as the first gouts of [pc.cumNoun] spray into her{, spurred on by the sudden impact of your [pc.knot] pounding her wide open, tying the two of you together}. Short, frantic thrusts bring you deeper into her, working out every drop of spooge you can fill her with. By the time you’re done, Renvra’s left panting against the wall, her hands on her belly around the throbbing shaft of her deflating cock. She’s a mess of her own pink spunk, smearing across her chest and shoulders and dripping down onto her desk.");
+	output("\n\nRen sucks in a sharp breath as the first gouts of [pc.cumNoun] spray into her");
+	if (pc.hasKnot()) output(", spurred on by the sudden impact of your [pc.knot] pounding her wide open, tying the two of you together");
+	output(". Short, frantic thrusts bring you deeper into her, working out every drop of spooge you can fill her with. By the time you’re done, Renvra’s left panting against the wall, her hands cradling the throbbing shaft of her deflating cock against her belly. She’s a mess of her own pink spunk, smearing across her chest and shoulders and dripping down onto her desk.");
 	output("\n\n“<i>What a mess,</i>” she laughs, rolling her head back and closing her eyes. A plated finger flicks through the pink cream on one of her tits, bringing it up to her mouth to be cleaned off. After a moment’s enjoyment of her own taste, Ren reaches into a shelf nearby, pulls out a fairly thick towel, and begins to clean herself off -- even as you’re still ");
 	if(pc.cockVolume(0) < 300) output("buried");
 	else output("knotted");
@@ -586,105 +606,336 @@ public function buttFuckRenvra():void
 	addButton(0,"Next",mainGameMenu);
 }
 
-/*output("\n\n");
-output("\n\nPregshit");
+public function renvraEggnancyEnds(pregSlot:int):void
+{
+	clearOutput();
+	author("Savin");
+	
+	var pData:PregnancyData = (pc.pregnancyData[pregSlot] as PregnancyData);
+	
+	output("You feel a rumble in your gut, strong enough to make you nearly double over. Oh, God.... Your hands grab your gut, and instantly feel something shifting just under your gravid flesh. The eggs inside you are moving, straining against your gut in a desperate bid to escape. With a panicked cry, you slump down to the ground and strip off your [pc.gear]. A distinct wetness pools out of your");
+	if (pregSlot == 3) output(" [pc.asshole]");
+	else output(" [pc.cunt]");
+	output(" the moment you've gotten your gear out of the way. Your back arches as pleasure washes over you, brought on by the first egg starting its lengthy journey out of your");
+	if (pregSlot == 3) output(" bowels");
+	else output(" womb");
+	output(".");
 
-output("\n\nNyrean Egg Carrying (Modified for Renvra)");
-output("\n\n//Nyrean pregnancy lasts 7+/-2 days. The PC’s belly becomes fairly gravid, and their movement speed and evasion is reduced (or whatever standard preg debuffs there are, I dunno).");
+	output("\n\nYou curl up and spread your [pc.legs], giving your young charges as easy an access to the open air as you can. All there is to do after that is sit back and push. Your body convulses, the strange sensation of stretching pleasure overwhelming your senses.");
+	if (pc.hasCock() || pc.hasVagina()) output(" You instinctively begin masturbating, unable to resist the alien pleasure.");
+	else output(" You futilely rub at your over-sensitive groin, trying to coax some relief from your bare crotch.");
+	output(" The first egg starts pushing through you, slowly but surely reaching");
+	if (pregSlot == 3) output(" your [pc.asshole]");
+	else output(" the lips of your pussy");
+	output(". The stretch is incredible, ");
+	
+	var tGape:Number;
+	
+	if (pregSlot == 3) tGape = pc.ass.looseness();
+	else tGape = pc.vaginas[pregSlot].looseness();
+	
+	if (tGape < 5)
+	{
+		output(" forcing you to push like you've never pushed before to squeeze the egg through the");
+		if (pregSlot == 3) output(" ring of your ass");
+		else output(" lips of your cunt");
+	}
+	else
+	{
+		output(" but nothing you can't handle with your incredibly well-loosened hole");
+	}
+	output(". The egg squeezes out with a wet “POP,” rolling out of you and onto the ground in a pool of pink nyrean fluids.");
+	
 
-output("\n\nOther stuff we need to define a pregnancy:");
+	output("\n\nYou shiver as you lay the first egg of the clutch, dropping the egg down between your [pc.legs]. You sigh in relief, your belly noticeably shrunken. But it's not empty yet, and you soon feel another shift in your swollen gut.");
+	if (pData.pregnancyQuantity == 2) output(" The");
+	else output(" A");
+	output(" second egg begins its descent, refusing to let you recover after the first. Your");
+	if (pregSlot == 3) output(" ass");
+	else output(" sex");
+	output(" spasms and quivers as the next egg moves, and you grunt and push it out, letting the soon-to-be born nyrea join its sibling.");
+	if (pData.pregnancyQuantity == 3) output(" Another egg follows");
+	else if (pData.pregnancyQuantity > 3) output(" More eggs follow");
+	if (pData.pregnancyQuantity >= 3) output(", sliding out of you easily compared to the first."); 
 
-output("\n\nMinimum Quantity: 2");
-output("\n\nMaximum Quantity: 2");
+	output("\n\nYou spend minutes laying your nyrean eggs, dropping a clutch of "+ num2Text(pData.pregnancyQuantity) +" total eggs. When the final egg pops out, you flop onto your back, breathing hard. That took damn near everything out of you, and you find yourself nearly passing out after your ordeal. Before you do, however, you realize that you'll probably need to do... something about this clutch of eggs. You tap on your Codex and review the nyreas' entry. They'll be helpless for several weeks, so you can't exactly leave them here. You flip over to your comms and call in a pickup for the eggs -- thank God that Dad left you that nursery back on Tavros. A drone arrives a few minutes later, collects the eggs, and hands you a receipt before carting them back home.");
 
+	output("\n\n<b>"+ pData.pregnancyQuantity +" nyrea will soon be waiting for you back at the nursery.</b>");
 
-output("\n\n//Play immediately after PC gets oviposited:");
-output("\n\n<b>Your belly is swollen with nyrea eggs, distending your gut as if you were truly pregnant.</b> Hopefully, the eggs will pass quickly. Until then, you spend the next few minutes trying to adjust yourself and your equipment to your new size. Walking just got really awkward....");
+	if (pData.pregnancyType == "RenvraEggPregnancy")
+	{
+		output("\n\nAt least, they're three-quarters nyrea.");
+		if (silly || pc.isMischievous()) output(" Close enough for government work, right?");
+	}
+	
+	processTime(30);
+}
 
-output("\n\n//New Belly Descript");
-output("\n\nYour belly is bulging heavily. At first glance, people might be mistaken for thinking you’re properly pregnant, but closer inspection reveals your belly to be lumpy and slightly misshapen, bulging with eggs as you are. ");
+public function renvraMessageHandler():void
+{
+	if (pc.hasStatusEffect("Renvra Full Pregnancy Almost Due"))
+	{
+		renvraAlmostDue();
+		pc.removeStatusEffect("Renvra Full Pregnancy Almost Due");
+	}
+	if (pc.hasStatusEffect("Renvra Full Pregnancy Message 5"))
+	{
+		renvraPregnancyMessage5();
+		pc.removeStatusEffect("Renvra Full Pregnancy Message 5");
+	}
+	else if (pc.hasStatusEffect("Renvra Full Pregnancy Message 4"))
+	{
+		renvraPregnancyMessage4();
+		pc.removeStatusEffect("Renvra Full Pregnancy Message 4");
+	}
+	else if (pc.hasStatusEffect("Renvra Full Pregnancy Message 3"))
+	{
+		renvraPregnancyMessage3();
+		pc.removeStatusEffect("Renvra Full Pregnancy Message 3");
+	}
+	else if (pc.hasStatusEffect("Renvra Full Pregnancy Message 2"))
+	{
+		eventQueue.push(renvraPregnancyMessage2);
+		pc.removeStatusEffect("Renvra Full Pregnancy Message 2");
+	}
+	else if (pc.hasStatusEffect("Renvra Full Pregnancy Message 1") && hours < 9 && (rooms[currentLocation].hasFlag(GLOBAL.PUBLIC) || rooms[currentLocation].hasFlag(GLOBAL.INDOOR)))
+	{
+		eventQueue.push(renvraPregnancyMessage1);
+		pc.removeStatusEffect("Renvra Full Pregnancy Message 1");
+	}
+	else if (pc.hasStatusEffect("Renvra Milky Titties Go"))
+	{
+		if (flags["Supress Renvra Milky Titties"] == undefined && (!pc.canLactate() || pc.milkRate < 10 || pc.biggestTitSize() <= 1))
+		{
+			flags["Supress Renvra Milky Titties"] = rand(6) + 2;
+			eventQueue.push(renvraMilkyTittiesGo);
+		}
+		else
+		{
+			if (flags["Supress Renvra Milky Titties"] > 0)
+			{
+				flags["Supress Renvra Milky Titties"]--;
+			}
+			else
+			{
+				flags["Supress Renvra Milky Titties"] = undefined;
+			}
+		}
+	}
+	
+	if (pc.hasStatusEffect("Renvra Full Pregnancy Bellyrubs"))
+	{
+		renvraBellyrubs();
+	}
+}
 
-output("\n\n//Belly Rubs! Play at random every few hours");
-output("\n\nYou stop yourself, seemingly at random, and plant a hand soothingly over your [pc.belly]. The eggs inside you shift slightly, making your {if anal: stomach rumble // if vaginal: belly tremble}. It’s surprisingly nice to just rub your belly, enjoying the fullness of it.");
+public function renvraAlmostDue():void
+{
+	eventBuffer += "\n\nYou note that your swollen belly is shifting awkwardly, and you're starting to feel very... wet. Your motherly instincts tell you that you'll be giving birth very, very soon. ";
+}
 
-output("\n\n//Belly Rubs IN PUBLIC (small chance to play in public places/town)");
-output("\n\nAs you walk through town, people occasionally walk up to you, asking to feel your belly or how far along you are. You don’t have the heart to tell them you’re full of alien eggs. {if bimbo/Treated/ausar/kaithrit: Besides, people rubbing all over you feels super good!}");
+public function renvraBellyrubs():void
+{
+	if (flags["Renvra Full Pregnancy Bellyrub Supression"] == undefined) flags["Renvra Full Pregnancy Bellyrub Supression"] = 0;
+	
+	if (flags["Renvra Full Pregnancy Bellyrub Supression"] < days && rand(100) < 2)
+	{	
+		flags["Renvra Full Pregnancy Bellyrub Supression"] = days;
+		
+		if (InPublicSpace() && (kGAMECLASS.hours > 4 && kGAMECLASS.hours < 22))
+		{
+			eventBuffer += "\n\nAs you walk through town, people occasionally walk up to you, asking to feel your belly or how far along you are. You don't have the heart to tell them you're full of alien eggs.";
+			if (pc.isBimbo() || pc.isTreated() || pc.race().indexOf("ausar") != -1 || pc.race().indexOf("kaithrit") != -1) eventBuffer += " Besides, people rubbing all over you feels super good!";
+		}
+		else
+		{
+			eventBuffer += "\n\nYou stop yourself, seemingly at random, and plant a hand soothingly over your [pc.belly]. Your children inside you shift slightly, making your";
+			if (pc.statusEffectv1("Renvra Full Pregnancy Bellyrubs") == 3) eventBuffer += " stomach rumble";
+			else eventBuffer += " belly tremble";
+			eventBuffer += ". It's surprisingly nice to just rub your belly, enjoying the fullness of it."
+		}
+	}
+}
 
-output("\n\n//Almost time!");
-output("\n\nYou note that your swollen belly is shifting awkwardly. The eggs clinging inside your {ass / belly} rumble and move, and you feel distinctly... wet. You doubt you’ll be carrying these eggs around with you much longer.");
+public function renvraPregnancyMessage1():void
+{
+	clearOutput();
+	author("Savin");
+	
+	output("You feel... ill. You slump against a nearby wall, clutching at your [pc.belly]. Ugh, what the...");
 
-output("\n\n//It’s Time! (Play at end of pregnancy)");
-output("\n\nYou feel a rumble in your gut, strong enough to make you nearly double over. Oh, God.... Your hands grab your gut, and instantly feel something shifting just under your gravid flesh. The eggs inside you are moving, straining against your gut in a desperate bid to escape. With a panicked cry, you slump down to the ground and strip off your [pc.gear]. A distinct wetness pools out of your {[pc.asshole] // [pc.cunt]} the moment you’ve gotten your gear out of the way. Your back arches as pleasure washes over you, brought on by the first egg starting its lengthy journey out of your {bowels / womb}. ");
+	output("\n\nYou double over and puke, hucking your lunch all over the ground. You spend several minutes hurling before you're able to stand. Geez, shouldn't your nanomachines be able to keep you from getting just a little cold or something?");
+	
+	processTime(10);
+	
+	addNextButton(mainGameMenu);
+}
 
-output("\n\nYou curl up and spread your [pc.legs], giving your young charges as easy an access to the open air as you can. All there is to do after that is sit back and push. Your body convulses, the strange sensation of stretching pleasure overwhelming your senses. {if PC isn’t genderless: You instinctively begin masturbating, unable to resist the alien pleasure. //else: You futilely rub at your over-sensitive groin, trying to coax some relief from your bare crotch.} The first egg starts pushing through you, slowly but surely reaching your {[pc.asshole] / the lips of your pussy}. The stretch is incredible, {if not horribly ruined hole: forcing you to push like you’ve never pushed before to squeeze the egg through the {ring of your ass // lips of your cunt} //else if ruined: but nothing you can’t handle with your incredibly well-loosened hole}. The egg squeezes out with a wet “<i>POP,</i>” rolling out of you and onto the ground in a pool of pink nyrean fluids. ");
+public function renvraPregnancyMessage2():void
+{
+	clearOutput();
+	author("Savin");
+	
+	output("You're not even surprised when you end up puking today.");
 
-output("\n\nYou shiver as you lay the first egg of the clutch, dropping the egg down between your [pc.legs]. You sigh in relief, your belly noticeably shrunken. But it’s not empty yet, and you soon feel another shift in your swollen gut. The second egg begins its descent, refusing to let you recover after the first. Your {ass/sex} spasms and quivers as the next egg moves, and you grunt and push it out, letting the soon-to-be born nyrea join its sibling. ");
+	output("\n\nYou don't feel <i>bad</i>, per se. But something's fucking wrong. That's for sure.");
 
-output("\n\nYou spend minutes laying your nyrean eggs, dropping a clutch of two total eggs. When the final egg pops out, you flop onto your back, breathing hard. That took damn near everything out of you, and you find yourself nearly passing out after your ordeal. Before you do, however, you realize that you’ll probably need to do... something about this clutch of eggs. You tap on your Codex and review the nyreas’ entry. They’ll be helpless for several weeks, so you can’t exactly leave them here. You flip over to your comms and call in a pickup for the eggs -- thank God that Dad left you that nursery back on Tavros. A drone arrives a few minutes later, collects the eggs, and hands you a receipt before carting them back home. ");
+	output("\n\nWith a groan, you slump against the wall and pull out your Codex. A few moments of scanning, extranet searching, and cursing pretty much solidifies in your mind: you're pregnant. With a clutch of part-myr, part-nyrea, and part-human as well. Well look at you, Daddy's " + pc.mf("boy","girl") + "! He sure would be proud you're well on your way to leaving your trail of galactic bastards just like your old man.");
+	
+	processTime(10);
+	
+	addNextButton(mainGameMenu);
+}
 
-output("\n\n<b>{X} nyrea will soon be waiting for you back at the nursery.</b>");
+public function renvraPregnancyMessage3():void
+{
+	eventBuffer += "\n\nYour belly is bulging slightly, the first visible signs of pregnancy. Your halfbreed spawn seem to be behaving... not that differently from human offspring so far. At least you're not getting horribly sick in the mornings anymore!";	
+}
 
-output("\n\nAt least, they’re three-quarters nyrea. {If Silly/Misch: Close enough for government work, right?}");
+public function renvraPregnancyMessage4():void
+{
+	eventBuffer += "\n\nYou're really starting to show, now. Anybody who looks your way can see you're obviously pregnant, and you've had to adjust your [pc.gear] to make room for your bloated gut. Every so often, you feel a slight movement under your [pc.skinFurScales] as your growing young shift or move. Occasionally, you could swear you feel them kick!\n\nFrom time to time, you find your hands wandering down to your belly, idly caressing your swollen form.";
+}
 
+public function renvraPregnancyMessage5():void
+{
+	eventBuffer += "\n\nYou find your hands wandering to your belly more and more -- as much to support the growing weight you're bearing as to caress the home of your unborn children.\n\nYou're so heavily showing now that you can't go much of anywhere without people staring. It won't be long now... maybe just a few weeks more!";
+}
 
-output("\n\n");
+public function renvraMilkyTittiesGo():void
+{
+	var tBoobies:Boolean = false;
+	var tMilky:Boolean = false;
+	
+	if (pc.biggestTitSize() <= 1)
+	{
+		pc.breastRows[0].breastRatingRaw += rand(3) + 1;
+		tBoobies = true;
+	}
+	
+	if (!pc.canLactate())
+	{
+		tMilky = true;
+		
+		pc.milkMultiplier = 75;
+		pc.milkFullness = 75;
+		
+		if (pc.milkRate < 10)
+		{
+			pc.milkRate = 10;
+		}
+	}
+	
+	if (tBoobies == false && tMilky == false && pc.milkRate < 10)
+	{
+		pc.milkRate = 10;
+		
+		eventBuffer += "\n\nYour breasts are starting to feel a little heavier as your body prepares for its coming young. While you're already lactating, your rate of production seems to be increasing in preparation.";
+	}
+	else
+	{
+		eventBuffer += "\n\nYou notice that your [pc.chest] is starting to grow, swelling with the beginnings of milk production. You find someplace quiet and pull your gear off, cupping your";
+		if (tBoobies) eventBuffer += " freshly engorged";
+		eventBuffer += " breasts and squeezing out a trickle of [pc.milk] from your teat.\n\n<b>It appears you're lactating now!</b>";
+	}
+}
 
-output("\n\nRenvra Impregnates the PC");
-output("\n\n//Renvra’s pregnancy lasts for 60 days. The PC’s belly becomes fairly gravid, and their movement speed and evasion is reduced (or whatever standard preg debuffs there are, I dunno).");
+public function renvraFullPregnancyEnds(pregSlot:int):void
+{
+	var pData:PregnancyData = pc.pregnancyData[pregSlot];
+	var cpData:PregnancyData = new PregnancyData();
+	cpData.loadSaveObject(pData.getSaveObject());
+	
+	clearOutput();
+	author("Savin");
+	
+	if (InPublicSpace() || currentLocation == "SHIP INTERIOR")
+	{
+		output("You feel a rumble in your gut, strong enough to make you nearly double over. Oh, God.... ");
 
-output("\n\nMinimum Quantity: 1");
-output("\n\nMaximum Quantity: 4");
+		output("\n\nYour hands grab your gut, and instantly feel something shifting just under your gravid flesh. The children inside you are moving, straining against your gut in a desperate bid to escape. With a panicked cry, you feel your water break, a flood of wetness splashing down your thighs as your offspring get ready to come into the world!");
 
-output("\n\nChance of Knockup: Let’s say a base of 30%, modified for fertility?");
+		output("\n\nShit!");
 
+		output("\n\nYou");
+		if (currentLocation != "SHIP INTERIOR") output(" grab your Codex and dial an emergency medical alert, summoning an ambulance from the nearest hospital");
+		else output(" punch your ship to maximum LightDrive speed, and set a course for Tavros station. You've got just enough willpower left to forward an emergency medical alert to the dock, making sure an ambulance will be there when you arrive.");
 
-output("\n\n//Play in the mornings 1-3 days after PC gets knocked up. Needs to be in a town or somewhere safe-ish/not in a vacuum, etc. ");
-output("\n\nYou feel... ill. You slump against a nearby wall, clutching at your [pc.belly]. Ugh, what the... ");
+		output("\n\nIt isn't long before you're in an ambulance, several V-KO droids looming over you as you're carted to a medical station. The last thing you see is a mask being placed over your face, and one of the droids telling you to be calm -- you'll be fine soon.");
 
-output("\n\nYou double over and puke, hucking your lunch all over the ground. You spend several minutes hurling before you’re able to stand. Geez, shouldn’t your nanomachines be able to keep you from getting just a little cold or something?");
+		clearMenu();
+		addButton(0, "Next", renvraFullPregnancyPublicII, cpData);
+		return;
+	}
+	else
+	{
+		output("You feel a rumble in your gut, strong enough to make you nearly double over. Oh, God....");
 
-output("\n\n//Repeat a couple times over the next few days. ");
+		output("\n\nYour hands grab your gut, and instantly feel something shifting just under your gravid flesh. The children inside you are moving, straining against your gut in a desperate bid to escape. With a panicked cry, you slump down to the ground and strip off your [pc.gear]. You feel your water break, a flood of wetness splashing down your thighs as your offspring get ready to come into the world! Your back arches as pleasure washes over you, brought on by the first shifting mass of a body starting its lengthy journey out of your womb.");
 
+		output("\n\nYou curl up and spread your [pc.legs], giving your young charges as easy an access to the open air as you can. All there is to do after that is sit back and push. Your body convulses, the strange sensation of stretching pleasure overwhelming your senses.");
+		if (pc.hasVagina() || pc.hasCock()) output(" You instinctively begin masturbating, unable to resist the alien pleasure.");
+		else output(" You futilely rub at your over-sensitive groin, trying to coax some relief from your bare crotch.");
+		output(" The first child's crown starts pushing out of you, slowly but surely reaching the lips of your pussy. The stretch is incredible,");
+		var tGape:Number;
+		
+		if (pregSlot == 3) tGape = pc.ass.looseness();
+		else tGape = pc.vaginas[pregSlot].looseness();
+		if (tGape < 5) output(" forcing you to push like you've never pushed before to squeeze the newborn through the lips of your cunt");
+		else output(" but nothing you can't handle with your incredibly well-loosened hole");
+		output(". After several minutes of screaming, grunting, and shouting... the first of your newborn children squeezes out with a wet “POP,” flopping out of you and onto the ground in a pool of pink nyrean fluids.");
 
-output("\n\n//Play 10 days after PC gets knocked up. Needs to be in a town or somewhere safe-ish/not in a vacuum, etc. ");
-output("\n\nYou’re not even surprised when you end up puking today. ");
+		output("\n\nYou shiver as you give birth");
+		if (pData.pregnancyQuantity == 1) output(" for the very first time");
+		else output(" to the first of what must be even more children");
+		output(", reaching down while you can and collecting the squalling newborn and bringing it to your breast. It cries out, thrashing its tiny, chitinous arms around until you bring its mouth to your [pc.nipple].");
 
-output("\n\nYou don’t feel <i>bad</i>, per se. But something’s fucking wrong. That’s for sure. ");
+		output("\n\nYou sigh in relief as your first young suckles. Your belly is noticeably shrunken");
+		if (pData.pregnancyQuantity == 1) output(". You're left to recover from your... surprisingly pleasurable ordeal. You suppose if Renvra's seed is filled with aphrodisiacs, it's not entirely beyond the pale that your birthing fluids would be too. Weird, but it kept things from being painful, to say the least.");
+		else
+		{
+			output(", but it's not empty yet, and you soon feel another shift in your swollen gut. The second of your young begins its descent, refusing to let you recover after the first. Your sex spasms and quivers as the next child follows its "+ (rand(10) == 0 ? "brother" : "sister ") +", and you grunt and push it out, letting the soon-to-be born nyrea join its sibling.");
 
-output("\n\nWith a groan, you slump against the wall and pull out your Codex. A few moments of scanning, extranet searching, and cursing pretty much solidifies in your mind: you’re pregnant. With a clutch of part-myr, part-nyrea, and party human as well. Well look at you, Daddy’s {boy/girl}! He sure would be proud you’re well on your way to leaving your trail of galactic bastards just like your old man.");
+			if (pData.pregnancyQuantity > 2)
+			{
+				output("\n\nAnother follows suit");
+				if (pData.pregnancyQuantity > 3) output(", and another");
+				output(". Before long you've got your arms completely full of crying, suckling nyrean babies. You thought these were supposed to come in eggs! Gah!");
+			} 
+		}
 
-output("\n\n//A few days later... New Belly Descript 1");
-output("\n\nYour belly is bulging slightly, the first visible signs of pregnancy. Your halfbreed spawn seem to be behaving... not that differently from human offspring so far. At least you’re not getting horribly sick in the mornings anymore!");
+		output("\n\nAfter spending a good long while making sure each of your children is wrapped up and well-fed from your breast, you set them aside for a moment and pull out your Codex. You flip over to your comms and call in a pickup for the eggs -- thank God that Dad left you that nursery back on Tavros. A drone arrives a few minutes later, collects the newborns, and hands you a receipt before carting them back home.");
 
-output("\n\n//Several weeks later... New Belly Descript 2");
-output("\n\nYou’re really starting to show, now. Anybody who looks your way can see you’re obviously pregnant, and you’ve had to adjust your [pc.gear] to make room for your bloated gut. Every so often, you feel a slight movement under your [pc.skinFurScales] as your growing young shift or move. Occasionally, you could swear you feel them kick! ");
+		output("\n\n<b>" + pData.pregnancyQuantity + " nyrea-myr-human hybrids will soon be waiting for you back at the nursery.</b> You're going to have to find a name for whatever race you've");
+		if (StatTracking.getStat("pregnancy/renvra kids") == 0) output(" just created");
+		else output(" just added to");
+		output("!");
+	}
+	
+	clearMenu();
+	addButton(0, "Next", mainGameMenu);
+}
 
-output("\n\nFrom time to time, you find your hands wandering down to your belly, idly caressing your swollen form. ");
+public function renvraFullPregnancyPublicII(pData:PregnancyData):void
+{
+	clearOutput();
+	author("Savin");
+	
+	output("<b>Hours pass...</b>");
 
-output("\n\n//Lactation Start (if none already)");
-output("\n\n//PC breasts increase 1d3 cup sizes -- permanently, if no breasts existed beforehand. ");
-output("\n\n//Scene repeats ~24 hours after lactation stops or PC breasts disappear");
+	output("\n\nYou wake up in a sterile room, feeling very... light and empty, for the first time in months! You feel great, too! ");
 
-output("\n\nYou notice that your [pc.chest] is starting to grow, swelling with the beginnings of milk production. You find someplace quiet and pull your gear off, cupping your {new }breast and squeezing out a trickle of [pc.milk] from your teat.");
+	output("\n\nA local medical droid approaches when you've woken up, saying that you've recently given birth -- congratulations! You now have" + pData.pregnancyQuantity + " new child");
+	if (pData.pregnancyQuantity > 1) output("ren");
+	output(", who in accordance with your Emergency Medical Profile (when did you set <i>that</i> up?), have been delivered to Tavros Station's nursery.");
 
-output("\n\n<b>It appears ");
+	if (pc.isBimbo()) output("\n\nAww, you don't even get to see them!?");
 
+	output("\n\nYou dismiss the droid and grab your [pc.gear] from a nearby bin, taking the opportunity to get dressed. Whatever drug they gave you is powerful as hell, and you're more than able to walk out of the med station and return to your ship in a few minutes.");
 
-output("\n\n//Several weeks later... New Belly Descript 3");
-output("\n\nYou find your hands wandering to your belly more and more -- as much to support the growing weight you’re bearing as to caress the home of your unborn children.");
-
-output("\n\nYou’re so heavily showing now that you can’t go much of anywhere without people staring. It won’t be long now... maybe just a few weeks more!");
-
-output("\n\n-----");
-
-output("\n\n//Belly Rubs! Play at random every few hours after Belly 1");
-output("\n\nYou stop yourself, seemingly at random, and plant a hand soothingly over your [pc.belly]. Your children inside you shift slightly, making your {if anal: stomach rumble // if vaginal: belly tremble}. It’s surprisingly nice to just rub your belly, enjoying the fullness of it.");
-
-output("\n\n//Belly Rubs IN PUBLIC (small chance to play in public places/town) After Belly 1");
-output("\n\nAs you walk through town, people occasionally walk up to you, asking to feel your belly or how far along you are. You don’t have the heart to tell them you’re full of alien eggs. {if bimbo/Treated/ausar/kaithrit: Besides, people rubbing all over you feels super good!}");
-
-output("\n\n----");
-
-output("\n\n//Almost time!");
-output("\n\nYou note that your swollen belly is shifting awkwardly, and you’re starting to feel very... wet. Your motherly instincts tell you that you’ll be giving birth very, very soon. ");
-*/
+	processTime(10);
+	
+	//Put PC back at ship tile.
+	clearMenu();
+	addButton(0, "Next", move, "SHIP INTERIOR");
+}

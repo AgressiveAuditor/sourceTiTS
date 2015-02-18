@@ -5,6 +5,8 @@ import classes.Characters.HuntressVanae;
 import classes.Characters.Kiro;
 import classes.Characters.Lane;
 import classes.Characters.MaidenVanae;
+import classes.Characters.NyreaAlpha;
+import classes.Characters.NyreaBeta;
 import classes.Characters.PhoenixPirates;
 import classes.Characters.GunTurrets;
 import classes.Characters.Saendra;
@@ -12,6 +14,7 @@ import classes.Characters.SecurityDroids;
 public function initializeNPCs(justUpdate:Boolean = false):void 
 {
 	trace("initializeNPCs Called, just doing cleanup?", justUpdate)
+	
 	if (!justUpdate || (justUpdate && chars["CELISE"] == undefined))
 	{
 		chars["CELISE"] = new classes.Characters.Celise();
@@ -279,6 +282,22 @@ public function initializeNPCs(justUpdate:Boolean = false):void
 	if (!justUpdate || (justUpdate && chars["RENVRA"] == undefined))
 	{
 		chars["RENVRA"] = new Renvra();
+	}
+	if (!justUpdate || (justUpdate && chars["COCKVINE"] == undefined))
+	{
+		chars["COCKVINE"] = new Cockvine();
+	}
+	if (!justUpdate || (justUpdate && chars["XANTHE"] == undefined))
+	{
+		chars["XANTHE"] = new Xanthe();
+	}
+	if (!justUpdate || (justUpdate && chars["NYREA ALPHA"] == undefined))
+	{
+		chars["NYREA ALPHA"] = new NyreaAlpha();
+	}
+	if (!justUpdate || (justUpdate && chars["NYREA BETA"] == undefined))
+	{
+		chars["NYREA BETA"] = new NyreaBeta();
 	}
 	// Check all characters have version information set
 	for (var prop:String in chars)

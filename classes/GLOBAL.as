@@ -48,6 +48,7 @@
 		public static const FLAG_NUBBY:int  		                        = 30;
 		public static const FLAG_FORESKINNED:int	    					= 31;
 		public static const FLAG_HOLLOW:int									= 32;
+		public static const FLAG_RIBBED:int									= 33;
 		
 		public static const FLAG_NAMES:Array = [
 			"OFFSET -- INVALID",
@@ -83,6 +84,7 @@
 			"Nubby",
 			"Foreskinned",
 			"Hollow",
+			"Ribbed"
 		];
 		
 		public static const VALID_SKIN_FLAGS:Array = [
@@ -125,18 +127,18 @@
 		public static const TYPE_DRAGONFLY:int                              = 31;
 		public static const TYPE_MLP:int                                    = 32;
 		public static const TYPE_CUNTSNAKE:int                              = 33;
-		public static const TYPE_VENUSPITCHER:int						   = 34;
+		public static const TYPE_VENUSPITCHER:int						   	= 34;
 		public static const TYPE_SUCCUBUS:int                               = 35;
 		public static const TYPE_SMALLBEE:int                               = 36;
 		public static const TYPE_SMALLDEMONIC:int                           = 37;
 		public static const TYPE_SMALLDRACONIC:int                          = 38;
-		public static const TYPE_NALEEN_FACE:int 						   = 39;
-		public static const TYPE_PANDA:int 								   = 40;
-		public static const TYPE_MIMBRANE:int							   = 41;
-		public static const TYPE_RASKVEL:int 							   = 42;
-		public static const TYPE_SYDIAN:int 								   = 43;
-		public static const TYPE_LAPINARA:int 							   = 44;
-		public static const TYPE_BADGER:int 								   = 45;
+		public static const TYPE_NALEEN_FACE:int 						   	= 39;
+		public static const TYPE_PANDA:int 								   	= 40;
+		public static const TYPE_MIMBRANE:int							  	= 41;
+		public static const TYPE_RASKVEL:int 							   	= 42;
+		public static const TYPE_SYDIAN:int 								= 43;
+		public static const TYPE_LAPINARA:int 							   	= 44;
+		public static const TYPE_BADGER:int 								= 45;
 		public static const TYPE_VANAE:int									= 46;
 		public static const TYPE_VANAE_MAIDEN:int							= 47;
 		public static const TYPE_VANAE_HUNTRESS:int							= 48;
@@ -145,6 +147,8 @@
 		public static const TYPE_SYNTHETIC:int 								= 51;
 		public static const TYPE_SIMII:int 								    = 52;
 		public static const TYPE_DAYNAR:int									= 53;
+		public static const TYPE_COCKVINE:int								= 54;
+		public static const TYPE_NYREA:int									= 55;
 		
 		public static const TYPE_NAMES:Array = [
 			"Human",
@@ -197,7 +201,9 @@
 			"Goat",
 			"Synthetic",
 			"Simii",
-			"Daynar"
+			"Daynar",
+			"Cockvine",
+			"Nyrea"
 		];
 		
 		public static const VALID_FACE_TYPES:Array = [
@@ -377,6 +383,7 @@
 			TYPE_RASKVEL,
 			TYPE_NAGA,
 			TYPE_SYDIAN,
+			TYPE_COCKVINE
 		];
 		
 		public static const VALID_TAIL_FLAGS:Array = [
@@ -477,6 +484,7 @@
 		public static const FLUID_TYPE_SYDIAN_CUM:int 							= 9;
 		public static const FLUID_TYPE_VANAE_MAIDEN_MILK:int					= 10;
 		public static const FLUID_TYPE_VANAE_HUNTRESS_MILK:int					= 11;
+		public static const FLUID_TYPE_NECTAR:int 								= 12;
 		
 		public static const FLUID_TYPE_NAMES:Array = [
 			"Milk",
@@ -491,6 +499,7 @@
 			"Sydian Cum",
 			"Vanae Maiden Milk",
 			"Vanae Huntress Milk",
+			"Nectar",
 		];
 		
 		public static const VALID_CUM_TYPES:Array = [

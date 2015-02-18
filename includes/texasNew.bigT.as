@@ -228,7 +228,7 @@ public function bigTFamiryTalk():void
 	output("\n\nIf the Governor picks up on the joke, he doesn't acknowledge it. \"<i>Well, I don't have any proper kids. Well, I </i>probably<i> have loads of 'em, but none I know about. 'Who's your daddy?' is a pretty hard question to answer 'round here sometimes! Ha! Only kid I've legally got is my girl Gianna. You've met her, ain't ya?</i>\"");
 
 	output("\n\nYou ");
-	if(flags["MET_GIANNA"] != undefined) output("shake your head");
+	if(flags["MET_GIANNA"] == undefined) output("shake your head");
 	else output("nod an affirmative");
 	output(". Tee smiles proudly, blowing a big ring of smoke as he says, \"<i>She's a good girl. Met her by running her over with my truck! Heck of a way to meet your daughter, don't ya reckon? Well, not my daughter then. Adopted her later, when her owner forgot about her. What kind of fella does that, has a great girl like that and just leaves her? I don't even know.</i>\"");
 
@@ -262,7 +262,7 @@ public function sexWithBigTMenu():void
 	output("</i>\" His deep, rough voice thunders down from above. \"<i>I think there's something we can do about that, don't you--?\"</i>");
 
 	output("\n\nAs if punctuating his statement, a large, powerful hand trails down your back and ");
-	if(!pc.isTaur()) output("squeezes your [pc.assLight]. Almost by instinct, you push it into his grasp, shivering with delight as he teases your rump.");
+	if(!pc.isTaur()) output("squeezes your [pc.ass]. Almost by instinct, you push it into his grasp, shivering with delight as he teases your rump.");
 	else output("rests at the small of your back.");
 	output(" The look in his eyes speaks volumes - he clearly has plans for you.");
 
@@ -271,7 +271,7 @@ public function sexWithBigTMenu():void
 	//treated:
 	if(pc.isTreated()) output("\n\nYou're giddy with delight!");
 	else output("\n\nYour head is spinning, and you find yourself seriously entertaining the idea.");
-	output(" You, [pc.fullName], servicing the biggest bull on New Texas? And it looks like his cock is proportional to his body size....");
+	output(" You, [pc.name] Steele, servicing the biggest bull on New Texas? And it looks like his cock is proportional to his body size....");
 
 	pc.lust(15);
 	//[Desk BJ] [Drunken Cow{boy/girl}] [Pitch T] 
@@ -315,7 +315,7 @@ public function bigTHasABigDDeskBlowjob():void
 	output(" stroke your [pc.chest] and look up at Tee. His blue eyes are filled with unashamed lust as he ogles your naked form, enjoying the show you’re giving him.");
 
 	output("\n\n“<i>Hot damn, that’s a mighty fine sight--!</i>” Tee exclaims, reaching down to tweak one of your [pc.nipples]. You let out a whimpering sigh as his thick fingers squeeze and tease your sensitive nub. The man sure knows how to wrangle " + pc.mf("a young buck in!","a woman in!"));
-	output("\n\nThrowing your head back, you sigh at the feeling of his powerful digits caressing your prickled [pc.nippleColor] areola, and sending pleasure coursing through your [pc.breastsSimple].");
+	output("\n\nThrowing your head back, you sigh at the feeling of his powerful digits caressing your prickled [pc.nippleColor] areola, and sending pleasure coursing through your [pc.breasts].");
 	if(pc.isLactating()) output(" A stream of [pc.milk] excitedly squirts from your [pc.nippleNoun] and you moan with delight.");
 	else output(" The masterful bull coaxes your aching nips until they are taut and tingling.");
 
@@ -327,7 +327,7 @@ public function bigTHasABigDDeskBlowjob():void
 	output("\n\nWhen you pull back, you’re delighted to see a thin string of his glistening spunk stretching from the tip of his flat tipped stallion to your tongue. You pull back and back until it breaks and spills down your chin and chest, feeling a giddy rush of delight. You dive back for more, sucking and nursing his tip, all the while wringing his base for more of his heady cream. Every drop is heaven in liquid form, and you want more--!");
 	output("\n\nSpurred forward by lusty need, you try to slide your [pc.lips] around his massive cock head, feeling your jaws strain with the effort. The second Tee’s dick touches your tongue, you’re utterly swept up in his incredibly strong taste, and another dollop of pre erases all other thoughts. You close your eyes, utterly content to suck his mighty flat-tipped stallion, sucking and trembling as his hot sperm slides down your throat.");
 
-	output("\n\nSuddenly, you feel his powerful hands reach around behind your head. You offer no resistance as the burly bull encourages you to take his girthy member inch by inch. You moan and tremble with delight as his big, strong member fills out your narrow throat, claiming it as his and stretching to fit his incredible shape. Your [pc.thighsSimple] deliciously quiver - you’re not sure how much hotter you can get until you’re liberally creaming ");
+	output("\n\nSuddenly, you feel his powerful hands reach around behind your head. You offer no resistance as the burly bull encourages you to take his girthy member inch by inch. You moan and tremble with delight as his big, strong member fills out your narrow throat, claiming it as his and stretching to fit his incredible shape. Your [pc.thighs] deliciously quiver - you’re not sure how much hotter you can get until you’re liberally creaming ");
 	if((pc.hasCock() || pc.hasVagina()) && pc.lowerUndergarment.shortName != "") output(" in your [pc.lowerUndergarment]!");
 	else output("yourself!");
 
@@ -527,7 +527,10 @@ public function pitchTOverATable():void
 
 	output("\n\nTee’s powerful brows shoot up, not to mention the impressive bulge in his pants. \"<i>Lookin’ to ride the biggest bull about, eh? Can’t say I don’t enjoy a good cock every now and then - just ask Zephyr!</i>” he chuckles. It seems he’s on board with the idea of taking your [pc.cock " + x + "]!");
 
-	output("\n\nBoth of you start feverishly making out as you strip off each other’s gear. Once {you’re both/he’s} completely in the buff -- with the exception of his stetson -- the huge, heavyset bull bends over the desk. You run your fingers down his impressively defined back. Each muscle is so perfect and well defined - it’s quite the sight to see him bent over like this!");
+	output("\n\nBoth of you start feverishly making out as you strip off each other’s gear. Once");
+	if (!pc.isNude()) output(" you’re both");
+	else output(" he’s");
+	output(" completely in the buff -- with the exception of his stetson -- the huge, heavyset bull bends over the desk. You run your fingers down his impressively defined back. Each muscle is so perfect and well defined - it’s quite the sight to see him bent over like this!");
 
 	output("\n\nLetting your digits descend, you firmly grab his posterior in both hands. His hard asscheeks are built for thrusting and squeezing - he’s truly a perfect stallion of a man. Tee trembles as you squeeze and tease his well developed rump, clearly getting off on your forceful grip. Between his thick thighs, you can see the bull’s gigantic flat-tip horsecock beating against the desk - someone’s raring to go!");
 	output("\n\n\"<i>Oh, you’re really getting into this. I wouldn’t think you were the sort, governor,</i>” you cheekily tease. At the same time, you slip one of your fingers between his buttocks. His pucker is so large compared to your finger that it’s a cinch to slip it inside. Once you realise how easy it is, you slip in two more fingers.");
@@ -697,7 +700,9 @@ public function getRiddenByBigWheee(target:int = -1):void
 	output(". With a deep roar, the alpha bull unloads his thick, ");
 	if(target >= 0) output("fertile seed inside of your [pc.vagina " + target + "], thick hot jets spurting out and flooding up into your eager womb.");
 	else output("gooey seed inside of your butt.");
-	output(" You cum long and hard, drenching his hardness with your [pc.girlCum], as your insides are simultaneously filled with Tee’s delectable warmth.");
+	output(" You cum long and hard,");
+	if (target >= 0) output(" drenching his hardness with your [pc.girlCum],");
+	output(" as your insides are simultaneously filled with Tee’s delectable warmth.");
 	output("\n\nBoth of you moan together, his hard muscled chest pressed against your back, trembling and spasming together for what seems like an eternity. Your ");
 	if(target >= 0) output("loins are");
 	else output("ass is");

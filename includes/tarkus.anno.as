@@ -958,7 +958,7 @@ public function talkToSyriAboutTheLocals():void
 		output("\n\nShe laughs, <i>\"Still, if you want an easy lay, just ");
 		if(pc.hasCock()) output("grab a rask and bend her over something");
 		else output("bend over and hike your clothes");
-		output("); they'll take care of the rest. As a race, they're obsessed with eggs and rutting, which makes sense when they can just get stepped on by sydians. Outbreed and outlast.\"</i>");
+		output("; they'll take care of the rest. As a race, they're obsessed with eggs and rutting, which makes sense when they can just get stepped on by sydians. Outbreed and outlast.\"</i>");
 		output("\n\nAfter a moment of thought, Anno adds, <i>\"I don't think any other races made it off Tarkus. Not in enough numbers, anyway. Still some of the more harmless grey goo and goblins around, but not many.\"</i>");
 	}
 	processTime(10);
@@ -2069,9 +2069,11 @@ public function deck13SecurityFunc():Boolean
 	{
 		clearOutput();
 		author("Savin");
+		showBust("DROID_SECURITY","DROID_SECURITY","DROID_SECURITY");
+		kGAMECLASS.userInterface.showName("FIGHT:\nS. DROIDS");
 		flags["DECK13_SECURITY_ENTERED"] = 1;
 
-		output("As you make your way out of the airlock, you're suddenly blinded by a bright white light. You flinch, trying to regain your senses as a booming metallic voice shouts: \"<i><b>INTRUDERS DETECTED. PASSENGER REGISTRY: UNAVAILABLE. IDENTITIES UNCONFIRMED. LAY DOWN YOUR WEAPONS OR YOU WILL BE PURGED</i></b>.\"");
+		output("As you make your way out of the airlock, you're suddenly blinded by a bright white light. You flinch, trying to regain your senses as a booming metallic voice shouts: \"<i><b>INTRUDERS DETECTED. PASSENGER REGISTRY: UNAVAILABLE. IDENTITIES UNCONFIRMED. LAY DOWN YOUR WEAPONS OR YOU WILL BE PURGED</b></i>.\"");
 
 		output("\n\nYour vision finally clears, revealing the unmistakable sight of security droids beneath an array of spotlights, each packing a laser pistol aimed right at you. \"<i>What the fuck?</i>\" Anno gasps, \"<i>How the... how the hell are a bunch of droids still functioning? Shit... looks like they're not kidding!</i>\"");
 
@@ -2165,7 +2167,7 @@ public function lossToSecurityDroid():void
 	clearOutput();
 	author("Savin");
 	showName("LOSS:\nSEC. DROIDS");
-	showBust("SECURITYDROIDS");
+	showBust("DROID_SECURITY","DROID_SECURITY","DROID_SECURITY");
 
 	output("You hear a horrible scream to your side. You pause in your fight just long enough to look, and see Anno crumpled on the ground, motionless. Oh, no.... You turn back, grabbing your [pc.rangedWeapon] to take the murderous drones down... only to see one of their gun barrels leveled at your forehead.");
 
@@ -2183,7 +2185,7 @@ public function victoryOverSecurityDroid():void
 	clearOutput();
 	author("Savin");
 	showName("VICTORY:\nSEC. DROIDS");
-	showBust("SECURITYDROIDS");
+	showBust("DROID_SECURITY","DROID_SECURITY","DROID_SECURITY");
 
 	output("<i>“FuckyoufuckyouFUCKYOU!”</i> Anno screams while firing her gun again and again into the last droid standing. It shudders and stumbles back under the impacts as her shots blow through its armored skeleton. She fires until the gun clicks empty, and still keeps pulling the trigger of the empty handgun until the robotic aggressor finally collapses, utterly destroyed.");
 
@@ -2485,7 +2487,7 @@ public function deck13ShieldControlFunc():Boolean
 		output("\n\nYou spin on a heel, coming face to face with the goo again as she rises from the sea of gray behind you, reforming with her head quite intact and a deadly look in her steel-gray eyes. ");
 		
 		output("\n\nUh-oh. ");
-
+		grayGooDisplay();
 		clearMenu();
 		pc.createStatusEffect("Annoquest Helper AI", 0, 0, 0, 0, true, "", "", true, 0);
 		addButton(0, "Fight!", startCombat, "grayprime");
@@ -2508,7 +2510,7 @@ public function deck13ShieldControlFunc():Boolean
 public function grayPrimeAI():void
 {
 	//Basic combat routine: She focuses on her sword-swings at first. As she falls in HP or starts to build up lust, she'll proc Lust Clones and Tentacles more often, though still mostly relying on physical attacks.
-
+	grayGooDisplay();
 	if (pc.hasStatusEffect("Grappled"))
 	{
 		processCombat();
@@ -2665,7 +2667,7 @@ public function grayPrimeForcePunch():void
 		if (rand(4) == 0)
 		{
 			output(" The blow hits you so hard you're seeing stars!");
-			pc.createStatusEffect("Trip");
+			pc.createStatusEffect("Trip", 0, 0, 0, 0, false, "DefenseDown", "You've been tripped, reducing your effective physique and reflexes by 4. You'll have to spend an action standing up.", true, 0);
 		}
 	}
 }
@@ -2747,6 +2749,21 @@ public function grayPrimeAnnoEscape():void
 	foes[0].removeStatusEffect("AnnoEscape");
 }
 
+public function grayGooDisplay():void
+{
+	if(inCombat()) 
+	{
+		showName("FIGHT:\nGRAY PRIME");
+		showBust("GRAY_GOO_PRIME_2");
+		//showBust("GRAY_GOO_GIGA");
+	}
+	else 
+	{
+		showName("GRAY\nPRIME");
+		showBust("GRAY_GOO_PRIME");
+	}
+}
+
 public function victoryOverGrayPrime():void
 {
 	// HP Victory
@@ -2757,8 +2774,7 @@ public function victoryOverGrayPrime():void
 		
 		clearOutput();
 		author("Savin");
-		showBust("GRAYPRIME");
-		showName("FIGHT:\nGRAY PRIME");
+		grayGooDisplay();
 
 		output("<i>“No,”</i> the goo groans, staggering back under your withering barrage of attacks the hail of bullets from Anno’s gun. <i>“No, I can’t... my work is too important. I’ve given everything for this... EVERYTHING. YOU WILL </i>NOT<i> STOP ME! YOU WILL </i>NOT<i>!”</i> the goo screams, suddenly finding her second wind. Goo wriggles forward from the floor and walls, adding itself to her mass, repairing the damage you’ve done to her. She looks as good as new in the blink of an eye.");
 		
@@ -2780,8 +2796,7 @@ public function victoryOverGrayPrime():void
 	{
 		clearOutput();
 		author("Savin");
-		showBust("GRAYPRIME");
-		showName("FIGHT:\nGRAY PRIME");
+		grayGooDisplay();
 
 		output("<i>“FUCKING DIE! DIE ALREADY!”</i> Anno screams, firing her gun again and again and again into the retreating mass of gray goo, blowing fist-sized holes through its body with every shot. Still, it doesn’t fall - not for long. ");
 		
@@ -2800,8 +2815,7 @@ public function victoryOverGrayPrime():void
 	{
 		clearOutput();
 		author("Savin");
-		showBust("GRAYPRIME");
-		showName("FIGHT:\nGRAY PRIME");
+		grayGooDisplay();
 
 		output("<i>“No... stop...”</i> the goo groans as you continue to tease it. As you close the distance, you’re surprised to see her breasts, hips, and ass visibly enlarging, starting to fill out to the proportions of the <i>“regular”</i> gray goo. <i>“I don’t want to... I don’t want to become like them,”</i> the goo cries, stumbling back, clutching at her rack as if she could hold it in, restrain it from growing. ");
 		
@@ -2820,7 +2834,7 @@ public function lossToGrayPrime():void
 {
 	clearOutput();
 	author("Savin");
-	showBust("GRAYPRIME");
+	grayGooDisplay();
 	showName("LOSS:\nGRAY PRIME");
 
 	output("<i>“What the hell!?”</i> Anno shouts beside you, firing again and again into the seemingly unstoppable goo-girl. Every bullet blows chunks out of the jiggling gray mass of her body, enough to kill any living thing outright; this monster just shrugs it off as her body reforms into perfect shape a moment later, as if she’d never been hit at all. <i>“She won’t go fucking down!”</i>");
@@ -2846,7 +2860,7 @@ public function lossToGrayPrime():void
 	{
 		output(" writhing mass of tentacles reach up, eagerly probing and poking at your [pc.crotch] and [pc.asshole]. Several of the smaller ones wrap around [pc.eachCock], jerking and stroking and caressing every inch of your ample cockflesh. Other tentacles tease your womanhood");
 		if (pc.vaginas.length > 1) output("s");
-		output(", brushing and tickling your [pc.clits] until you’re too wet to prevent their entrance. Your ass, too, suffers the same fate as the rest of you: a single thick tentacle presses against it, so wet and so slender at the tip that you can’t clench hard enough to keep it in you. In the blink of an eye, you’re being speared from both ends, tendrils of gray goo writhing madly inside you.");
+		output(", brushing and tickling your [pc.clits] until you’re too wet to prevent their entrance. Your ass, too, suffers the same fate as the rest of you: a single thick tentacle presses against it, so wet and so slender at the tip that you can’t clench hard enough to keep it out of you. In the blink of an eye, you’re being speared from both ends, tendrils of gray goo writhing madly inside you.");
 	}
 	else if (pc.hasVagina() && !pc.hasCock())
 	{
@@ -2873,7 +2887,7 @@ public function lossToGrayPrime():void
 	
 	output("\n\nThe tentacles inside you speed up, squirming and writhing in mad, worming motions that have your insides bulging in response, using your body like a well-trained whore’s. You’re physically dangled over the vat of goo as the gray girl wheels off the top, revealing a veritable ocean of the stuff. It gurgles and bubbles in response to the light - and the dripping of your sexual fluids into it as the pounding tentacles lift you over it. An amorphous bubble of goop reaches up from the vat, squirming as you and your ausar companion draw near it. ");
 	
-	output("\n\nThe sea of goo binding you shifts up, and crawling up the wall of the vat to merge with its larger mirror. Oh, no.... You brace for impact, squeezing your eyes shut as you’re plunged bodily into the vat. The gray is soft as butter when you fall into it, the tentacles inside you merging with the surrounding host until you barely notice them as independent entities anymore: goo positively floods your body, pouring into you like water. You struggle, gasping for breath - and finding it. After a moment, you have no trouble breathing at all, as if the goo is pumping oxygen into you. You manage to calm down once you catch your breath, blind and immobile in the vat, but still alive. You try and move your arm, but find yourself held fast, spread eager in the heart of the vat. You call out for Anno, and get no response - you can’t hear anything, even if you actually managed to speak through the goo. ");
+	output("\n\nThe sea of goo binding you shifts up, and crawling up the wall of the vat to merge with its larger mirror. Oh, no.... You brace for impact, squeezing your eyes shut as you’re plunged bodily into the vat. The gray is soft as butter when you fall into it, the tentacles inside you merging with the surrounding host until you barely notice them as independent entities anymore: goo positively floods your body, pouring into you like water. You struggle, gasping for breath - and finding it. After a moment, you have no trouble breathing at all, as if the goo is pumping oxygen into you. You manage to calm down once you catch your breath, blind and immobile in the vat, but still alive. You try and move your arm, but find yourself held fast, spread eagle in the heart of the vat. You call out for Anno, and get no response - you can’t hear anything, even if you actually managed to speak through the goo. ");
 	
 	output("\n\nSuddenly, you feel a rush of pleasure through your now-helpless body. An impossible, overwhelming shock of sensation assailing your every hole, filling you from the inside out as every inch of your body is tormented by the lusty micromachines. Your orgasm is as instantaneous as it is intense, pleasure driving your mind wild as you cum and cum and cum into your gooey prison, feeding the microbes that lube they so desperately seem to need. ");
 	
@@ -2973,8 +2987,8 @@ public function deck13FinalFormIntro():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("You and Anno approach the hatch leading into the secondary reactor. The snowy ausar readies her holdout and gives you a slight nod. Together, you shove the door open and charge in after the strange gray goo. ");
 	
@@ -3025,8 +3039,9 @@ public function deck13GrayPrimeTalkCrew():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
+	
 
 	flags["DECK13_CREW_TALK"] = 1;
 
@@ -3073,8 +3088,8 @@ public function deck13GrayPrimeTalkNova():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("<i>“Tell me about the ship,”</i> you say, indicating the massive chamber around you.");
 	
@@ -3090,8 +3105,8 @@ public function deck13GrayPrimeTalkWork():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("<i>“So what’s this work you didn’t want us to see?”</i>");
 	
@@ -3119,8 +3134,8 @@ public function deck13GrayPrimeTalkGoo():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("<i>“So, what’s the deal with the gray goo outside?”</i> you ask. ");
 	
@@ -3144,8 +3159,8 @@ public function deck13GrayPrimeTalkDone():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("<i>“I’ve heard enough.”</i>");
 	
@@ -3164,8 +3179,8 @@ public function deck13DecisionBodies():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	pc.addNice(5);
 
@@ -3202,8 +3217,8 @@ public function deck13DecisionGoo():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	pc.addHard(5);
 
@@ -3266,8 +3281,8 @@ public function deck13DecisionAskAnno():void
 {
 	clearOutput();
 	author("Savin");
+	grayGooDisplay();
 	showName("\nANNO");
-	showBust("ANNO");
 
 	output("<i>“Thoughts?”</i> you whisper, turning to Anno.");
 	
@@ -3282,8 +3297,8 @@ public function deck13DecisionStopHer():void
 {
 	clearOutput();
 	author("Savin");
+	showBust("GRAY_GOO_GIGA");
 	showName("\nGRAY PRIME");
-	showBust("GRAYPRIME");
 
 	output("You level your [pc.rangedWeapon] at Nova. Anno follows suit, her holdout steady with the goo’s head. ");
 	
@@ -3304,6 +3319,7 @@ public function deck13DecisionStopHer():void
 
 public function gigaGooAI():void
 {
+	showBust("GRAY_GOO_GIGA");
 	if (rand(3) == 0)
 	{
 		attack(foes[0], pc);
@@ -3378,7 +3394,7 @@ public function gigaGooCageRattle():void
 	if (rand(50) <= totalDamage)
 	{
 		output("\n<b>The rocking of the cage knocks you flat on your ass! You’re prone!</b>");
-		pc.createStatusEffect("Trip");
+		pc.createStatusEffect("Trip", 0, 0, 0, 0, false, "DefenseDown", "You've been tripped, reducing your effective physique and reflexes by 4. You'll have to spend an action standing up.", true, 0);
 	}
 }
 
@@ -3386,8 +3402,8 @@ public function loseToGigaGoo():void
 {
 	clearOutput();
 	author("Savin");
-	showBust("GIGAGOO");
 	showName("LOSS:\nGIGA GOO");
+	showBust("GRAY_GOO_GIGA");
 
 	output("<i>“YOU SHOULD HAVE LET US WORK,”</i> Nova roars, reaching through the elevator’s lips and grabbing you and Anno, squeezing you together in one of her massive fists. You can already feel the life being crushed out of you before the monolithic goo-girl throws you down to the deck below, ending your life as a crushed husk in a haze of poison gas.");
 	
@@ -3401,8 +3417,8 @@ public function victoryOverGigaGoo():void
 {
 	clearOutput();
 	author("Savin");
-	showBust("GIGAGOO");
 	showName("VICTORY:\nGIGA GOO");
+	showBust("GRAY_GOO_GIGA");
 
 	output("Finally, the elevator locks into position and the huge blast door slides open. Still firing, Anno steps off the elevator, slowly stepping back as she unloads on the monstrous goo-girl. With a roar of rage, Nova rips the elevator cart aside and reaches her arm into the corridor, nearly knocking you off your [pc.feet]. You scramble back, Anno in tow as the goo adjusts her size, body deforming as she claws her way into the hall. ");
 	
